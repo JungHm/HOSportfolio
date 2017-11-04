@@ -1,0 +1,40 @@
+﻿  stdafx.cpp
+  iScene.cpp
+  iMap.cpp
+  D3DX_Base.cpp
+  cTimeManager.cpp
+  cTextureManager.cpp
+c:\users\user\desktop\4dollor\d3dx_base\ctexturemanager.cpp(40): warning C4244: '=': 'UINT'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  cSpriteManager.cpp
+  cSceneManager.cpp
+  cObjMap.cpp
+c:\users\user\desktop\4dollor\d3dx_base\cobjmap.cpp(26): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  cObjLoader.cpp
+c:\users\user\desktop\4dollor\d3dx_base\cobjloader.cpp(255): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  cObjectManager.cpp
+  cObject.cpp
+  cMtlTex.cpp
+  cMainMenu.cpp
+  cMainGame.cpp
+  cKeyManager.cpp
+  cInGame.cpp
+  cGroup.cpp
+  cGrid.cpp
+  cDeviceManager.cpp
+  cCamera.cpp
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  cAseNode.cpp
+c:\users\user\desktop\4dollor\d3dx_base\casenode.cpp(16): warning C4018: '<=': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\user\desktop\4dollor\d3dx_base\casenode.cpp(21): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\user\desktop\4dollor\d3dx_base\casenode.cpp(30): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\user\desktop\4dollor\d3dx_base\casenode.cpp(61): warning C4018: '<=': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\user\desktop\4dollor\d3dx_base\casenode.cpp(68): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\user\desktop\4dollor\d3dx_base\casenode.cpp(79): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  cAseLoader.cpp
+c:\users\user\desktop\4dollor\d3dx_base\caseloader.cpp(253): warning C4316: 'cAseNode': 힙에 할당된 개체가 16에 맞추어져 있지 않을 수도 있습니다
+c:\users\user\desktop\4dollor\d3dx_base\caseloader.cpp(355): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\user\desktop\4dollor\d3dx_base\caseloader.cpp(618): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  코드를 생성하고 있습니다...
+  D3DX_Base.vcxproj -> C:\Users\user\Desktop\4Dollor\Debug\D3DX_Base.exe
+  D3DX_Base.vcxproj -> C:\Users\user\Desktop\4Dollor\Debug\D3DX_Base.pdb (Full PDB)
