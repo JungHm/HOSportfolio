@@ -108,6 +108,9 @@
     <ClInclude Include="cInGame.h">
       <Filter>Scene</Filter>
     </ClInclude>
+    <ClInclude Include="cFontManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -178,6 +181,9 @@
     </ClCompile>
     <ClCompile Include="cInGame.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="cFontManager.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

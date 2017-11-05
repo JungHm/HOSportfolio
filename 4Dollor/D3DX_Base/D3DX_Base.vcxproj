@@ -88,6 +88,7 @@
     <ClInclude Include="cAseNode.h" />
     <ClInclude Include="cCamera.h" />
     <ClInclude Include="cDeviceManager.h" />
+    <ClInclude Include="cFontManager.h" />
     <ClInclude Include="cGrid.h" />
     <ClInclude Include="cGroup.h" />
     <ClInclude Include="cInGame.h" />
@@ -115,6 +116,7 @@
     <ClCompile Include="cAseNode.cpp" />
     <ClCompile Include="cCamera.cpp" />
     <ClCompile Include="cDeviceManager.cpp" />
+    <ClCompile Include="cFontManager.cpp" />
     <ClCompile Include="cGrid.cpp" />
     <ClCompile Include="cGroup.cpp" />
     <ClCompile Include="cInGame.cpp" />
