@@ -89,6 +89,7 @@ struct ST_PNT_VERTEXT
 	enum { FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1 };
 };
 
+#include "cKeyManager.h"
 #include "cObject.h"
 #include "cObjectManager.h"
 #include "cDeviceManager.h"
