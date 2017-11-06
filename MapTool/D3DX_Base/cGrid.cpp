@@ -16,8 +16,8 @@ cGrid::~cGrid()
 
 void cGrid::Setup(IN char* szFolder, IN char* szFile, IN int nRow, IN int nCol, IN float fSize)
 {
-	std::string sFullPath(szFolder);
-	sFullPath += (std::string("/") + std::string(szFile));
+	string sFullPath(szFolder);
+	sFullPath += (string("/") + string(szFile));
 	m_pTexTure = g_pTextureManager->GetTexture(sFullPath);
 
 	m_nRow = nRow;			// 행 
@@ -43,8 +43,8 @@ void cGrid::Setup(IN char* szFolder, IN char* szFile, IN int nRow, IN int nCol, 
 			v.p.y = 0.0f;
 			v.p.z = m_fStartPosZ + (-1.0f) * (z * m_fTileSize);
 			// 텍스쳐 좌표
-			v.t.x = x;
-			v.t.y = z;
+			v.t.x = ONE_XPER * x;
+			v.t.y = ONE_YPER * z;
 			// 버텍스 벡터에 저장
 			m_vecVertex[nVIndex] = v;
 			// 버텍스 벡터 인덱스 증가
@@ -115,13 +115,7 @@ void cGrid::Setup(IN char* szFolder, IN char* szFile, IN int nRow, IN int nCol, 
 	// 최적화
 	vector<DWORD> vecAdj(m_nTotalIndex);
 	m_pMesh->GenerateAdjacency(0.0f, &vecAdj[0]);
-
-	m_pMesh->OptimizeInplace(
-		D3DXMESHOPT_ATTRSORT |
-		D3DXMESHOPT_COMPACT |
-		D3DXMESHOPT_VERTEXCACHE,
-		&vecAdj[0],
-		0, 0, 0);
+	m_pMesh->OptimizeInplace(D3DXMESHOPT_ATTRSORT | D3DXMESHOPT_COMPACT | D3DXMESHOPT_VERTEXCACHE, &vecAdj[0], 0, 0, 0);
 
 	// 중심 축
 	ST_PC_VERTEXT v;
@@ -138,6 +132,7 @@ void cGrid::Setup(IN char* szFolder, IN char* szFile, IN int nRow, IN int nCol, 
 
 void cGrid::Render()
 {
+	// 그리드 렌더
 	g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
 	g_pD3DDevice->SetMaterial(&m_mtl);
 	g_pD3DDevice->SetTexture(0, m_pTexTure);

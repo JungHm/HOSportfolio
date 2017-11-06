@@ -8,10 +8,7 @@ private:
 	std::map<eFontType, LPD3DXFONT>	m_mapFont;
 
 public:
-	//cFontManager();
-	//~cFontManager();
-	LPD3DXFONT	GetFont(eFontType e);
+	LPD3DXFONT GetFont(IN eFontType e, IN int nWidth, IN int nHeight);
 	void Destroy();
-
 };
 
