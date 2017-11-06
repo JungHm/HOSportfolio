@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "cInGame.h"
 
+
 cInGame::cInGame()
 {
 }
