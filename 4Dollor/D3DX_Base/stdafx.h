@@ -81,7 +81,7 @@ struct ST_PT_VERTEXT
 	enum { FVF = D3DFVF_XYZ | D3DFVF_TEX1 };
 };
 
-// PNT//jPNT
+// PNT
 struct ST_PNT_VERTEXT
 {
 	D3DXVECTOR3	p;
