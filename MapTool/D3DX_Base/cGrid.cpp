@@ -43,8 +43,8 @@ void cGrid::Setup(IN char* szFolder, IN char* szFile, IN int nRow, IN int nCol, 
 			v.p.y = 0.0f;
 			v.p.z = m_fStartPosZ + (-1.0f) * (z * m_fTileSize);
 			// 텍스쳐 좌표
-			v.t.x = x;
-			v.t.y = z;
+			v.t.x = ONE_XPER * x;
+			v.t.y = ONE_YPER * z;
 			// 버텍스 벡터에 저장
 			m_vecVertex[nVIndex] = v;
 			// 버텍스 벡터 인덱스 증가

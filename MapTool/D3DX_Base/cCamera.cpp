@@ -5,9 +5,11 @@ cCamera::cCamera()
 	: m_vEye(0, 0, 0)
 	, m_vLookAt(0, 0, 0)
 	, m_vUp(0, 1, 0)
-	, m_fCameraDistance(30.0f)
+	, m_fCameraDistance(120.0f)
 	, m_isLButtonDown(false)
 	, m_vCamRotAngle(0, 0, 0)
+	, m_eCamMode(BASE)
+	, m_vMove(0, 0, 0)
 {
 	m_ptPrevMouse.x = 0;
 	m_ptPrevMouse.y = 0;
@@ -28,13 +30,41 @@ void cCamera::Setup()
 }
 void cCamera::Update()
 {
-	D3DXMATRIXA16 matR, matRX, matRY;
-	D3DXMatrixRotationX(&matRX, m_vCamRotAngle.x);
-	D3DXMatrixRotationY(&matRY, m_vCamRotAngle.y);
-	matR = matRX * matRY;
+	if (KEY->isOnceKeyDown(VK_F1))
+	{
+		m_eCamMode = BASE;
+	}
 
-	m_vEye = D3DXVECTOR3(0, m_fCameraDistance, -m_fCameraDistance);
-	D3DXVec3TransformCoord(&m_vEye, &m_vEye, &matR);
+	if (KEY->isOnceKeyDown(VK_F2))
+	{
+		m_eCamMode = IN_GAME;
+	}
+
+	if (KEY->isOnceKeyDown(VK_F3))
+	{
+		m_eCamMode = WORLD;
+	}
+
+	//D3DXMATRIXA16 matR, matRX, matRY;
+	//D3DXMatrixRotationX(&matRX, m_vCamRotAngle.x);
+	//D3DXMatrixRotationY(&matRY, m_vCamRotAngle.y);
+	//matR = matRX * matRY;
+	//
+	//m_vEye = D3DXVECTOR3(0, m_fCameraDistance, -m_fCameraDistance);
+	//D3DXVec3TransformCoord(&m_vEye, &m_vEye, &matR);
+
+	if (KEY->isStayKeyDown('A'))
+	{
+		m_vMove.x--;
+	}
+
+	if (KEY->isStayKeyDown('D'))
+	{
+		m_vMove.x++;
+	}
+	
+	m_vLookAt = D3DXVECTOR3(m_vMove.x, m_vMove.y, m_vMove.z);
+	m_vEye = D3DXVECTOR3(m_vMove.x, m_vMove.y + m_fCameraDistance, -(m_vMove.z + m_fCameraDistance));
 
 	D3DXMATRIXA16 matView;
 	D3DXMatrixLookAtLH(&matView, &m_vEye, &m_vLookAt, &m_vUp);
