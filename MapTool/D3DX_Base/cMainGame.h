@@ -2,12 +2,14 @@
 
 class cCamera;
 class cGrid;
+class cInfomation;
 
 class cMainGame
 {
 private:
-	cCamera*	m_pCamera;
-	cGrid*		m_pGrid;
+	cCamera*	 m_pCamera;
+	cGrid*		 m_pGrid;
+	cInfomation* m_pInfo;
 
 public:
 	cMainGame();

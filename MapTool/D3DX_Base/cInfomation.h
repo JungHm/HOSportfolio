@@ -9,6 +9,7 @@ public:
 	cInfomation();
 	~cInfomation();
 
-	void PrintInfo();
+	void Setup();
+	void Render();
 };
 

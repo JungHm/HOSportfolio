@@ -3,10 +3,12 @@
 
 #include "cCamera.h"
 #include "cGrid.h"
+#include "cInfomation.h"
 
 cMainGame::cMainGame()
 	: m_pCamera(NULL)
 	, m_pGrid(NULL)
+	, m_pInfo(NULL)
 {
 }
 
@@ -14,6 +16,7 @@ cMainGame::~cMainGame()
 {
 	SAFE_DELETE(m_pCamera);
 	SAFE_DELETE(m_pGrid);
+	SAFE_DELETE(m_pInfo);
 
 	g_pFontManager->Destroy();
 	g_pTextureManager->Destroy();
@@ -28,6 +31,9 @@ void cMainGame::Setup()
 
 	m_pGrid = new cGrid;
 	m_pGrid->Setup("Grid", "higthMapTexture.png", 25, 50, 1.0f);
+
+	m_pInfo = new cInfomation;
+	m_pInfo->Setup();
 
 	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, false);
 	g_pD3DDevice->SetRenderState(D3DRS_AMBIENT, 0x00202020);
@@ -49,6 +55,7 @@ void cMainGame::Render()
 	g_pD3DDevice->BeginScene();
 	//===================================
 	if (m_pGrid) m_pGrid->Render();
+	if (m_pInfo) m_pInfo->Render();
 	//===================================
 	g_pD3DDevice->EndScene();
 	g_pD3DDevice->Present(NULL, NULL, NULL, NULL);
