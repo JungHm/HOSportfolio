@@ -1,20 +1,17 @@
 #include "stdafx.h"
 #include "cMainGame.h"
 
-#include "cCamera.h"
 #include "cGrid.h"
 #include "cInfomation.h"
 
 cMainGame::cMainGame()
-	: m_pCamera(NULL)
-	, m_pGrid(NULL)
+	: m_pGrid(NULL)
 	, m_pInfo(NULL)
 {
 }
 
 cMainGame::~cMainGame()
 {
-	SAFE_DELETE(m_pCamera);
 	SAFE_DELETE(m_pGrid);
 	SAFE_DELETE(m_pInfo);
 
@@ -26,11 +23,10 @@ cMainGame::~cMainGame()
 
 void cMainGame::Setup()
 {
-	m_pCamera = new cCamera;
-	m_pCamera->Setup();
+	g_cCamera->Setup();
 
 	m_pGrid = new cGrid;
-	m_pGrid->Setup("Grid", "field.png", 60, 120, 2.0f);
+	m_pGrid->Setup("Grid", "field.png", 80, 160, 2.0f);
 
 	m_pInfo = new cInfomation;
 	m_pInfo->Setup();
@@ -45,8 +41,7 @@ void cMainGame::Setup()
 void cMainGame::Update()
 {
 	g_pTimeManager->Update();
-
-	if (m_pCamera) m_pCamera->Update();
+	g_cCamera->Update();
 }
 
 void cMainGame::Render()
@@ -64,8 +59,5 @@ void cMainGame::Render()
 
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	if (m_pCamera)
-	{
-		m_pCamera->WndProc(hWnd, message, wParam, lParam);
-	}
+	g_cCamera->WndProc(hWnd, message, wParam, lParam);
 }

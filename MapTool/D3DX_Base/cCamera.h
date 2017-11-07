@@ -1,12 +1,10 @@
 #pragma once
 
-enum CAMMODE
-{
-	BASE, IN_GAME, WORLD
-};
+#define g_cCamera cCamera::GetInstance()
 
 class cCamera
 {
+	SINGLETONE(cCamera);
 private:
 	D3DXVECTOR3		m_vEye;
 	D3DXVECTOR3		m_vLookAt;
@@ -16,18 +14,18 @@ private:
 	bool			m_isLButtonDown;
 	float			m_fCameraDistance;
 	D3DXVECTOR3		m_vCamRotAngle;
+	D3DXMATRIXA16 matR, matRX, matRY;
 
 private:
 	CAMMODE			m_eCamMode;
 	D3DXVECTOR3		m_vMove;
+	D3DXMATRIXA16	m_matTrans;
+	D3DXVECTOR3     m_vDirection;
 
 public:
-	cCamera();
-	~cCamera();
-
 	void Setup();
 	void Update();
-
+	void CameraModeChange();
 
 	void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };

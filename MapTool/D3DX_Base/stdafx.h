@@ -73,8 +73,8 @@ public:\
 // 텍스쳐 비율
 #define MAX_XPIXEL   1187
 #define MAX_YPIXEL   601
-#define ONE_XPIXEL   MAX_XPIXEL / 120
-#define ONE_YPIXEL   MAX_YPIXEL / 60
+#define ONE_XPIXEL   MAX_XPIXEL / 160
+#define ONE_YPIXEL   MAX_YPIXEL / 80
 #define ONE_XPER   (float)ONE_XPIXEL / (float)MAX_XPIXEL
 #define ONE_YPER   (float)ONE_YPIXEL / (float)MAX_YPIXEL
 
@@ -136,6 +136,11 @@ enum eFontType
 	FT_QUEST,
 };
 
+enum CAMMODE
+{
+	BASE, IN_GAME, WORLD
+};
+
 #include "cObject.h"
 #include "cGameObject.h"
 #include "cObjectManager.h"
@@ -144,3 +149,4 @@ enum eFontType
 #include "cTextureManager.h"
 #include "cFontManager.h"
 #include "cKeyManager.h"
+#include "cCamera.h"

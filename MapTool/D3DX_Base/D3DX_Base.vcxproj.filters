@@ -40,6 +40,9 @@
     <Filter Include="Infomation">
       <UniqueIdentifier>{0da4e465-8042-4242-aa66-a0a95812280a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Picking">
+      <UniqueIdentifier>{2d5ff53c-9dfb-41c1-a8ac-f0fe60ca8901}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -159,6 +162,9 @@
     <ClInclude Include="cInfomation.h">
       <Filter>Infomation</Filter>
     </ClInclude>
+    <ClInclude Include="cPicking.h">
+      <Filter>Picking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cCube.cpp">
@@ -265,6 +271,9 @@
     </ClCompile>
     <ClCompile Include="cInfomation.cpp">
       <Filter>Infomation</Filter>
+    </ClCompile>
+    <ClCompile Include="cPicking.cpp">
+      <Filter>Picking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

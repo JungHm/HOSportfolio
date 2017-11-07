@@ -19,7 +19,7 @@ void cInfomation::Setup()
 void cInfomation::Render()
 {
 	char szWolrdTime[1024];
-	sprintf_s(szWolrdTime, "WorldTime : %.2f", g_pTimeManager->GetWorldTime());
+	sprintf_s(szWolrdTime, "WorldTime : %.4f", g_pTimeManager->GetWorldTime());
 
 	RECT rc;
 	SetRect(&rc, 0, 0, 10, 20);
