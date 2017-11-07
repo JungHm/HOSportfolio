@@ -20,7 +20,6 @@ private:
 	CAMMODE			m_eCamMode;
 	D3DXVECTOR3		m_vMove;
 	D3DXMATRIXA16	m_matTrans;
-	D3DXVECTOR3     m_vDirection;
 
 public:
 	void Setup();

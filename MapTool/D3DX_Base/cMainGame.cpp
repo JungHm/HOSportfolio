@@ -26,7 +26,7 @@ void cMainGame::Setup()
 	g_cCamera->Setup();
 
 	m_pGrid = new cGrid;
-	m_pGrid->Setup("Grid", "field.png", 80, 160, 2.0f);
+	m_pGrid->Setup("Grid", "field.png", 80, 160, 1.0f);
 
 	m_pInfo = new cInfomation;
 	m_pInfo->Setup();

@@ -138,7 +138,7 @@ enum eFontType
 
 enum CAMMODE
 {
-	BASE, IN_GAME, WORLD
+	BASE, WORLD
 };
 
 #include "cObject.h"
