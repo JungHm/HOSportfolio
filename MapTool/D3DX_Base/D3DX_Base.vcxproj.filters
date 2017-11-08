@@ -165,6 +165,9 @@
     <ClInclude Include="cPicking.h">
       <Filter>Picking</Filter>
     </ClInclude>
+    <ClInclude Include="cMapTool.h">
+      <Filter>MapTool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cCube.cpp">
@@ -274,6 +277,9 @@
     </ClCompile>
     <ClCompile Include="cPicking.cpp">
       <Filter>Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="cMapTool.cpp">
+      <Filter>MapTool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

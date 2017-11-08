@@ -5,7 +5,7 @@ class cGroup;
 class cObjLoader
 {
 private:
-	std::map<std::string, cMtlTex*>	m_mapMtlTex;
+	std::map<string, cMtlTex*>	m_mapMtlTex;
 
 public:
 	cObjLoader();

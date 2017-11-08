@@ -141,6 +141,7 @@ enum CAMMODE
 	BASE, WORLD
 };
 
+#include "cCamera.h"
 #include "cObject.h"
 #include "cGameObject.h"
 #include "cObjectManager.h"
@@ -149,4 +150,3 @@ enum CAMMODE
 #include "cTextureManager.h"
 #include "cFontManager.h"
 #include "cKeyManager.h"
-#include "cCamera.h"

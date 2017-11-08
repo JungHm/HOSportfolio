@@ -70,10 +70,16 @@ void cGrid::Setup(IN char* szFolder, IN char* szFile, IN int nRow, IN int nCol, 
 		}
 	}
 
-	// 법선 벡터 지정
+
 	D3DXVECTOR3 v1, v2, n;
 	for (int i = 0; i < m_nTotalIndex; i += 3)
 	{
+		// 그리드 버텍스 받아오기
+		m_vecGridVertex.push_back(m_vecVertex[m_vecIndex[i]].p);
+		m_vecGridVertex.push_back(m_vecVertex[m_vecIndex[i + 1]].p);
+		m_vecGridVertex.push_back(m_vecVertex[m_vecIndex[i + 2]].p);
+
+		// 법선 벡터 지정
 		v1 = m_vecVertex[m_vecIndex[i + 1]].p - m_vecVertex[m_vecIndex[i]].p;
 		v2 = m_vecVertex[m_vecIndex[i + 2]].p - m_vecVertex[m_vecIndex[i]].p;
 

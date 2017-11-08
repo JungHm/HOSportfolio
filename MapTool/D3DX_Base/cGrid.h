@@ -19,6 +19,9 @@ private:
 	float m_fStartPosX;		// 그리드 생성 시작 x좌표
 	float m_fStartPosZ;		// 그리드 생성 시작 z좌표
 
+private:
+	SYNTHESIZE(vector<D3DXVECTOR3>, m_vecGridVertex, GridVertex);
+
 public:
 	cGrid();
 	~cGrid();

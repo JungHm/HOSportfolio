@@ -1,13 +1,13 @@
 #pragma once
 
-class cGrid;
 class cInfomation;
+class cMapTool;
 
 class cMainGame
 {
 private:
-	cGrid*		 m_pGrid;
 	cInfomation* m_pInfo;
+	cMapTool*	 m_pMapTool;
 
 public:
 	cMainGame();

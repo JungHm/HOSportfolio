@@ -1,19 +1,19 @@
 #include "stdafx.h"
 #include "cMainGame.h"
 
-#include "cGrid.h"
 #include "cInfomation.h"
+#include "cMapTool.h"
 
 cMainGame::cMainGame()
-	: m_pGrid(NULL)
-	, m_pInfo(NULL)
+	: m_pInfo(NULL)
+	, m_pMapTool(NULL)
 {
 }
 
 cMainGame::~cMainGame()
 {
-	SAFE_DELETE(m_pGrid);
 	SAFE_DELETE(m_pInfo);
+	SAFE_DELETE(m_pMapTool);
 
 	g_pFontManager->Destroy();
 	g_pTextureManager->Destroy();
@@ -25,11 +25,11 @@ void cMainGame::Setup()
 {
 	g_cCamera->Setup();
 
-	m_pGrid = new cGrid;
-	m_pGrid->Setup("Grid", "field.png", 80, 160, 1.0f);
-
 	m_pInfo = new cInfomation;
 	m_pInfo->Setup();
+
+	m_pMapTool = new cMapTool;
+	m_pMapTool->ObjLoaderTestSetup();
 
 	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, false);
 	g_pD3DDevice->SetRenderState(D3DRS_AMBIENT, 0x00202020);
@@ -49,8 +49,8 @@ void cMainGame::Render()
 	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	g_pD3DDevice->BeginScene();
 	//===================================
-	if (m_pGrid) m_pGrid->Render();
 	if (m_pInfo) m_pInfo->Render();
+	if (m_pMapTool) m_pMapTool->ObjLoaderTestRender();
 	//===================================
 	g_pD3DDevice->EndScene();
 	g_pD3DDevice->Present(NULL, NULL, NULL, NULL);
