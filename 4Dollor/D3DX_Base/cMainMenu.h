@@ -7,6 +7,7 @@ class cObjLoader;
 class cGroup;
 class cObjMap;
 class cAseNode;
+class cXLoader;
 
 class cMainMenu : public iScene
 {
@@ -16,6 +17,7 @@ private:
 	cCamera*	m_pCamera;
 	cObjLoader*		m_pObjLoader;
 	cObjMap*		m_pObjMap;
+	cXLoader*		m_pX;
 	//cAseNode*		m_pRootNode;
 
 	std::vector<cGroup*>	m_vecGroup;

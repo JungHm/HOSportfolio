@@ -25,6 +25,9 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{6a154d75-2499-4d8b-82a7-68e75a72a442}</UniqueIdentifier>
     </Filter>
+    <Filter Include="XFile">
+      <UniqueIdentifier>{2621d4e7-078c-427e-8b3d-a2b5b80c6561}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -111,6 +114,12 @@
     <ClInclude Include="cFontManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
+    <ClInclude Include="cXLoader.h">
+      <Filter>XFile</Filter>
+    </ClInclude>
+    <ClInclude Include="cAllocateHierarchy.h">
+      <Filter>XFile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -184,6 +193,12 @@
     </ClCompile>
     <ClCompile Include="cFontManager.cpp">
       <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cXLoader.cpp">
+      <Filter>XFile</Filter>
+    </ClCompile>
+    <ClCompile Include="cAllocateHierarchy.cpp">
+      <Filter>XFile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
