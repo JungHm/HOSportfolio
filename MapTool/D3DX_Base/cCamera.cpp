@@ -5,7 +5,7 @@ cCamera::cCamera()
 	: m_vEye(0, 0, 0)
 	, m_vLookAt(0, 0, 0)
 	, m_vUp(0, 1, 0)
-	, m_fCameraDistance(120.0f)
+	, m_fCameraDistance(100.0f)
 	, m_isLButtonDown(false)
 	, m_vCamRotAngle(0, 0, 0)
 	, m_eCamMode(BASE)
@@ -13,6 +13,7 @@ cCamera::cCamera()
 {
 	m_ptPrevMouse.x = 0;
 	m_ptPrevMouse.y = 0;
+	D3DXMatrixIdentity(&m_matTrans);
 }
 
 cCamera::~cCamera()
@@ -28,47 +29,57 @@ void cCamera::Setup()
 	D3DXMatrixPerspectiveFovLH(&matProj, D3DX_PI / 4.0f, rc.right / (float)rc.bottom, 1.0f, 1000.0f);
 	g_pD3DDevice->SetTransform(D3DTS_PROJECTION, &matProj);
 }
+
 void cCamera::Update()
 {
 	if (KEY->isOnceKeyDown(VK_F1))
 	{
+		m_vLookAt = D3DXVECTOR3(0, 0, 0);
+		m_fCameraDistance = 100.0f;
 		m_eCamMode = BASE;
 	}
 
 	if (KEY->isOnceKeyDown(VK_F2))
 	{
-		m_eCamMode = IN_GAME;
-	}
-
-	if (KEY->isOnceKeyDown(VK_F3))
-	{
+		m_vMove = D3DXVECTOR3(0, 0, -15.0f);
+		m_fCameraDistance = 50.0f;
 		m_eCamMode = WORLD;
 	}
 
-	//D3DXMATRIXA16 matR, matRX, matRY;
-	//D3DXMatrixRotationX(&matRX, m_vCamRotAngle.x);
-	//D3DXMatrixRotationY(&matRY, m_vCamRotAngle.y);
-	//matR = matRX * matRY;
-	//
-	//m_vEye = D3DXVECTOR3(0, m_fCameraDistance, -m_fCameraDistance);
-	//D3DXVec3TransformCoord(&m_vEye, &m_vEye, &matR);
-
-	if (KEY->isStayKeyDown('A'))
-	{
-		m_vMove.x--;
-	}
-
-	if (KEY->isStayKeyDown('D'))
-	{
-		m_vMove.x++;
-	}
-	
-	m_vLookAt = D3DXVECTOR3(m_vMove.x, m_vMove.y, m_vMove.z);
-	m_vEye = D3DXVECTOR3(m_vMove.x, m_vMove.y + m_fCameraDistance, -(m_vMove.z + m_fCameraDistance));
+	CameraModeChange();
 
 	D3DXMATRIXA16 matView;
 	D3DXMatrixLookAtLH(&matView, &m_vEye, &m_vLookAt, &m_vUp);
 	g_pD3DDevice->SetTransform(D3DTS_VIEW, &matView);
+}
+
+void cCamera::CameraModeChange()
+{
+	switch (m_eCamMode)
+	{
+	case BASE:	 // 축 중심 카메라
+		D3DXMatrixRotationX(&matRX, m_vCamRotAngle.x);
+		D3DXMatrixRotationY(&matRY, m_vCamRotAngle.y);
+		matR = matRX * matRY;
+
+		m_vEye = D3DXVECTOR3(0, m_fCameraDistance, -m_fCameraDistance);
+		D3DXVec3TransformCoord(&m_vEye, &m_vEye, &matR);
+		break;
+
+	case WORLD: // 월드 카메라
+		if (KEY->isStayKeyDown('W')) m_vMove.z++;
+		if (KEY->isStayKeyDown('S')) m_vMove.z--;
+		if (KEY->isStayKeyDown('A')) m_vMove.x--;
+		if (KEY->isStayKeyDown('D')) m_vMove.x++;
+
+		D3DXMatrixTranslation(&m_matTrans, m_vMove.x, m_vMove.y, m_vMove.z);
+
+		m_vLookAt = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		m_vEye = D3DXVECTOR3(0.0f, m_fCameraDistance, -m_fCameraDistance);
+		D3DXVec3TransformCoord(&m_vLookAt, &m_vLookAt, &m_matTrans);
+		D3DXVec3TransformCoord(&m_vEye, &m_vEye, &m_matTrans);
+		break;
+	}
 }
 
 void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

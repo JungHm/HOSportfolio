@@ -3,11 +3,9 @@
 #include "cGroup.h"
 #include "cMtlTex.h"
 
-
 cObjLoader::cObjLoader()
 {
 }
-
 
 cObjLoader::~cObjLoader()
 {
@@ -260,4 +258,10 @@ void cObjLoader::LoadSurface(OUT std::vector<D3DXVECTOR3>& vecSurface,
 				pMat);
 		}
 	}
+}
+
+LPD3DXMESH cObjLoader::LoadMesh(OUT vector<cMtlTex*>& vecMtlTex, IN char * szFolder, IN char * szFile)
+{
+
+	return LPD3DXMESH();
 }
