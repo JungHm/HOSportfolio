@@ -7,6 +7,7 @@
 #include "cObjMap.h"
 #include "cAseNode.h"
 #include "cAseLoader.h"
+#include "cXLoader.h"
 
 
 cMainMenu::cMainMenu()
@@ -74,6 +75,9 @@ void cMainMenu::SetUp()
 	m_pGrid = new cGrid;
 	m_pGrid->Setup();
 
+	m_pX = new cXLoader;
+	m_pX->Load("d");
+
 	//m_pObjLoader = new cObjLoader;
 	//m_pObjLoader->Load(m_vecGroup, "obj", "map.obj");
 
@@ -119,6 +123,8 @@ void cMainMenu::Render()
 
 	if (m_pGrid)
 		m_pGrid->Render();
+
+	m_pX->Render();
 
 	//if (m_pRootNode)
 	//	m_pRootNode->Render();
