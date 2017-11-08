@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asciitok.h" />
+    <ClInclude Include="cAllocateHierarchy.h" />
     <ClInclude Include="cAseLoader.h" />
     <ClInclude Include="cAseNode.h" />
     <ClInclude Include="cCamera.h" />
@@ -104,6 +105,7 @@
     <ClInclude Include="cSpriteManager.h" />
     <ClInclude Include="cTextureManager.h" />
     <ClInclude Include="cTimeManager.h" />
+    <ClInclude Include="cXLoader.h" />
     <ClInclude Include="D3DX_Base.h" />
     <ClInclude Include="iMap.h" />
     <ClInclude Include="iScene.h" />
@@ -112,6 +114,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cAllocateHierarchy.cpp" />
     <ClCompile Include="cAseLoader.cpp" />
     <ClCompile Include="cAseNode.cpp" />
     <ClCompile Include="cCamera.cpp" />
@@ -132,6 +135,7 @@
     <ClCompile Include="cSpriteManager.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
     <ClCompile Include="cTimeManager.cpp" />
+    <ClCompile Include="cXLoader.cpp" />
     <ClCompile Include="D3DX_Base.cpp" />
     <ClCompile Include="iMap.cpp" />
     <ClCompile Include="iScene.cpp" />

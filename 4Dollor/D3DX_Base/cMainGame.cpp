@@ -31,7 +31,8 @@ void cMainGame::Setup()
 void cMainGame::Update()
 {
 	g_pTimeManager->Update();
-
+	
+	g_pTimeManager->GetLastUpdateTime();
 	g_Cam->Update();
 
 	g_Scene->Update();
@@ -48,7 +49,16 @@ void cMainGame::Render()
 		1.0f, 0);
 	g_pD3DDevice->BeginScene();
 
+
+
 	g_Scene->Render();
+
+	//RECT rc;
+	//SetRect(&rc, 100, 100, 200, 200);
+	//std::string s = "이것이 굴림체다";
+	//m_pFont->DrawTextA(NULL, s.c_str(), strlen(s.c_str()), &rc,
+	//	DT_LEFT | DT_TOP | DT_NOCLIP,
+	//	D3DCOLOR_XRGB(255, 255, 255));
 
 	g_pD3DDevice->EndScene();
 
