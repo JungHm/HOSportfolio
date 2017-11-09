@@ -4,9 +4,6 @@
 #include "cCamera.h"
 #include "cObjLoader.h"
 #include "cGroup.h"
-#include "cObjMap.h"
-#include "cAseNode.h"
-#include "cAseLoader.h"
 #include "cXLoader.h"
 
 
@@ -16,7 +13,6 @@ cMainMenu::cMainMenu()
 	, m_pD3DTexture(NULL)
 	, m_pFont(NULL)
 	, m_pObjLoader(NULL)
-	, m_pObjMap(NULL)
 	//, m_pRootNode(NULL)
 {
 }
@@ -26,9 +22,8 @@ cMainMenu::~cMainMenu()
 {
 	SAFE_DELETE(m_pGrid);
 	SAFE_DELETE(m_pObjLoader);
-	SAFE_DELETE(m_pObjMap);
 	SAFE_RELEASE(m_pD3DTexture);
-	SAFE_RELEASE(m_pD3DTexture1);
+		SAFE_RELEASE(m_pD3DTexture1);
 	SAFE_RELEASE(m_pFont);
 
 	for each (auto p in m_vecGroup)
@@ -42,46 +37,17 @@ cMainMenu::~cMainMenu()
 
 void cMainMenu::SetUp()
 {
-	//// ASE Loader
-	////cAseLoader	loader;
-	////m_pRootNode = loader.Load("woman/woman_01_all.ASE");
-	//// font
-	//D3DXFONT_DESC fd;
-	//ZeroMemory(&fd, sizeof(D3DXFONT_DESC));
-	//fd.Height = 25;
-	//fd.Width = 12;
-	//fd.Weight = FW_BOLD;
-	//fd.Italic = false;
-	//fd.CharSet = DEFAULT_CHARSET;
-	//fd.OutputPrecision = OUT_DEFAULT_PRECIS;
-	//fd.PitchAndFamily = FF_DONTCARE;
-
-	////WCHAR str[36] = L"±¼¸²Ã¼";
-	////wsprintf(str, fd.FaceName);
-
-	////char szFaceName[32] = "±¼¸²Ã¼";
-	////char* p = szFaceName;
-	////strcpy_s(fd.FaceName, 32, L"±¼¸²Ã¼");
-
-	//D3DXCreateFontIndirect(g_pD3DDevice, &fd, &m_pFont);
-
-	//SetLight();
 
 	
 	D3DXVECTOR2 temp;
 	g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
-	//D3DXCreateTextureFromFile(g_pD3DDevice, L"Black Dragon NEW/textures/Dragon_Bump_Col2.jpg", &m_pD3DTexture1);
 
 	m_pGrid = new cGrid;
 	m_pGrid->Setup();
 
-	m_pX = new cXLoader;
-	m_pX->Load("d");
+	m_pAba = new cXLoader;
+	m_pAba->SetUp();
 
-	//m_pObjLoader = new cObjLoader;
-	//m_pObjLoader->Load(m_vecGroup, "obj", "map.obj");
-
-	//LoadSurface();
 
 }
 
@@ -91,11 +57,11 @@ void cMainMenu::Destroy()
 
 void cMainMenu::Update()
 {
-	//m_pRootNode->Update(m_pRootNode->GetKeyFrame(), NULL);
 	if (GetAsyncKeyState(VK_LBUTTON) & 0001)
 	{
 		g_Scene->ChangeScene("game");
 	}
+	m_pAba->Update();
 }
 
 void cMainMenu::Render()
@@ -105,17 +71,9 @@ void cMainMenu::Render()
 	std::string s = "ÀÌ°ÍÀÌ ±¼¸²Ã¼´Ù";
 	m_pFont->DrawTextA(NULL, s.c_str(), strlen(s.c_str()), &rc,
 	DT_LEFT | DT_TOP | DT_NOCLIP,
-	D3DCOLOR_XRGB(255, 255, 255));
+	D3DCOLOR_XRGB(255, 255, 255));*/
 
-	D3DXMATRIXA16	matWorld;
-	D3DXMatrixIdentity(&matWorld);
-	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
-	g_pD3DDevice->SetTexture(0, m_pD3DTexture);
-	g_pD3DDevice->SetFVF(ST_PT_VERTEXT::FVF);
-	g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST,
-	m_vecTriVertex.size() / 3,
-	&m_vecTriVertex[0],
-	sizeof(ST_PT_VERTEXT));*/
+
 
 	g_pSprite->BeginScene();
 	g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
@@ -123,13 +81,8 @@ void cMainMenu::Render()
 
 	if (m_pGrid)
 		m_pGrid->Render();
+	m_pAba->Render();
 
-	m_pX->Render();
-
-	//if (m_pRootNode)
-	//	m_pRootNode->Render();
-
-	//RenderObjFile();
 }
 
 void cMainMenu::RenderObjFile()
@@ -196,14 +149,4 @@ void cMainMenu::SetLight()
 	//g_pD3DDevice->SetLight(2, &lightSpot);
 
 	//g_pD3DDevice->LightEnable(2, true);
-}
-
-void cMainMenu::LoadSurface()
-{
-	D3DXMATRIXA16 matWorld, matS, matR;
-	D3DXMatrixScaling(&matS, 0.06f, 0.06f, 0.06f);
-	D3DXMatrixRotationX(&matR, -D3DX_PI / 2.0f);
-	matWorld = matS * matR;
-
-	m_pObjMap = new cObjMap("obj", "map_surface.obj", &matWorld);
 }

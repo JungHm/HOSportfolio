@@ -6,7 +6,7 @@
 #pragma once
 
 #include "targetver.h"
-
+#define _CRT_SECURE_NO_DEPRECATE      // C4996 오류 무시. 과거 문자열(_s가 없는 것)을 사용하지 마라는 정도의 오류// Windows 헤더 파일:
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용은 Windows 헤더에서 제외합니다.
 // Windows 헤더 파일:
 #include <windows.h>
@@ -28,7 +28,6 @@
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 #pragma comment(lib, "libfbxsdk-md.lib")
-
 extern HWND g_hWnd;
 
 #define SINGLETONE(class_name)	\
@@ -41,7 +40,7 @@ public:\
 		static class_name instance;\
 		return &instance;\
 	}
-
+#define SAFE_DELETE_ARRAY(p) {if(p) delete[] p; p = NULL; }
 #define SAFE_DELETE(p) { if(p) delete p; p = NULL; }
 #define SAFE_RELEASE(p) { if(p) p->Release(); p = NULL; }
 
@@ -100,3 +99,4 @@ struct ST_PNT_VERTEXT
 #include "cCamera.h"
 #include "cSceneManager.h"
 #include "cFontManager.h"
+#include "cXLoader.h"

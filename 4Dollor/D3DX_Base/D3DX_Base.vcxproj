@@ -105,6 +105,7 @@
     <ClInclude Include="cSpriteManager.h" />
     <ClInclude Include="cTextureManager.h" />
     <ClInclude Include="cTimeManager.h" />
+    <ClInclude Include="cUnit.h" />
     <ClInclude Include="cXLoader.h" />
     <ClInclude Include="D3DX_Base.h" />
     <ClInclude Include="iMap.h" />
@@ -135,6 +136,7 @@
     <ClCompile Include="cSpriteManager.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
     <ClCompile Include="cTimeManager.cpp" />
+    <ClCompile Include="cUnit.cpp" />
     <ClCompile Include="cXLoader.cpp" />
     <ClCompile Include="D3DX_Base.cpp" />
     <ClCompile Include="iMap.cpp" />

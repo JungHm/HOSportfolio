@@ -6,7 +6,6 @@ class cCamera;
 class cObjLoader;
 class cGroup;
 class cObjMap;
-class cAseNode;
 class cXLoader;
 
 class cMainMenu : public iScene
@@ -16,13 +15,12 @@ private:
 	cGrid*		m_pGrid;
 	cCamera*	m_pCamera;
 	cObjLoader*		m_pObjLoader;
-	cObjMap*		m_pObjMap;
-	cXLoader*		m_pX;
-	//cAseNode*		m_pRootNode;
+	
+	cXLoader*		m_pAba;
 
 	std::vector<cGroup*>	m_vecGroup;
 	std::vector<ST_PT_VERTEXT>	m_vecTriVertex;
-	std::vector<ST_PNT_VERTEXT>	m_vecFbxVertex;
+
 	LPDIRECT3DTEXTURE9		m_pD3DTexture;
 	LPDIRECT3DTEXTURE9		m_pD3DTexture1;
 	LPD3DXFONT				m_pFont;
@@ -38,6 +36,5 @@ public:
 	void RenderObjFile();
 	void SetLight();
 
-	void LoadSurface();
 };
 

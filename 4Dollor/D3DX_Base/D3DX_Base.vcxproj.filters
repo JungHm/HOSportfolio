@@ -28,6 +28,9 @@
     <Filter Include="XFile">
       <UniqueIdentifier>{2621d4e7-078c-427e-8b3d-a2b5b80c6561}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UNIT">
+      <UniqueIdentifier>{30d792b0-8fa8-4847-9d31-d82c3c1962df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -120,6 +123,9 @@
     <ClInclude Include="cAllocateHierarchy.h">
       <Filter>XFile</Filter>
     </ClInclude>
+    <ClInclude Include="cUnit.h">
+      <Filter>UNIT</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -176,9 +182,6 @@
     <ClCompile Include="cKeyManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="cMainGame.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="cMainMenu.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
@@ -199,6 +202,12 @@
     </ClCompile>
     <ClCompile Include="cAllocateHierarchy.cpp">
       <Filter>XFile</Filter>
+    </ClCompile>
+    <ClCompile Include="cUnit.cpp">
+      <Filter>UNIT</Filter>
+    </ClCompile>
+    <ClCompile Include="cMainGame.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

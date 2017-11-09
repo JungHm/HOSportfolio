@@ -1,40 +1,43 @@
 #pragma once
-struct D3DXFRAME_DERIVED : public D3DXFRAME    //프레임노드로부터 상속받되 부모의 변환행렬들을 가지게 된다
+
+using namespace std;
+class cMtlTex;
+struct ST_BONE : public D3DXFRAME
 {
-	D3DXMATRIXA16        CombinedTransformationMatrix; //축적된 부모들의 변환행렬
+	D3DXMATRIXA16 matWorldTM; //각 Bone의 월드 매트릭스. D3DXFRAME안에는 변환매트릭스(Local?)만 있음.
 };
-struct D3DXMESHCONTAINER_DERIVED : public D3DXMESHCONTAINER //메시 컨테이너로부터 상속받고, 텍스쳐, 속성테이블, 뼈결합 등등을 가진다
+
+struct ST_BONE_MESH : public D3DXMESHCONTAINER
 {
-	LPDIRECT3DTEXTURE9*  ppTextures;       // array of textures, entries are NULL if no texture specified   
-										   // SkinMesh info             
-	LPD3DXMESH           pOrigMesh;    //원본 메시
-	LPD3DXATTRIBUTERANGE pAttributeTable;  //속성 테이블
-	DWORD                NumAttributeGroups; //속성 그룹의 수
-	DWORD                NumInfl;    //이 디바이스가 블랜딩할수 있는 최대 갯수
-	LPD3DXBUFFER         pBoneCombinationBuf; //본 콤비네이션 버퍼
-	D3DXMATRIX**         ppBoneMatrixPtrs;  //프레임에 저정되어있는 변환 매트릭스배열들의 포인터
-	D3DXMATRIX*          pBoneOffsetMatrices; //본의 위치를 담아둘 매트릭스 배열의 포인터
-	DWORD                NumPaletteEntries;  //행렬 팔레트 엔트리(nonindexed에선 사용안됨)
-	bool                 UseSoftwareVP;   //소프트웨어 버텍스 프로세싱을 사용하는가
-	DWORD                iAttributeSW;     // used to denote the split between SW and HW if necessary for non-indexed skinning
+	DWORD					numSubset; //메쉬를 이루는 폴리곤 마다 재질이 다른경우 같은 재질을 사용하는 폴리곤 끼리 set로 묶어서 렌더시 재질설정.
+	std::vector<cMtlTex*>	vecMtlTex; //재질과 재질에 상응하는 텍스쳐를 담고있는 cMtlTex 클래스를 재질 갯수만큼 생성. 벡터로 보관.
+	LPD3DXMESH				pOrigMesh; //원본 메쉬
+	D3DXMATRIX**			ppBoneMatrixPtrs; // 이 메쉬에 영향을 주는 프레임들의 월드매트릭스 포인터 '배열'
+	D3DXMATRIXA16*			pBoneOffsetMatrices; //원본 메쉬를 로컬스페이스로 보내는 매트릭스들? NodeTM역행렬?
+	D3DXMATRIXA16*          pCurrentBoneMatrices;	// 각 본의 계산된 월드매트릭스
 };
+
 class cAllocateHierarchy : public ID3DXAllocateHierarchy
 {
 public:
 	cAllocateHierarchy();
 	~cAllocateHierarchy();
 
-	HRESULT CreateFrame(LPCSTR Name, LPD3DXFRAME *ppNewFrame);
-	HRESULT CreateMeshContainer(
-		LPCSTR Name,           //메시 컨테이너의 이름
-		CONST D3DXMESHDATA *pMeshData,       //메시 데이터
-		CONST D3DXMATERIAL *pMaterials,       //재질 정보
-		CONST D3DXEFFECTINSTANCE *pEffectInstances,    //이펙트
-		DWORD NumMaterials,          //재질 수
-		CONST DWORD *pAdjacency,        //인접정보 포인터
-		LPD3DXSKININFO pSkinInfo,        //스키닝정보
-		LPD3DXMESHCONTAINER *ppNewMeshContainer);    //반환할 메시컨테이너의 주소
+	STDMETHOD(CreateFrame)(THIS_ LPCSTR Name, LPD3DXFRAME *ppNewFrame) override;
 
-	HRESULT DestroyFrame(LPD3DXFRAME pFrameToFree);
-	HRESULT DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase);
+	STDMETHOD(CreateMeshContainer(
+		THIS_ LPCSTR Name,
+		CONST D3DXMESHDATA* pMeshData,
+		CONST D3DXMATERIAL* pMaterials,
+		CONST D3DXEFFECTINSTANCE* pEffectInstance,
+		DWORD NumMaterials,
+		CONST DWORD* pAdjacency,
+		LPD3DXSKININFO pSkinInfo,
+		LPD3DXMESHCONTAINER* ppNewMeshContainer));
+
+	STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pFrameToFree);
+
+	STDMETHOD(DestroyMeshContainer)(THIS_ LPD3DXMESHCONTAINER pMeshContainerToFree);
+
 };
+

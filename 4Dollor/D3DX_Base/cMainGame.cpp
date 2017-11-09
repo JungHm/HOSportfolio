@@ -10,10 +10,10 @@ cMainGame::cMainGame()
 
 cMainGame::~cMainGame()
 {
-	g_Scene->Destroy();
 	g_pSprite->Destroy();
 	g_pTextureManager->Destroy();
 	g_pObjectManager->Destroy();
+	g_Scene->Destroy();
 	g_pDeviceManager->Destroy();
 }
 
