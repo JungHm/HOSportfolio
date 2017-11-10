@@ -103,6 +103,7 @@
     <ClInclude Include="cObjMap.h" />
     <ClInclude Include="cSceneManager.h" />
     <ClInclude Include="cSpriteManager.h" />
+    <ClInclude Include="cTessadar.h" />
     <ClInclude Include="cTextureManager.h" />
     <ClInclude Include="cTimeManager.h" />
     <ClInclude Include="cUnit.h" />
@@ -134,6 +135,7 @@
     <ClCompile Include="cObjMap.cpp" />
     <ClCompile Include="cSceneManager.cpp" />
     <ClCompile Include="cSpriteManager.cpp" />
+    <ClCompile Include="cTessadar.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
     <ClCompile Include="cTimeManager.cpp" />
     <ClCompile Include="cUnit.cpp" />

@@ -4,11 +4,10 @@ class cAllocateHierarchy;
 
 enum CharState
 {
-	IDLE,
-	FIRE,
-	FIREPOST,
-	SELECT,
-	RELOAD
+	ATTACK,
+	SPELL,
+	STAND,
+	WALK,
 };
 
 
@@ -22,13 +21,10 @@ private:
 
 	cAllocateHierarchy* m_pAlloc;
 	LPD3DXFRAME					m_pFrameRoot;
-	LPD3DXFRAME					m_pFrameRootOrigin;
-	wstring						m_sPath = wstring(L"Zealot/zealot.X");
+	wstring						m_sPath = wstring(L"Tassadar/Tassadar.X");
 	LPD3DXANIMATIONCONTROLLER	m_pAnimControl;
 
 	/*LPD3DXMESH					m_pMesh;*/
-	LPD3DXBUFFER				m_pBuffer;
-	vector<LPDIRECT3DTEXTURE9>	m_vecTexture;
 	float						m_ft;
 
 	D3DXMATRIXA16 matT, matR;
@@ -38,9 +34,9 @@ private:
 
 	double m_dTimeCurrent;
 
-	DWORD dwFire, dwReload, dwIdle, dwFirePost, dwSelect;
+	DWORD dwAttack, dwSpell, dwWalk, dwStand;//, dwSelect;
 
-	CharState m_State;
+	int m_State;
 
 public:
 	cXLoader();

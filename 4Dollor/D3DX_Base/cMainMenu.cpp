@@ -2,8 +2,6 @@
 #include "cMainMenu.h"
 #include "cGrid.h"
 #include "cCamera.h"
-#include "cObjLoader.h"
-#include "cGroup.h"
 #include "cXLoader.h"
 
 
@@ -11,9 +9,6 @@ cMainMenu::cMainMenu()
 	: m_pGrid(NULL)
 	, m_pCamera(NULL)
 	, m_pD3DTexture(NULL)
-	, m_pFont(NULL)
-	, m_pObjLoader(NULL)
-	//, m_pRootNode(NULL)
 {
 }
 
@@ -21,16 +16,7 @@ cMainMenu::cMainMenu()
 cMainMenu::~cMainMenu()
 {
 	SAFE_DELETE(m_pGrid);
-	SAFE_DELETE(m_pObjLoader);
 	SAFE_RELEASE(m_pD3DTexture);
-		SAFE_RELEASE(m_pD3DTexture1);
-	SAFE_RELEASE(m_pFont);
-
-	for each (auto p in m_vecGroup)
-	{
-		SAFE_RELEASE(p);
-	}
-	m_vecGroup.clear();
 
 	//m_pRootNode->Destroy();
 }
@@ -66,15 +52,6 @@ void cMainMenu::Update()
 
 void cMainMenu::Render()
 {
-	/*RECT rc;
-	SetRect(&rc, 100, 100, 200, 200);
-	std::string s = "이것이 굴림체다";
-	m_pFont->DrawTextA(NULL, s.c_str(), strlen(s.c_str()), &rc,
-	DT_LEFT | DT_TOP | DT_NOCLIP,
-	D3DCOLOR_XRGB(255, 255, 255));*/
-
-
-
 	g_pSprite->BeginScene();
 	g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
 	g_pSprite->End();
@@ -83,20 +60,6 @@ void cMainMenu::Render()
 		m_pGrid->Render();
 	m_pAba->Render();
 
-}
-
-void cMainMenu::RenderObjFile()
-{
-	D3DXMATRIXA16 matWorld, matS, matR;
-	D3DXMatrixScaling(&matS, 0.06f, 0.06f, 0.06f);
-	D3DXMatrixRotationX(&matR, -D3DX_PI / 2.0f);
-	matWorld = matS * matR;
-	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
-
-	for each (auto p in m_vecGroup)
-	{
-		p->Render();
-	}
 }
 
 void cMainMenu::SetLight()
