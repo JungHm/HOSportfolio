@@ -4,7 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # User-specific files
-*/.vs/
+*4Dollor/.vs/
+*MapTool/.vs/
 *.suo
 *.user
 *.userosscache
