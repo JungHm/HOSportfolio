@@ -13,6 +13,7 @@ cMapTool::cMapTool()
 	, m_pObjLoader(NULL)
 	, m_vObjPos(0.0f, 0.0f, 0.0f)
 	, m_isPicking(false)
+	, m_isAllocate(false)
 {
 }
 
@@ -33,7 +34,7 @@ void cMapTool::ObjLoaderTestSetup()
 	m_pGrid->Setup("Grid", "field.png", 80, 160, 1.0f);
 
 	m_pObjLoader = new cObjLoader;
-	m_pObjMesh = m_pObjLoader->LoadMesh(m_vecObjMtlTex, "obj", "Storm_Building_WinterCrest_Gate_00_Sc2.obj");
+	m_pObjMesh = m_pObjLoader->LoadMesh(m_vecObjMtlTex, "obj", "Storm_Building_KingsCrest_ManaWell_Sc2.obj");
 }
 
 void cMapTool::ObjLoaderTestRender()
@@ -65,14 +66,25 @@ void cMapTool::ObjPicking(LPARAM lParam)
 	cPicking cRay = cPicking::CalcWorldSpace(LOWORD(lParam), HIWORD(lParam));
 	D3DXVECTOR3 vOutPos;
 
-	for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
+	if (!m_isAllocate)
 	{
-		m_isPicking = cRay.IntersectTri(m_pGrid->GetPicVertex()[i].p, m_pGrid->GetPicVertex()[i + 1].p, m_pGrid->GetPicVertex()[i + 2].p, vOutPos);
-
-		if (m_isPicking)
+		for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
 		{
-			m_vObjPos = vOutPos;
-			break;
+			m_isPicking = cRay.IntersectTri(m_pGrid->GetPicVertex()[i].p, m_pGrid->GetPicVertex()[i + 1].p, m_pGrid->GetPicVertex()[i + 2].p, vOutPos);
+
+			if (m_isPicking)
+			{
+				m_vObjPos = vOutPos;
+				break;
+			}
 		}
+	}
+
+	if (KEY->isOnceKeyDown(VK_LBUTTON))
+	{
+		m_isAllocate = true;
+		m_isPicking = false;
+
+		//m_vObjPos = vOutPos;
 	}
 }

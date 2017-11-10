@@ -348,7 +348,7 @@ LPD3DXMESH cObjLoader::LoadMesh(OUT vector<cMtlTex*>& vecMtlTex, IN char * szFol
 
 	// 빈 매쉬 생성
 	LPD3DXMESH pMesh = NULL;
-	D3DXCreateMeshFVF(vecAttrBuf.size(), vecVertex.size(), D3DXMESH_MANAGED, ST_PNT_VERTEXT::FVF, g_pD3DDevice, &pMesh);
+	D3DXCreateMeshFVF(vecAttrBuf.size(), vecVertex.size(), D3DXMESH_MANAGED | D3DXMESH_32BIT, ST_PNT_VERTEXT::FVF, g_pD3DDevice, &pMesh);
 
 	// 버텍스 버퍼
 	ST_PNT_VERTEXT* pV = NULL;
@@ -357,7 +357,7 @@ LPD3DXMESH cObjLoader::LoadMesh(OUT vector<cMtlTex*>& vecMtlTex, IN char * szFol
 	pMesh->UnlockVertexBuffer();
 
 	// 인덱스 버퍼
-	WORD* pI = NULL;
+	DWORD* pI = NULL;
 	pMesh->LockIndexBuffer(0, (LPVOID*)&pI);
 	for (int i = 0; i < vecVertex.size(); i++)
 	{

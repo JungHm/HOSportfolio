@@ -56,7 +56,7 @@ bool cPicking::IntersectTri(IN D3DXVECTOR3 v0, IN D3DXVECTOR3 v1, IN D3DXVECTOR3
 	vOut = m_vPosition + (m_vDirection * f);
 
 	vPickingPos.x = vOut.x;
-	vPickingPos.y = 0.0f;
+	vPickingPos.y = vOut.y;
 	vPickingPos.z = vOut.z;
 
 	return b;

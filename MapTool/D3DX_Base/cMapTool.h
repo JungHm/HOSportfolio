@@ -10,7 +10,7 @@ class cMapTool
 private:
 	D3DXVECTOR3	m_vObjPos;
 	bool		m_isPicking;
-	bool		m_is
+	bool		m_isAllocate;
 
 private:
 	cGrid*		 m_pGrid;
