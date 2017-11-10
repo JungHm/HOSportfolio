@@ -1,14 +1,13 @@
 #include "stdafx.h"
 #include "cFontManager.h"
 
-
 cFontManager::cFontManager()
 {
 }
 
-
 cFontManager::~cFontManager()
 {
+
 }
 
 LPD3DXFONT cFontManager::GetFont(IN eFontType e, IN int nWidth, IN int nHeight)

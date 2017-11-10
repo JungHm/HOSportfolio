@@ -1,13 +1,12 @@
 #pragma once
 
-class cInfomation;
 class cMapTool;
 
 class cMainGame
 {
 private:
-	cInfomation* m_pInfo;
 	cMapTool*	 m_pMapTool;
+	
 
 public:
 	cMainGame();

@@ -79,8 +79,8 @@ public:\
 #define ONE_YPER   (float)ONE_YPIXEL / (float)MAX_YPIXEL
 
 // 윈도우 시작점, 사이즈
-#define WINSTARTX 300
-#define WINSTARTY 100
+#define WINSTARTX -7
+#define WINSTARTY -50
 #define WINSIZEX  1500	
 #define WINSIZEY  900
 
