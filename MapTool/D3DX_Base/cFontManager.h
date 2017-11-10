@@ -3,9 +3,9 @@
 
 class cFontManager
 {
-private:
 	SINGLETONE(cFontManager);
-	std::map<eFontType, LPD3DXFONT>	m_mapFont;
+private:
+	map<eFontType, LPD3DXFONT>	m_mapFont;
 
 public:
 	LPD3DXFONT GetFont(IN eFontType e, IN int nWidth, IN int nHeight);

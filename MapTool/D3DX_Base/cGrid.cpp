@@ -70,15 +70,9 @@ void cGrid::Setup(IN char* szFolder, IN char* szFile, IN int nRow, IN int nCol, 
 		}
 	}
 
-
 	D3DXVECTOR3 v1, v2, n;
 	for (int i = 0; i < m_nTotalIndex; i += 3)
 	{
-		// 그리드 버텍스 받아오기
-		m_vecGridVertex.push_back(m_vecVertex[m_vecIndex[i]].p);
-		m_vecGridVertex.push_back(m_vecVertex[m_vecIndex[i + 1]].p);
-		m_vecGridVertex.push_back(m_vecVertex[m_vecIndex[i + 2]].p);
-
 		// 법선 벡터 지정
 		v1 = m_vecVertex[m_vecIndex[i + 1]].p - m_vecVertex[m_vecIndex[i]].p;
 		v2 = m_vecVertex[m_vecIndex[i + 2]].p - m_vecVertex[m_vecIndex[i]].p;
@@ -123,7 +117,7 @@ void cGrid::Setup(IN char* szFolder, IN char* szFile, IN int nRow, IN int nCol, 
 	m_pMesh->GenerateAdjacency(0.0f, &vecAdj[0]);
 	m_pMesh->OptimizeInplace(D3DXMESHOPT_ATTRSORT | D3DXMESHOPT_COMPACT | D3DXMESHOPT_VERTEXCACHE, &vecAdj[0], 0, 0, 0);
 
-	// 중심 축
+	// 중심 축 지정
 	ST_PC_VERTEXT v;
 	v.c = D3DCOLOR_XRGB(255, 0, 0);
 	v.p = D3DXVECTOR3(m_fStartPosX, 0.0f, 0.0f);	m_vecAxis.push_back(v);
@@ -134,6 +128,23 @@ void cGrid::Setup(IN char* szFolder, IN char* szFile, IN int nRow, IN int nCol, 
 	v.c = D3DCOLOR_XRGB(0, 0, 255);
 	v.p = D3DXVECTOR3(0.0f, 0.0f, m_fStartPosZ);	m_vecAxis.push_back(v);
 	v.p = D3DXVECTOR3(0.0f, 0.0f, -m_fStartPosZ);	m_vecAxis.push_back(v);
+
+	// 피킹용 버텍스 지정
+	ST_PC_VERTEXT vp;
+	vp.c = D3DCOLOR_XRGB(255, 255, 255);
+	vp.p = D3DXVECTOR3(m_fStartPosX, 0.0f, m_fStartPosZ);
+	m_vecPicVertex.push_back(vp);
+	vp.p = D3DXVECTOR3(-m_fStartPosX, 0.0f, -m_fStartPosZ);
+	m_vecPicVertex.push_back(vp);
+	vp.p = D3DXVECTOR3(m_fStartPosX, 0.0f, -m_fStartPosZ);
+	m_vecPicVertex.push_back(vp);
+
+	vp.p = D3DXVECTOR3(m_fStartPosX, 0.0f, m_fStartPosZ);
+	m_vecPicVertex.push_back(vp);
+	vp.p = D3DXVECTOR3(-m_fStartPosX, 0.0f, m_fStartPosZ);
+	m_vecPicVertex.push_back(vp);
+	vp.p = D3DXVECTOR3(-m_fStartPosX, 0.0f, -m_fStartPosZ);
+	m_vecPicVertex.push_back(vp);
 }
 
 void cGrid::Render()
@@ -144,11 +155,13 @@ void cGrid::Render()
 	g_pD3DDevice->SetTexture(0, m_pTexTure);
 	m_pMesh->DrawSubset(0);
 
-	// 축 렌더
+	// 축, 피킹용 버텍스 렌더
 	if (KEY->m_isWireFrame)
 	{
 		g_pD3DDevice->SetTexture(0, NULL);
 		g_pD3DDevice->SetFVF(ST_PC_VERTEXT::FVF);
 		g_pD3DDevice->DrawPrimitiveUP(D3DPT_LINELIST, m_vecAxis.size() / 2, &m_vecAxis[0], sizeof(ST_PC_VERTEXT));
+		g_pD3DDevice->SetFVF(ST_PC_VERTEXT::FVF);
+		g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, m_vecPicVertex.size() / 3, &m_vecPicVertex[0], sizeof(ST_PC_VERTEXT));
 	}
 }

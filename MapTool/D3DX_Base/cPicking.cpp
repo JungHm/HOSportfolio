@@ -51,7 +51,15 @@ bool cPicking::IntersectTri(IN D3DXVECTOR3 v0, IN D3DXVECTOR3 v1, IN D3DXVECTOR3
 {
 	float u, v, f;
 	bool b = D3DXIntersectTri(&v0, &v1, &v2, &m_vPosition, &m_vDirection, &u, &v, &f);
-	vPickingPos = m_vPosition + (m_vDirection * f);
+	D3DXVECTOR3 vOut;
+
+	vOut = m_vPosition + (m_vDirection * f);
+
+	vPickingPos.x = vOut.x;
+	vPickingPos.y = 0.0f;
+	vPickingPos.z = vOut.z;
 
 	return b;
 }
+
+
