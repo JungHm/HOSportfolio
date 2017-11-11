@@ -3,7 +3,7 @@
 
 class cGrid;
 class cCamera;
-class cXLoader;
+class cTessadar;
 
 class cMainMenu : public iScene
 {
@@ -11,8 +11,7 @@ private:
 	std::vector<ST_PC_VERTEXT>	m_vecVertex;
 	cGrid*		m_pGrid;
 	cCamera*	m_pCamera;
-	
-	cXLoader*		m_pAba;
+	cTessadar*	m_pTessadar;
 
 	LPDIRECT3DTEXTURE9		m_pD3DTexture;
 public:

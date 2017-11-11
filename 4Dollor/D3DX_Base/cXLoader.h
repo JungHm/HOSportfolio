@@ -13,7 +13,10 @@ enum CharState
 
 class cXLoader
 {
+
 private:
+	std::map<int, cXLoader*> m_pXfile;
+
 	LPD3DXMESH m_pMesh; //Mesh 객체
 	D3DMATERIAL9* m_pMtl; //Mesh에서 사용할 재질.
 	LPDIRECT3DTEXTURE9* m_pTexture;//Mesh에서 사용할 텍스쳐.
@@ -40,16 +43,26 @@ private:
 
 public:
 	cXLoader();
+	~cXLoader();
+
+	void Destroy();
+	
+
 	HRESULT InitGeometry();
+
+	void XfileLoad(IN wstring m_sPath);
+
 	void SetUp();
 	void Update();
 	void Render();
 
-	void SetupWorldMatrix(D3DXFRAME* pFrame, D3DXMATRIXA16* pmatParent);
+	//void SetupWorldMatrix(D3DXFRAME* pFrame, D3DXMATRIXA16* pmatParent);
 	void SetupBoneMatrixPtrs(D3DXFRAME* pFrame);
 	void UpdateSkinnedMesh(D3DXFRAME* pFrame);
 	void RecursiveFrameRender(D3DXFRAME* pParent, D3DXMATRIXA16* pParentWorldTM);
 
-	~cXLoader();
+public:
+	LPD3DXANIMATIONCONTROLLER getAnimCtrl() { return m_pAnimControl; }
+
 };
 

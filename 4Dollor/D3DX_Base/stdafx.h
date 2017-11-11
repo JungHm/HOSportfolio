@@ -99,4 +99,4 @@ struct ST_PNT_VERTEXT
 #include "cCamera.h"
 #include "cSceneManager.h"
 #include "cFontManager.h"
-#include "cXLoader.h"
+#include "cXFileManager.h"

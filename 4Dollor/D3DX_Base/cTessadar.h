@@ -2,15 +2,14 @@
 class cTessadar
 {
 private:
-	LPD3DXMESH m_pMesh; //Mesh 객체
-	D3DMATERIAL9* m_pMtl; //Mesh에서 사용할 재질.
-	LPDIRECT3DTEXTURE9* m_pTexture;//Mesh에서 사용할 텍스쳐.
-	DWORD m_NumMtl;//Mesh에서 사용중인 재질의 개수.
-
-	cAllocateHierarchy* m_pAlloc;
-	LPD3DXFRAME					m_pFrameRoot;
+	enum CharState
+	{
+		ATTACK,
+		SPELL,
+		STAND,
+		WALK,
+	};
 	wstring						m_sPath = wstring(L"Tassadar/Tassadar.X");
-	LPD3DXANIMATIONCONTROLLER	m_pAnimControl;
 
 	/*LPD3DXMESH					m_pMesh;*/
 	float						m_ft;
@@ -22,11 +21,20 @@ private:
 
 	double m_dTimeCurrent;
 
-	DWORD dwAttack, dwSpell, dwWalk, dwStand;//, dwSelect;
+	DWORD dwAttack, dwSpell, dwWalk, dwStand;
 
 	int m_State;
+	int xKey;
 public:
 	cTessadar();
 	~cTessadar();
+
+	void AnimSetUp();
+	void SetUp();
+	void Update();
+	void Render();
+
+	void ChangeAni();
+
 };
 
