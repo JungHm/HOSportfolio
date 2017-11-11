@@ -13,9 +13,11 @@ private:
 	bitset<KEYMAX> _keyUp;
 	bitset<KEYMAX> _keyDown;
 
+
 public:
 	HRESULT init();
 	void release();
+	bool m_isWireFrame;
 
 	//키가 한번만 눌렷냐?
 	bool isOnceKeyDown(int key);
@@ -25,5 +27,7 @@ public:
 	bool isStayKeyDown(int key);
 	//토글키냐?(캡스락,넘버락)
 	bool isToggleKey(int key);
+	// 와이어 프레임 
+	void WireFrame();
 };
 

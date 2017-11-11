@@ -65,6 +65,14 @@ public:\
 		}\
 	}
 
+// 텍스쳐 비율
+#define MAX_XPIXEL   1187
+#define MAX_YPIXEL   601
+#define ONE_XPIXEL   MAX_XPIXEL / 160
+#define ONE_YPIXEL   MAX_YPIXEL / 80
+#define ONE_XPER   (float)ONE_XPIXEL / (float)MAX_XPIXEL
+#define ONE_YPER   (float)ONE_YPIXEL / (float)MAX_YPIXEL
+
 struct ST_PC_VERTEXT
 {
 	D3DXVECTOR3	p;
