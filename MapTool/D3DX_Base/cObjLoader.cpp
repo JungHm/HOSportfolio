@@ -260,7 +260,7 @@ void cObjLoader::LoadSurface(OUT std::vector<D3DXVECTOR3>& vecSurface,
 	}
 }
 
-LPD3DXMESH cObjLoader::LoadMesh(OUT vector<cMtlTex*>& vecMtlTex, IN char * szFolder, IN char * szFile)
+LPD3DXMESH cObjLoader::LoadMesh(OUT vector<cMtlTex*>& vecMtlTex, IN char * szFolder, IN string szFile)
 {
 	vector<D3DXVECTOR3> vecV;
 	vector<D3DXVECTOR2> vecVT;

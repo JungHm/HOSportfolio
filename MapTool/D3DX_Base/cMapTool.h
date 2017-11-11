@@ -8,24 +8,28 @@ class cMtlTex;
 class cMapTool
 {
 private:
-	D3DXVECTOR3	m_vObjPos;
-	bool		m_isPicking;
-	bool		m_isAllocate;
+	cGrid*			m_pGrid;
+	cInfomation*	m_pInfo;
+	cObjLoader*		m_pObjLoader;
+	map<int, vector<cMtlTex*>>	 m_mapObjMtlTex;
 
 private:
-	cGrid*		 m_pGrid;
-	cInfomation* m_pInfo;
-	cObjLoader*		 m_pObjLoader;
-	LPD3DXMESH		 m_pObjMesh;
-	vector<cMtlTex*> m_vecObjMtlTex;
+	OBJECT		m_sObj;
+	LPD3DXMESH	m_pObjMesh[OBJNUM];	  // 매쉬로 생성
+	int			m_nIndex;			  // 인덱스
+	bool		m_isPicking;		  // 피킹 중인 상태
+	bool		m_isAllocate;		  // 배치 상태
 
 public:
 	cMapTool();
 	~cMapTool();
 
-	void ObjLoaderTestSetup();
-	void ObjLoaderTestRender();
+	void Setup();
+	void Update();
+	void Render();
 
-	void ObjPicking(LPARAM lParam);
+	void SetUpObj();
+	void ObjPicking(IN UINT message, IN WPARAM wParam, IN LPARAM lParam);
+	void ObjSelect();
 };
 

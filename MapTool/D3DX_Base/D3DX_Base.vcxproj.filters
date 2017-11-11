@@ -43,6 +43,9 @@
     <Filter Include="Picking">
       <UniqueIdentifier>{2d5ff53c-9dfb-41c1-a8ac-f0fe60ca8901}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SaveLoad">
+      <UniqueIdentifier>{eabb5f91-6ba7-43d2-b8e2-8b7c8c43ffa9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -168,6 +171,9 @@
     <ClInclude Include="cMapTool.h">
       <Filter>MapTool</Filter>
     </ClInclude>
+    <ClInclude Include="cSaveLoad.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cCube.cpp">
@@ -280,6 +286,9 @@
     </ClCompile>
     <ClCompile Include="cMapTool.cpp">
       <Filter>MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="cSaveLoad.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

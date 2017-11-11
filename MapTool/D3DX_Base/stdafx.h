@@ -5,7 +5,7 @@
 
 #pragma once
 // 콘솔 창 사용
-#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+//#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
 #include "targetver.h"
 
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용은 Windows 헤더에서 제외합니다.
@@ -140,6 +140,28 @@ enum CAMMODE
 {
 	BASE, WORLD
 };
+
+enum OBJECTKIND
+{
+	GATE, WELL, OBJNUM
+};
+
+typedef struct tagObject
+{
+	OBJECTKIND		eKind;			// 종류
+	LPD3DXMESH		pMesh;			// 매쉬
+	string			sFileName[OBJNUM]; // 파일 이름
+
+	D3DXMATRIXA16	matWorld;		// 월드
+
+	D3DXMATRIXA16	matScal;		// 스케일링
+	D3DXMATRIXA16	matRotY;		// 로테이션 Y
+	D3DXMATRIXA16	matTrans;		// 트랜스 레이션
+
+	D3DXVECTOR3		vScaling;		// 스케일일 값
+	float			fAngleY;		// 로테이션 Y값
+	D3DXVECTOR3		vPosition;		// 로테이션 값
+} OBJECT;
 
 #include "cCamera.h"
 #include "cObject.h"
