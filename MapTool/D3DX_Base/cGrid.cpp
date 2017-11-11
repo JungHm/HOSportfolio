@@ -149,6 +149,8 @@ void cGrid::Setup(IN char* szFolder, IN char* szFile, IN int nRow, IN int nCol, 
 
 void cGrid::Render()
 {
+	g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
+
 	// ±×¸®µå ·»´õ
 	g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
 	g_pD3DDevice->SetMaterial(&m_mtl);

@@ -143,25 +143,8 @@ enum CAMMODE
 
 enum OBJECTKIND
 {
-	GATE, WELL, OBJNUM
+	GATE, WELL, FOUNTAIN, OBJNUM
 };
-
-typedef struct tagObject
-{
-	OBJECTKIND		eKind;			// 종류
-	LPD3DXMESH		pMesh;			// 매쉬
-	string			sFileName[OBJNUM]; // 파일 이름
-
-	D3DXMATRIXA16	matWorld;		// 월드
-
-	D3DXMATRIXA16	matScal;		// 스케일링
-	D3DXMATRIXA16	matRotY;		// 로테이션 Y
-	D3DXMATRIXA16	matTrans;		// 트랜스 레이션
-
-	D3DXVECTOR3		vScaling;		// 스케일일 값
-	float			fAngleY;		// 로테이션 Y값
-	D3DXVECTOR3		vPosition;		// 로테이션 값
-} OBJECT;
 
 #include "cCamera.h"
 #include "cObject.h"
@@ -172,3 +155,18 @@ typedef struct tagObject
 #include "cTextureManager.h"
 #include "cFontManager.h"
 #include "cKeyManager.h"
+#include "cMtlTex.h"
+
+typedef struct tagObject
+{
+	LPD3DXMESH		pMesh;			// 매쉬
+	string			sFileName;		// 파일 이름
+	D3DXMATRIXA16	matWorld;		// 월드
+	D3DXMATRIXA16	matScal;		// 스케일링
+	D3DXMATRIXA16	matRotY;		// 로테이션 Y
+	D3DXMATRIXA16	matTrans;		// 트랜스 레이션
+	D3DXVECTOR3		vScaling;		// 스케일일 값
+	float			fAngleY;		// 로테이션 Y값
+	D3DXVECTOR3		vPosition;		// 로테이션 값
+	vector<cMtlTex*>	vecMtlTex;
+} OBJECT;
