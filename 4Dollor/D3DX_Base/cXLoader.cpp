@@ -117,7 +117,7 @@ void cXLoader::XfileLoad(IN wstring m_sPath)
 		} //animation Track 비활성화.
 		m_pAnimControl->SetTrackEnable(0, TRUE);
 
-		SAFE_DELETE(m_pAlloc);
+		//SAFE_DELETE(m_pAlloc);
 }
 
 //void cXLoader::SetUp()

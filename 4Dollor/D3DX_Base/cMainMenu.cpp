@@ -15,10 +15,7 @@ cMainMenu::cMainMenu()
 
 cMainMenu::~cMainMenu()
 {
-	SAFE_DELETE(m_pGrid);
-	SAFE_RELEASE(m_pD3DTexture);
-	XFile->Destroy();
-	//m_pRootNode->Destroy();
+
 }
 
 void cMainMenu::SetUp()
@@ -38,6 +35,10 @@ void cMainMenu::SetUp()
 
 void cMainMenu::Destroy()
 {
+	SAFE_DELETE(m_pGrid);
+	SAFE_RELEASE(m_pD3DTexture);
+	XFile->Destroy();
+	//m_pRootNode->Destroy();
 }
 
 void cMainMenu::Update()

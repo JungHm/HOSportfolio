@@ -25,6 +25,8 @@ private:
 
 	int m_State;
 	int xKey;
+
+
 public:
 	cTessadar();
 	~cTessadar();
