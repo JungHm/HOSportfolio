@@ -12,7 +12,7 @@ cMainGame::~cMainGame()
 {
 	g_pSprite->Destroy();
 	g_pTextureManager->Destroy();
-	g_pObjectManager->Destroy();
+	//g_pObjectManager->Destroy();
 	g_Scene->Destroy();
 	g_pDeviceManager->Destroy();
 }
@@ -27,6 +27,7 @@ void cMainGame::Setup()
 
 	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
+
 
 void cMainGame::Update()
 {

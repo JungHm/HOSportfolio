@@ -89,11 +89,15 @@ void cTessadar::Update()
 	}
 	ChangeAni();
 	XFile->GetXFile(xKey)->Update();
+
+	
 }
 
 void cTessadar::Render()
 {
 	XFile->GetXFile(xKey)->Render();
+	D3DXMATRIXA16 matR; D3DXMatrixIdentity(&matR);
+
 }
 
 void cTessadar::ChangeAni()

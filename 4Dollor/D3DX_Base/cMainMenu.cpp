@@ -15,10 +15,7 @@ cMainMenu::cMainMenu()
 
 cMainMenu::~cMainMenu()
 {
-	SAFE_DELETE(m_pGrid);
-	SAFE_RELEASE(m_pD3DTexture);
-	XFile->Destroy();
-	//m_pRootNode->Destroy();
+
 }
 
 void cMainMenu::SetUp()
@@ -29,7 +26,7 @@ void cMainMenu::SetUp()
 	g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
 
 	m_pGrid = new cGrid;
-	m_pGrid->Setup();
+	m_pGrid->Setup("Grid", "field.png", 80, 160, 1.0f);
 
 	m_pTessadar = new cTessadar;
 	m_pTessadar->SetUp();
@@ -38,6 +35,10 @@ void cMainMenu::SetUp()
 
 void cMainMenu::Destroy()
 {
+	SAFE_DELETE(m_pGrid);
+	SAFE_RELEASE(m_pD3DTexture);
+	XFile->Destroy();
+	//m_pRootNode->Destroy();
 }
 
 void cMainMenu::Update()

@@ -27,7 +27,6 @@
 #include <d3dx9.h>
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
-#pragma comment(lib, "libfbxsdk-md.lib")
 extern HWND g_hWnd;
 
 #define SINGLETONE(class_name)	\
@@ -65,6 +64,14 @@ public:\
 			varName = var;\
 		}\
 	}
+
+// 텍스쳐 비율
+#define MAX_XPIXEL   1187
+#define MAX_YPIXEL   601
+#define ONE_XPIXEL   MAX_XPIXEL / 160
+#define ONE_YPIXEL   MAX_YPIXEL / 80
+#define ONE_XPER   (float)ONE_XPIXEL / (float)MAX_XPIXEL
+#define ONE_YPER   (float)ONE_YPIXEL / (float)MAX_YPIXEL
 
 struct ST_PC_VERTEXT
 {
