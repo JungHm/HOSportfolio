@@ -2,7 +2,7 @@
 #include "cMainMenu.h"
 #include "cGrid.h"
 #include "cCamera.h"
-#include "cXLoader.h"
+#include "cTessadar.h"
 
 
 cMainMenu::cMainMenu()
@@ -17,23 +17,22 @@ cMainMenu::~cMainMenu()
 {
 	SAFE_DELETE(m_pGrid);
 	SAFE_RELEASE(m_pD3DTexture);
-
+	XFile->Destroy();
 	//m_pRootNode->Destroy();
 }
 
 void cMainMenu::SetUp()
 {
 
-	
+
 	D3DXVECTOR2 temp;
 	g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
 
 	m_pGrid = new cGrid;
 	m_pGrid->Setup();
 
-	m_pAba = new cXLoader;
-	m_pAba->SetUp();
-
+	m_pTessadar = new cTessadar;
+	m_pTessadar->SetUp();
 
 }
 
@@ -47,7 +46,7 @@ void cMainMenu::Update()
 	{
 		g_Scene->ChangeScene("game");
 	}
-	m_pAba->Update();
+	m_pTessadar->Update();
 }
 
 void cMainMenu::Render()
@@ -58,7 +57,8 @@ void cMainMenu::Render()
 
 	if (m_pGrid)
 		m_pGrid->Render();
-	m_pAba->Render();
+
+	m_pTessadar->Render();
 
 }
 

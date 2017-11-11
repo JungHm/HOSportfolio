@@ -20,6 +20,22 @@ cXLoader::cXLoader()
 	m_State = STAND;
 }
 
+void cXLoader::Destroy()
+{
+	D3DXFrameDestroy(m_pFrameRoot, m_pAlloc);
+	//m_pAlloc->DestroyFrame(m_pFrame);
+	SAFE_DELETE(m_pAlloc);
+	SAFE_RELEASE(m_pMesh);
+
+	SAFE_DELETE(m_pMtl);
+	for (DWORD i = 0; i < m_NumMtl; i++)
+	{
+		SAFE_DELETE(m_pTexture[i]);
+
+	}
+	/*m_pMesh->Release();*/
+}
+
 HRESULT cXLoader::InitGeometry()
 {
 	LPD3DXBUFFER pMtlBuffer; //파일에서 불러온 재질정보 *임시로* 저장할 버퍼.
@@ -74,209 +90,94 @@ HRESULT cXLoader::InitGeometry()
 	return S_OK;
 }
 
-void cXLoader::SetUp()
+void cXLoader::XfileLoad(IN wstring m_sPath)
 {
-	m_pAlloc = new cAllocateHierarchy;
 
-	HRESULT hr = D3DXLoadMeshHierarchyFromX(m_sPath.c_str(),
-		D3DXMESH_MANAGED,
-		g_pD3DDevice,
-		m_pAlloc,
-		NULL,
-		&m_pFrameRoot,
-		&m_pAnimControl);
-	//assert(hr == S_OK);
-	D3DXMATRIX matW;
-	D3DXMatrixIdentity(&matW);
+		m_pAlloc = new cAllocateHierarchy;
 
-	D3DXMatrixTranslation(&matW, 1, 0, 0);
+		HRESULT hr = D3DXLoadMeshHierarchyFromX(m_sPath.c_str(),
+			D3DXMESH_MANAGED,
+			g_pD3DDevice,
+			m_pAlloc,
+			NULL,
+			&m_pFrameRoot,
+			&m_pAnimControl);
+		//assert(hr == S_OK);
+		D3DXMATRIX matW;
+		D3DXMatrixIdentity(&matW);
 
-	//SetupWorldMatrix(m_pFrameRoot, &matW);
-	SetupBoneMatrixPtrs((ST_BONE*)m_pFrameRoot);
+		D3DXMatrixTranslation(&matW, 0, 0, 0);
 
-	for (int i = 0; i < m_pAnimControl->GetMaxNumTracks(); i++)
-	{
-		m_pAnimControl->SetTrackEnable(i, TRUE);
-	} //animation Track 비활성화.
-	m_pAnimControl->SetTrackEnable(0, TRUE);
-	LPD3DXANIMATIONSET pAS;
+		//SetupWorldMatrix(m_pFrameRoot, &matW);
+		SetupBoneMatrixPtrs((ST_BONE*)m_pFrameRoot);
 
-	for (DWORD i = 0; i < m_pAnimControl->GetNumAnimationSets(); ++i)
-	{
-		m_pAnimControl->GetAnimationSet(i, &pAS);
-
-		if (!strncmp(pAS->GetName(), "Attack ", strlen(pAS->GetName())))
+		for (int i = 0; i < m_pAnimControl->GetMaxNumTracks(); i++)
 		{
-			dwAttack = i;
-		}
-		else if (!strncmp(pAS->GetName(), "Spell ", strlen(pAS->GetName())))
-		{
-			dwSpell = i;
-		}
-		else if (!strncmp(pAS->GetName(), "Stand ", strlen(pAS->GetName())))
-		{
-			dwStand = i;
-		}
-		else if (!strncmp(pAS->GetName(), "Walk ", strlen(pAS->GetName())))
-		{
-			dwWalk = i;
-		}
-	}
+			m_pAnimControl->SetTrackEnable(i, TRUE);
+		} //animation Track 비활성화.
+		m_pAnimControl->SetTrackEnable(0, TRUE);
 
-	m_pAnimControl->GetAnimationSet(dwAttack, &pAS);
-	m_pAnimControl->SetTrackAnimationSet(0, pAS);
-	m_pAnimControl->ResetTime();
+		SAFE_DELETE(m_pAlloc);
 }
+
+//void cXLoader::SetUp()
+//{
+//	m_pAlloc = new cAllocateHierarchy;
+//
+//	HRESULT hr = D3DXLoadMeshHierarchyFromX(m_sPath.c_str(),
+//		D3DXMESH_MANAGED,
+//		g_pD3DDevice,
+//		m_pAlloc,
+//		NULL,
+//		&m_pFrameRoot,
+//		&m_pAnimControl);
+//	//assert(hr == S_OK);
+//	D3DXMATRIX matW;
+//	D3DXMatrixIdentity(&matW);
+//
+//	D3DXMatrixTranslation(&matW, 0, 0, 0);
+//
+//	//SetupWorldMatrix(m_pFrameRoot, &matW);
+//	SetupBoneMatrixPtrs((ST_BONE*)m_pFrameRoot);
+//
+//	for (int i = 0; i < m_pAnimControl->GetMaxNumTracks(); i++)
+//	{
+//		m_pAnimControl->SetTrackEnable(i, TRUE);
+//	} //animation Track 비활성화.
+//	m_pAnimControl->SetTrackEnable(0, TRUE);
+//	LPD3DXANIMATIONSET pAS;
+//
+//	for (DWORD i = 0; i < m_pAnimControl->GetNumAnimationSets(); ++i)
+//	{
+//		m_pAnimControl->GetAnimationSet(i, &pAS);
+//
+//		if (!strncmp(pAS->GetName(), "Attack ", strlen(pAS->GetName())))
+//		{
+//			dwAttack = i;
+//		}
+//		else if (!strncmp(pAS->GetName(), "Spell ", strlen(pAS->GetName())))
+//		{
+//			dwSpell = i;
+//		}
+//		else if (!strncmp(pAS->GetName(), "Stand ", strlen(pAS->GetName())))
+//		{
+//			dwStand = i;
+//		}
+//		else if (!strncmp(pAS->GetName(), "Walk ", strlen(pAS->GetName())))
+//		{
+//			dwWalk = i;
+//		}
+//	}
+//
+//	m_pAnimControl->GetAnimationSet(dwAttack, &pAS);
+//	m_pAnimControl->SetTrackAnimationSet(0, pAS);
+//	m_pAnimControl->ResetTime();
+//}
 
 void cXLoader::Update()
 {
-	m_pAnimControl->AdvanceTime(m_dTimeCurrent, NULL);
-
-
-
-	//m_ft += 0.01f;
-	//if (m_State != ATTACK)
-	m_pAnimControl->AdvanceTime(0.018f, NULL);
-	double a = m_pAnimControl->GetTime();
-	LPD3DXANIMATIONSET pAS;
-	if (GetAsyncKeyState('1') & 0x8000)
-	{
-		m_State = dwAttack;
-	}
-	if (GetAsyncKeyState('2') & 0x8000)
-	{
-		m_State = dwSpell;
-	}
-	if (GetAsyncKeyState('3') & 0x8000)
-	{
-		m_State = dwStand;
-	}
-	if (GetAsyncKeyState('4') & 0x8000)
-	{
-		m_State = dwWalk;
-	}
-
-
-	LPD3DXANIMATIONSET pASCompare;
-	D3DXTRACK_DESC desc;
-	switch (m_State)
-	{
-	case ATTACK:
-		m_pAnimControl->GetAnimationSet(dwAttack, &pAS);
-		m_pAnimControl->GetTrackAnimationSet(0, &pASCompare);
-		if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
-		{
-			m_pAnimControl->GetTrackDesc(0, &desc);
-			if (desc.Position  > pAS->GetPeriod())
-			{
-				m_State = STAND;
-			}
-			//break;
-		}
-		else
-		{
-			m_pAnimControl->SetTrackAnimationSet(0, pAS);
-			m_pAnimControl->SetTrackPosition(0, 0);
-		}
-		break;
-
-	case SPELL:
-		m_pAnimControl->GetAnimationSet(dwSpell, &pAS);
-		m_pAnimControl->GetTrackAnimationSet(0, &pASCompare);
-		if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
-		{
-			m_pAnimControl->GetTrackDesc(0, &desc);
-			if (desc.Position  > pAS->GetPeriod())
-			{
-				m_State = STAND;
-				//// 트랙에 있는 키값들을 모두 없앤다.
-				//m_pAnimControl->UnkeyAllTrackEvents(dwCurr);
-				//m_pAnimControl->UnkeyAllTrackEvents(dwNew);
-				//// 현재트랙을 사용하지않는 키값을 현재시간으로부터 블랜딩이 끝나는 시간에 넣는다.
-				//m_pAnimControl->KeyTrackEnable(dwCurr, FALSE, m_dTimeCurrent + 0.018f);
-				//// 현재트랙의 속도를 현재시간부로 0으로 점차 선형보간한다.
-				//m_pAnimControl->KeyTrackSpeed(dwCurr, 0.0f, m_dTimeCurrent, 0.018f, D3DXTRANSITION_LINEAR);
-				//// 현재트랙의 가중치를 현재시간부로 0으로 점차 선형보간한다.
-				//m_pAnimControl->KeyTrackWeight(dwCurr, 0.0f, m_dTimeCurrent, 0.018f, D3DXTRANSITION_LINEAR);
-				//// dwNewTrack을 사용한다.
-				//m_pAnimControl->SetTrackEnable(dwNew, TRUE);
-				//// 새로운트랙의 속도를 현재시간부로 1로 점차 선형보간한다.
-				//m_pAnimControl->KeyTrackSpeed(dwNew, 1.0f, m_dTimeCurrent, 0.018f, D3DXTRANSITION_LINEAR);
-				//// 새로운트랙의 가중치를 현재시간부로 1로 점차 선형보간한다.
-				//m_pAnimControl->KeyTrackWeight(dwNew, 1.0f, m_dTimeCurrent, 0.018f, D3DXTRANSITION_LINEAR);
-			}
-			//break;
-		}
-		else
-		{
-			m_pAnimControl->SetTrackAnimationSet(0, pAS);
-			m_pAnimControl->SetTrackPosition(0, 0);
-		}
-		break;
-
-	case STAND:
-		m_pAnimControl->GetAnimationSet(dwStand, &pAS);
-		m_pAnimControl->GetTrackAnimationSet(0, &pASCompare);
-		if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
-		{
-
-			break;
-		}
-		else
-		{
-			m_pAnimControl->SetTrackAnimationSet(0, pAS);
-			m_pAnimControl->SetTrackPosition(0, 0);
-		}
-		break;
-
-	case WALK:
-		m_pAnimControl->GetAnimationSet(dwWalk, &pAS);
-		m_pAnimControl->GetTrackAnimationSet(0, &pASCompare);
-		if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
-		{
-
-			break;
-		}
-		else
-		{
-			m_pAnimControl->SetTrackAnimationSet(0, pAS);
-			m_pAnimControl->SetTrackPosition(0, 0);
-		}
-		break;
-		//case SELECT:
-		//	m_pAnimControl->GetAnimationSet(dwSelect, &pAS);
-		//	m_pAnimControl->GetTrackAnimationSet(0, &pASCompare);
-		//	if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
-		//	{
-		//		m_pAnimControl->GetTrackDesc(0, &desc);
-		//		if (desc.Position + 0.2 >= pAS->GetPeriod())
-		//		{
-		//			m_State = IDLE;
-		//		}
-		//	}
-		//	else
-		//	{
-		//		m_pAnimControl->SetTrackAnimationSet(0, pAS);
-		//		m_pAnimControl->SetTrackPosition(0, 0);
-		//	}
-
-		//	break;
-	}
 
 	UpdateSkinnedMesh(m_pFrameRoot);
-	//LPD3DXANIMATIONSET pAS;
-	//D3DXTRACK_DESC test;
-
-	//m_pAnimControl->GetTrackDesc(dwCurr, &test);
-	//a = test.Position;
-	//m_pAnimControl->GetAnimationSet(3, &pAS);
-	//if (test.Position > pAS->GetPeriod())
-	//{
-	//	/*m_pAnimControl->SetTrackEnable(0, TRUE);*/
-	//	m_pAnimControl->GetAnimationSet(1, &pAS);
-	//	m_pAnimControl->SetTrackAnimationSet(0, pAS);
-	//	/*m_pAnimControl->SetTrackEnable(1, FALSE);*/
-	//}
 }
 
 
@@ -302,25 +203,25 @@ void cXLoader::Render()
 
 }
 
-void cXLoader::SetupWorldMatrix(D3DXFRAME * pFrame, D3DXMATRIXA16 * pmatParent)
-{
-	ST_BONE* pBone = (ST_BONE*)pFrame;
-	pBone->matWorldTM = pBone->TransformationMatrix;
-
-	if (pmatParent)
-	{
-		pBone->matWorldTM *= (*pmatParent);
-	}
-
-	if (pBone->pFrameSibling)
-	{
-		SetupWorldMatrix(pBone->pFrameSibling, pmatParent);
-	}
-	if (pBone->pFrameFirstChild)
-	{
-		SetupWorldMatrix(pBone->pFrameFirstChild, &pBone->matWorldTM);
-	}
-}
+//void cXLoader::SetupWorldMatrix(D3DXFRAME * pFrame, D3DXMATRIXA16 * pmatParent)
+//{
+//	ST_BONE* pBone = (ST_BONE*)pFrame;
+//	pBone->matWorldTM = pBone->TransformationMatrix;
+//
+//	if (pmatParent)
+//	{
+//		pBone->matWorldTM *= (*pmatParent);
+//	}
+//
+//	if (pBone->pFrameSibling)
+//	{
+//		SetupWorldMatrix(pBone->pFrameSibling, pmatParent);
+//	}
+//	if (pBone->pFrameFirstChild)
+//	{
+//		SetupWorldMatrix(pBone->pFrameFirstChild, &pBone->matWorldTM);
+//	}
+//}
 
 void cXLoader::SetupBoneMatrixPtrs(D3DXFRAME * pFrame)
 {
@@ -457,16 +358,5 @@ void cXLoader::RecursiveFrameRender(D3DXFRAME * pParent, D3DXMATRIXA16 * pParent
 
 cXLoader::~cXLoader()
 {
-	D3DXFrameDestroy(m_pFrameRoot, m_pAlloc);
-	//m_pAlloc->DestroyFrame(m_pFrame);
-	SAFE_DELETE(m_pAlloc);
-	SAFE_RELEASE(m_pMesh);
-
-	SAFE_DELETE(m_pMtl);
-	for (DWORD i = 0; i < m_NumMtl; i++)
-	{
-		SAFE_DELETE(m_pTexture[i]);
-
-	}
-	/*m_pMesh->Release();*/
+	
 }

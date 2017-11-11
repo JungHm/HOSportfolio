@@ -69,15 +69,6 @@
     <ClInclude Include="iMap.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Asciitok.h">
-      <Filter>ASELoader</Filter>
-    </ClInclude>
-    <ClInclude Include="cAseLoader.h">
-      <Filter>ASELoader</Filter>
-    </ClInclude>
-    <ClInclude Include="cAseNode.h">
-      <Filter>ASELoader</Filter>
-    </ClInclude>
     <ClInclude Include="cCamera.h">
       <Filter>Manager</Filter>
     </ClInclude>
@@ -129,6 +120,9 @@
     <ClInclude Include="cTessadar.h">
       <Filter>UNIT</Filter>
     </ClInclude>
+    <ClInclude Include="cXFileManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -157,12 +151,6 @@
     </ClCompile>
     <ClCompile Include="iMap.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="cAseLoader.cpp">
-      <Filter>ASELoader</Filter>
-    </ClCompile>
-    <ClCompile Include="cAseNode.cpp">
-      <Filter>ASELoader</Filter>
     </ClCompile>
     <ClCompile Include="cDeviceManager.cpp">
       <Filter>Manager</Filter>
@@ -214,6 +202,9 @@
     </ClCompile>
     <ClCompile Include="cTessadar.cpp">
       <Filter>UNIT</Filter>
+    </ClCompile>
+    <ClCompile Include="cXFileManager.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
