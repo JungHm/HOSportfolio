@@ -11,9 +11,9 @@ cMainGame::cMainGame()
 cMainGame::~cMainGame()
 {
 	SAFE_DELETE(m_pMapTool);
-
-	g_pTextureManager->Destroy();
+	
 	g_pFontManager->Destroy();
+	g_pTextureManager->Destroy();
 	g_pObjectManager->Destroy();
 	g_pDeviceManager->Destroy();
 }

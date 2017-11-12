@@ -1,40 +1,27 @@
 #include "stdafx.h"
 #include "cMapTool.h"
-
 #include "cGrid.h"
 #include "cInfomation.h"
-#include "cObjLoader.h"
-#include "cMtlTex.h"
 #include "cPicking.h"
 #include "cSaveLoad.h"
 
 cMapTool::cMapTool()
 	: m_pGrid(NULL)
 	, m_pInfo(NULL)
-	, m_pObjLoader(NULL)
 	, m_isPicking(false)
 	, m_isAllocate(false)
 {
-	m_sFileName[GATE] = "Storm_Building_WinterCrest_Gate_00_Sc2.obj";
-	m_sFileName[WELL] = "Storm_Building_KingsCrest_ManaWell_Sc2.obj";
-	m_sFileName[FOUNTAIN] = "Storm_Doodad_KingsCrest_Fountain_00.obj";
 }
 
 cMapTool::~cMapTool()
 {	
 	SAFE_DELETE(m_pGrid);
 	SAFE_DELETE(m_pInfo);
-	SAFE_DELETE(m_pObjLoader);
 	SAFE_DELETE(m_pSaveLoad);
 	SAFE_RELEASE(m_sObj.pMesh);
-	
-	for (int i = 0; i < OBJNUM; i++)
-	{
-		//SAFE_RELEASE(m_pObjMesh[i]);
-	}
 }
 
-void cMapTool::SetUpObj()
+void cMapTool::SetUpPickingObj()
 {
 	ZeroMemory(&m_sObj, sizeof(OBJECT));
 
@@ -48,7 +35,9 @@ void cMapTool::SetUpObj()
 
 void cMapTool::Setup()
 {
-	SetUpObj();
+	SetUpPickingObj();
+
+	m_pSaveLoad = new cSaveLoad;
 
 	m_pInfo = new cInfomation;
 	m_pInfo->Setup();
@@ -56,14 +45,8 @@ void cMapTool::Setup()
 	m_pGrid = new cGrid;
 	m_pGrid->Setup("Grid", "field.png", 80, 160, 1.0f);
 
-	m_pObjLoader = new cObjLoader;
-	m_pObjMesh[GATE] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[GATE], "obj", m_sFileName[GATE]);
-	m_pObjMesh[WELL] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[WELL], "obj", m_sFileName[WELL]);
-	m_pObjMesh[FOUNTAIN] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[FOUNTAIN], "obj", m_sFileName[FOUNTAIN]);
-	
-	m_pSaveLoad = new cSaveLoad;
-	
-	m_sObj.pMesh = m_pObjMesh[m_nIndex];
+	m_sObj.pMesh = m_pSaveLoad->GetObjMesh(m_nIndex);
+	m_sObj.nKind = m_nIndex;
 
 	g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR);
@@ -75,7 +58,7 @@ void cMapTool::Setup()
 
 void cMapTool::Update()
 {
-	ObjSelect();
+	ObjAllocate();
 }
 
 void cMapTool::Render()
@@ -93,10 +76,10 @@ void cMapTool::Render()
 	g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(60, 255, 255, 255));
 	g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_sObj.matWorld);
 
-	for (size_t i = 0; i < m_mapObjMtlTex[m_nIndex].size(); i++)
+	for (size_t i = 0; i < m_pSaveLoad->GetMapObjMtltex(m_nIndex).size(); i++)
 	{
-		g_pD3DDevice->SetMaterial(&m_mapObjMtlTex[m_nIndex][i]->GetMaterial());
-		g_pD3DDevice->SetTexture(0, m_mapObjMtlTex[m_nIndex][i]->GetTexture());
+		g_pD3DDevice->SetMaterial(&m_pSaveLoad->GetMapObjMtltex(m_nIndex)[i]->GetMaterial());
+		g_pD3DDevice->SetTexture(0, m_pSaveLoad->GetMapObjMtltex(m_nIndex)[i]->GetTexture());
 		m_sObj.pMesh->DrawSubset(i);
 	}
 }
@@ -138,14 +121,6 @@ void cMapTool::ObjPicking(IN UINT message, IN WPARAM wParam, IN LPARAM lParam)
 		break;
 	}
 
-	if (KEY->isOnceKeyDown(VK_LBUTTON))
-	{
-		m_pSaveLoad->CreateObj(m_sObj.pMesh, m_mapObjMtlTex[m_nIndex], m_sFileName[m_nIndex], m_sObj.vScaling, m_sObj.vPosition, m_sObj.fAngleY);
-	}
-}
-
-void cMapTool::ObjSelect()
-{
 	if (KEY->isOnceKeyDown('Q')) m_sObj.fAngleY -= D3DX_PI / 4;
 	if (KEY->isOnceKeyDown('E')) m_sObj.fAngleY += D3DX_PI / 4;
 
@@ -161,6 +136,22 @@ void cMapTool::ObjSelect()
 		m_nIndex++;
 	}
 
-	m_sObj.pMesh = m_pObjMesh[m_nIndex];
+	m_sObj.pMesh = m_pSaveLoad->GetObjMesh(m_nIndex);
+	m_sObj.nKind = m_nIndex;
 }
 
+void cMapTool::ObjAllocate()
+{
+	if (KEY->isOnceKeyDown(VK_LBUTTON))
+		m_pSaveLoad->CreateObj(
+			m_nIndex, 
+			m_sObj.pMesh, 
+			m_pSaveLoad->GetMapObjMtltex(m_nIndex), 
+			m_pSaveLoad->GetFileName(m_nIndex), 
+			m_sObj.vScaling, m_sObj.vPosition, 
+			m_sObj.fAngleY);
+	
+	if (KEY->isOnceKeyDown('F')) m_pSaveLoad->RemoveObj();
+	if (KEY->isOnceKeyDown('G')) m_pSaveLoad->SaveFieldObj();
+	if (KEY->isOnceKeyDown('H')) m_pSaveLoad->LoadFieldObj();
+}

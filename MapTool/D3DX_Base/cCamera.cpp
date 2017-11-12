@@ -8,7 +8,7 @@ cCamera::cCamera()
 	, m_fCameraDistance(100.0f)
 	, m_isLButtonDown(false)
 	, m_vCamRotAngle(0, 0, 0)
-	, m_eCamMode(BASE)
+	, m_eCamMode(WORLD)
 	, m_vMove(0, 0, 0)
 {
 	m_ptPrevMouse.x = 0;

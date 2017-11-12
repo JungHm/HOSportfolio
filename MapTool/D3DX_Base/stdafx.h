@@ -159,6 +159,7 @@ enum OBJECTKIND
 
 typedef struct tagObject
 {
+	int				nKind;			// 종류
 	LPD3DXMESH		pMesh;			// 매쉬
 	string			sFileName;		// 파일 이름
 	D3DXMATRIXA16	matWorld;		// 월드
