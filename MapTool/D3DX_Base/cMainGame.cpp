@@ -42,7 +42,7 @@ void cMainGame::Update()
 
 void cMainGame::Render()
 {
-	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(125, 125, 125), 1.0f, 0);
+	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	g_pD3DDevice->BeginScene();
 	//===================================
 	if (m_pMapTool) m_pMapTool->Render();
@@ -55,5 +55,5 @@ void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	g_cCamera->WndProc(hWnd, message, wParam, lParam);
 
-	if (m_pMapTool) m_pMapTool->ObjPicking(message, wParam, lParam);
+	if (m_pMapTool && !g_cCamera->GetButtonDown()) m_pMapTool->ObjPicking(message, wParam, lParam);
 }

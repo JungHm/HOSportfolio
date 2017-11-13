@@ -71,10 +71,10 @@ public:\
 	}
 
 // 텍스쳐 비율
-#define MAX_XPIXEL   1187
-#define MAX_YPIXEL   601
-#define ONE_XPIXEL   MAX_XPIXEL / 160
-#define ONE_YPIXEL   MAX_YPIXEL / 80
+#define MAX_XPIXEL   1041	
+#define MAX_YPIXEL   652
+#define ONE_XPIXEL   MAX_XPIXEL / 280
+#define ONE_YPIXEL   MAX_YPIXEL / 160
 #define ONE_XPER   (float)ONE_XPIXEL / (float)MAX_XPIXEL
 #define ONE_YPER   (float)ONE_YPIXEL / (float)MAX_YPIXEL
 
@@ -143,7 +143,11 @@ enum CAMMODE
 
 enum OBJECTKIND
 {
-	GATE, WELL, FOUNTAIN, OBJNUM
+	GATE_01,
+	WALL_01, WALL_02, WALL_03, WALL_04, WALL_05,
+	FOUNTAIN, 
+	ROCK_00, ROCK_04, ROCK_05,
+	OBJNUM
 };
 
 #include "cCamera.h"

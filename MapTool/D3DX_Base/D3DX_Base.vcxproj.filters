@@ -46,6 +46,9 @@
     <Filter Include="SaveLoad">
       <UniqueIdentifier>{eabb5f91-6ba7-43d2-b8e2-8b7c8c43ffa9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MapToolUI">
+      <UniqueIdentifier>{07b0f007-2917-4e11-b835-9d32c2433bfe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -172,7 +175,7 @@
       <Filter>MapTool</Filter>
     </ClInclude>
     <ClInclude Include="cSaveLoad.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>SaveLoad</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -288,7 +291,7 @@
       <Filter>MapTool</Filter>
     </ClCompile>
     <ClCompile Include="cSaveLoad.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>SaveLoad</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

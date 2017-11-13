@@ -37,7 +37,7 @@ LPD3DXFONT cFontManager::GetFont(IN eFontType e, IN int nWidth, IN int nHeight)
 	{
 		fd.Width = nWidth;
 		fd.Height = nHeight;
-		fd.Weight = FW_MEDIUM;
+		fd.Weight = FW_HEAVY;
 		fd.Italic = false;
 		fd.CharSet = DEFAULT_CHARSET;
 		fd.OutputPrecision = OUT_DEFAULT_PRECIS;

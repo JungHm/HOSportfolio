@@ -43,7 +43,7 @@ void cMapTool::Setup()
 	m_pInfo->Setup();
 
 	m_pGrid = new cGrid;
-	m_pGrid->Setup("Grid", "field.png", 80, 160, 1.0f);
+	m_pGrid->Setup("Grid", "field2.png", 160, 280, 2.0f);
 
 	m_sObj.pMesh = m_pSaveLoad->GetObjMesh(m_nIndex);
 	m_sObj.nKind = m_nIndex;
@@ -59,6 +59,11 @@ void cMapTool::Setup()
 void cMapTool::Update()
 {
 	ObjAllocate();
+	m_pInfo->SetScale(m_sObj.vScaling.x);
+	m_pInfo->SetRotation(m_sObj.fAngleY);
+	m_pInfo->SetPosition(m_sObj.vPosition);
+	m_pInfo->SetObjKind(m_sObj.nKind);
+	m_pInfo->SetObjNum(m_pSaveLoad->GetFieldObjNum());
 }
 
 void cMapTool::Render()
@@ -73,7 +78,7 @@ void cMapTool::Render()
 
 	m_sObj.matWorld = m_sObj.matScal * m_sObj.matRotY * m_sObj.matTrans;
 
-	g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(60, 255, 255, 255));
+	g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(130, 255, 255, 255));
 	g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_sObj.matWorld);
 
 	for (size_t i = 0; i < m_pSaveLoad->GetMapObjMtltex(m_nIndex).size(); i++)
@@ -114,15 +119,15 @@ void cMapTool::ObjPicking(IN UINT message, IN WPARAM wParam, IN LPARAM lParam)
 	case WM_MOUSEWHEEL:
 		if (KEY->isStayKeyDown('R'))
 		{
-			m_sObj.vScaling.x += (GET_WHEEL_DELTA_WPARAM(wParam) / 100000.f);
-			m_sObj.vScaling.y += (GET_WHEEL_DELTA_WPARAM(wParam) / 100000.f);
-			m_sObj.vScaling.z += (GET_WHEEL_DELTA_WPARAM(wParam) / 100000.f);
+			m_sObj.vScaling.x += (GET_WHEEL_DELTA_WPARAM(wParam) / 30000.f);
+			m_sObj.vScaling.y += (GET_WHEEL_DELTA_WPARAM(wParam) / 30000.f);
+			m_sObj.vScaling.z += (GET_WHEEL_DELTA_WPARAM(wParam) / 30000.f);
 		}
 		break;
 	}
 
-	if (KEY->isOnceKeyDown('Q')) m_sObj.fAngleY -= D3DX_PI / 4;
-	if (KEY->isOnceKeyDown('E')) m_sObj.fAngleY += D3DX_PI / 4;
+	if (KEY->isOnceKeyDown('Q')) m_sObj.fAngleY -= D3DX_PI / 18;
+	if (KEY->isOnceKeyDown('E')) m_sObj.fAngleY += D3DX_PI / 18;
 
 	if (KEY->isOnceKeyDown('X'))
 	{

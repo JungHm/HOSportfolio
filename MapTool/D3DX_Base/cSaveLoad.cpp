@@ -5,14 +5,30 @@
 cSaveLoad::cSaveLoad()
 	: m_pObjLoader(NULL)
 {
-	m_sFileName[GATE] = "Storm_Building_WinterCrest_Gate_00_Sc2.obj";
-	m_sFileName[WELL] = "Storm_Building_KingsCrest_ManaWell_Sc2.obj";
-	m_sFileName[FOUNTAIN] = "Storm_Doodad_KingsCrest_Fountain_00.obj";
+	// 원하는 obj파일 지정
+	m_sFileName[GATE_01] = "Gate_01.obj";
+	m_sFileName[WALL_01] = "Wall_01.obj";
+	m_sFileName[WALL_02] = "Wall_02.obj";
+	m_sFileName[WALL_03] = "Wall_03.obj";
+	m_sFileName[WALL_04] = "Wall_04.obj";
+	m_sFileName[WALL_05] = "Wall_05.obj";	
+	m_sFileName[FOUNTAIN] = "Storm_Doodad_KingsCrest_Fountain_00.obj";	
+	m_sFileName[ROCK_00] = "Storm_Doodad_KingsCrest_BigChunkyRock_00_Sc2.obj";
+	m_sFileName[ROCK_04] = "Storm_Doodad_KingsCrest_BigChunkyRock_04_Sc2.obj";
+	m_sFileName[ROCK_05] = "Storm_Doodad_KingsCrest_BigChunkyRock_05_Sc2.obj";
 
+	// 지정한 obj파일 매쉬 생성 후 저장
 	m_pObjLoader = new cObjLoader;
-	m_pObjMesh[GATE] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[GATE], "obj", m_sFileName[GATE]);
-	m_pObjMesh[WELL] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[WELL], "obj", m_sFileName[WELL]);
-	m_pObjMesh[FOUNTAIN] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[FOUNTAIN], "obj", m_sFileName[FOUNTAIN]);
+	m_pObjMesh[GATE_01] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[GATE_01], "obj", m_sFileName[GATE_01]);
+	m_pObjMesh[WALL_01] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[WALL_01], "obj", m_sFileName[WALL_01]);
+	m_pObjMesh[WALL_02] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[WALL_02], "obj", m_sFileName[WALL_02]);
+	m_pObjMesh[WALL_03] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[WALL_03], "obj", m_sFileName[WALL_03]);
+	m_pObjMesh[WALL_04] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[WALL_04], "obj", m_sFileName[WALL_04]);
+	m_pObjMesh[WALL_05] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[WALL_05], "obj", m_sFileName[WALL_05]);	
+	m_pObjMesh[FOUNTAIN] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[FOUNTAIN], "obj", m_sFileName[FOUNTAIN]);	
+	m_pObjMesh[ROCK_00] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[ROCK_00], "obj", m_sFileName[ROCK_00]);
+	m_pObjMesh[ROCK_04] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[ROCK_04], "obj", m_sFileName[ROCK_04]);
+	m_pObjMesh[ROCK_05] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[ROCK_05], "obj", m_sFileName[ROCK_05]);
 }
 
 cSaveLoad::~cSaveLoad()

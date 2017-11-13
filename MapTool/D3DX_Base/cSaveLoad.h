@@ -21,6 +21,8 @@ public:
 	LPD3DXMESH GetObjMesh(int nIndex) { return m_pObjMesh[nIndex]; }
 	// 도더 된 메터리얼, 텍스처 정보 Get
 	vector<cMtlTex*> GetMapObjMtltex(int nkey) { return m_mapObjMtlTex[nkey]; }
+	// 필드에 배치된 오브젝트 개수 Get
+	int GetFieldObjNum() { return m_vecFieldObj.size(); }
 	// 필드에 배치되는 오브젝트 생성 함수
 	void CreateObj(IN int nKind, IN LPD3DXMESH pMesh, IN vector<cMtlTex*> vecValue, IN string sFileName, IN D3DXVECTOR3 vScal, IN D3DXVECTOR3 vPos, IN float fAngleY);
 	// 배치 된 오브젝터 랜더
