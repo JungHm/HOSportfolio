@@ -93,31 +93,31 @@ HRESULT cXLoader::InitGeometry()
 void cXLoader::XfileLoad(IN wstring m_sPath)
 {
 
-		m_pAlloc = new cAllocateHierarchy;
+	m_pAlloc = new cAllocateHierarchy;
 
-		HRESULT hr = D3DXLoadMeshHierarchyFromX(m_sPath.c_str(),
-			D3DXMESH_MANAGED,
-			g_pD3DDevice,
-			m_pAlloc,
-			NULL,
-			&m_pFrameRoot,
-			&m_pAnimControl);
-		//assert(hr == S_OK);
-		D3DXMATRIX matW;
-		D3DXMatrixIdentity(&matW);
+	HRESULT hr = D3DXLoadMeshHierarchyFromX(m_sPath.c_str(),
+		D3DXMESH_MANAGED,
+		g_pD3DDevice,
+		m_pAlloc,
+		NULL,
+		&m_pFrameRoot,
+		&m_pAnimControl);
+	//assert(hr == S_OK);
+	D3DXMATRIX matW;
+	D3DXMatrixIdentity(&matW);
 
-		D3DXMatrixTranslation(&matW, 0, 0, 0);
+	D3DXMatrixTranslation(&matW, 0, 0, 0);
 
-		//SetupWorldMatrix(m_pFrameRoot, &matW);
-		SetupBoneMatrixPtrs((ST_BONE*)m_pFrameRoot);
+	//SetupWorldMatrix(m_pFrameRoot, &matW);
+	SetupBoneMatrixPtrs((ST_BONE*)m_pFrameRoot);
 
-		for (int i = 0; i < m_pAnimControl->GetMaxNumTracks(); i++)
-		{
-			m_pAnimControl->SetTrackEnable(i, TRUE);
-		} //animation Track 비활성화.
-		m_pAnimControl->SetTrackEnable(0, TRUE);
+	for (int i = 0; i < m_pAnimControl->GetMaxNumTracks(); i++)
+	{
+		m_pAnimControl->SetTrackEnable(i, TRUE);
+	} //animation Track 비활성화.
+	m_pAnimControl->SetTrackEnable(0, TRUE);
 
-		//SAFE_DELETE(m_pAlloc);
+	//SAFE_DELETE(m_pAlloc);
 }
 
 //void cXLoader::SetUp()
@@ -181,47 +181,18 @@ void cXLoader::Update()
 }
 
 
-void cXLoader::Render()
+void cXLoader::Render(D3DXMATRIXA16& matRT)
 {
-	/*for (DWORD i = 0; i < m_NumMtl; i++)
-	{
-	g_pD3DDevice->SetMaterial(&m_pMtl[i]);
-	g_pD3DDevice->SetTexture(0, m_pTexture[i]);
-	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, true);
-	g_pD3DDevice->SetFVF(ST_PNT_VERTEXT::FVF);
-	m_pMesh->DrawSubset(i);
-	}*/
-
-	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, true);
+	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	g_pD3DDevice->LightEnable(0, true);
 	//g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	//D3DXMatrixIdentity(&m_pFrame->TransformationMatrix);
 	ST_BONE* pBone = (ST_BONE*)m_pFrameRoot;
-	RecursiveFrameRender(pBone, &pBone->matWorldTM);
+	RecursiveFrameRender(pBone, &pBone->matWorldTM, matRT);
 	g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	//g_pD3DDevice->SetTexture(0, nullptr);
 
 }
-
-//void cXLoader::SetupWorldMatrix(D3DXFRAME * pFrame, D3DXMATRIXA16 * pmatParent)
-//{
-//	ST_BONE* pBone = (ST_BONE*)pFrame;
-//	pBone->matWorldTM = pBone->TransformationMatrix;
-//
-//	if (pmatParent)
-//	{
-//		pBone->matWorldTM *= (*pmatParent);
-//	}
-//
-//	if (pBone->pFrameSibling)
-//	{
-//		SetupWorldMatrix(pBone->pFrameSibling, pmatParent);
-//	}
-//	if (pBone->pFrameFirstChild)
-//	{
-//		SetupWorldMatrix(pBone->pFrameFirstChild, &pBone->matWorldTM);
-//	}
-//}
 
 void cXLoader::SetupBoneMatrixPtrs(D3DXFRAME * pFrame)
 {
@@ -316,7 +287,7 @@ void cXLoader::UpdateSkinnedMesh(D3DXFRAME * pFrame)
 
 }
 
-void cXLoader::RecursiveFrameRender(D3DXFRAME * pParent, D3DXMATRIXA16 * pParentWorldTM)
+void cXLoader::RecursiveFrameRender(D3DXFRAME * pParent, D3DXMATRIXA16 * pParentWorldTM, D3DXMATRIXA16& matRT)
 {
 	ST_BONE* pBone = (ST_BONE*)pParent;
 	D3DXMATRIXA16 matW;
@@ -324,10 +295,9 @@ void cXLoader::RecursiveFrameRender(D3DXFRAME * pParent, D3DXMATRIXA16 * pParent
 
 	matW = pParent->TransformationMatrix * (*pParentWorldTM);
 
-	D3DXMATRIXA16 matWorld, matS, matT; D3DXMatrixIdentity(&matS); D3DXMatrixIdentity(&matT);
-	D3DXMatrixScaling(&matS, 0.03f, 0.03f, 0.03f);
-	D3DXMatrixTranslation(&matT, 0, 0, 0);
-	matWorld = matS*matT;
+	D3DXMATRIXA16 matWorld, matS; D3DXMatrixIdentity(&matS);
+	D3DXMatrixScaling(&matS, 0.05f, 0.05f, 0.05f);
+	matWorld = matS*matRT;
 	pBone->matWorldTM = matW;
 
 	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
@@ -347,16 +317,16 @@ void cXLoader::RecursiveFrameRender(D3DXFRAME * pParent, D3DXMATRIXA16 * pParent
 	//자식
 	if (pParent->pFrameFirstChild)
 	{
-		RecursiveFrameRender(pParent->pFrameFirstChild, &pBone->matWorldTM);
+		RecursiveFrameRender(pParent->pFrameFirstChild, &pBone->matWorldTM, matRT);
 	}
 	//형제
 	if (pParent->pFrameSibling)
 	{
-		RecursiveFrameRender(pParent->pFrameSibling, pParentWorldTM);
+		RecursiveFrameRender(pParent->pFrameSibling, pParentWorldTM, matRT);
 	}
 }
 
 cXLoader::~cXLoader()
 {
-	
+
 }

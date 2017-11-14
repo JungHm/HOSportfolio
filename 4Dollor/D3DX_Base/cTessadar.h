@@ -1,13 +1,19 @@
 #pragma once
-class cTessadar
+#include "cCharacter.h"
+
+class cTessadar : public cCharacter
 {
 private:
 	enum CharState
 	{
 		ATTACK,
-		SPELL,
+		SPELL_Q,
+		SPELL_W,
+		SPELL_E,
+		SPELL_R,
 		STAND,
 		WALK,
+
 	};
 	wstring						m_sPath = wstring(L"Tassadar/Tassadar.X");
 
@@ -23,20 +29,19 @@ private:
 
 	DWORD dwAttack, dwSpell, dwWalk, dwStand;
 
-	int m_State;
+	//SYNTHESIZE(int, m_State, State);
+
 	int xKey;
 
 
 public:
 	cTessadar();
 	~cTessadar();
-
-	void AnimSetUp();
-	void SetUp();
-	void Update();
-	void Render();
-
-	void ChangeAni();
+	virtual void AnimSetUp() override;
+	virtual void SetUp()override;
+	virtual void Update()override;
+	virtual void Render(D3DXMATRIXA16& matRT)override;
+	virtual void ChangeAni()override;
 
 };
 

@@ -36,6 +36,11 @@ void cSceneManager::Render()
 	m_pScene[m_SceneName]->Render();
 }
 
+void cSceneManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	m_pScene[m_SceneName]->WndProc(hWnd, message, wParam, lParam);
+}
+
 void cSceneManager::AddScene(char * SceneName, iScene * pScene)
 {
 	if (m_pScene.find(SceneName) == m_pScene.end())

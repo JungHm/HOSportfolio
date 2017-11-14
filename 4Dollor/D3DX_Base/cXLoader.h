@@ -4,8 +4,12 @@ class cAllocateHierarchy;
 
 enum CharState
 {
+
 	ATTACK,
-	SPELL,
+	SPELL_Q,
+	SPELL_W,
+	SPELL_E,
+	SPELL_R,
 	STAND,
 	WALK,
 };
@@ -46,7 +50,7 @@ public:
 	~cXLoader();
 
 	void Destroy();
-	
+
 
 	HRESULT InitGeometry();
 
@@ -54,12 +58,13 @@ public:
 
 	void SetUp();
 	void Update();
-	void Render();
+	void Render(D3DXMATRIXA16& matRT);
 
 	//void SetupWorldMatrix(D3DXFRAME* pFrame, D3DXMATRIXA16* pmatParent);
 	void SetupBoneMatrixPtrs(D3DXFRAME* pFrame);
 	void UpdateSkinnedMesh(D3DXFRAME* pFrame);
-	void RecursiveFrameRender(D3DXFRAME* pParent, D3DXMATRIXA16* pParentWorldTM);
+	void RecursiveFrameRender(D3DXFRAME* pParent, D3DXMATRIXA16* pParentWorldTM, D3DXMATRIXA16& matRT);
+
 
 public:
 	LPD3DXANIMATIONCONTROLLER getAnimCtrl() { return m_pAnimControl; }
