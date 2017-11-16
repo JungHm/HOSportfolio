@@ -33,8 +33,6 @@ cSaveLoad::cSaveLoad()
 
 cSaveLoad::~cSaveLoad()
 {
-	SAFE_DELETE(m_pObjLoader);
-
 	for (int i = 0; i < OBJNUM; i++)
 	{
 		SAFE_RELEASE(m_pObjMesh[i]);
@@ -44,6 +42,8 @@ cSaveLoad::~cSaveLoad()
 	{
 		SAFE_RELEASE(m_vecFieldObj[i].pMesh);
 	}
+	
+	SAFE_DELETE(m_pObjLoader);
 }
 
 void cSaveLoad::CreateObj(IN int nKind, IN LPD3DXMESH pMesh, IN vector<cMtlTex*> vecValue, IN string sFileName, IN D3DXVECTOR3 vScal, IN D3DXVECTOR3 vPos, IN float fAngleY)
@@ -95,7 +95,6 @@ void cSaveLoad::CreateObjRender()
 void cSaveLoad::RemoveObj()
 {
 	if (m_vecFieldObj.size() == NULL) return;
-
 	m_vecFieldObj.pop_back();
 }
 
@@ -103,7 +102,7 @@ void cSaveLoad::SaveFieldObj()
 {
 	if (m_vecFieldObj.size() == NULL) return;
 
-	FILE* fp;
+	FILE* fp = NULL;
 	fopen_s(&fp, "SaveFieldObj/FieldObj.txt", "w");
 
 	for (unsigned int i = 0; i < m_vecFieldObj.size(); i++)
@@ -126,7 +125,7 @@ void cSaveLoad::LoadFieldObj()
 	int			nKind;
 	float		fAngleY;
 
-	FILE* fp;
+	FILE* fp = NULL;
 	fopen_s(&fp, "SaveFieldObj/FieldObj.txt", "r");
 
 	while (true)

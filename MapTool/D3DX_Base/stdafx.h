@@ -150,6 +150,15 @@ enum OBJECTKIND
 	OBJNUM
 };
 
+struct ST_UI_SIZE
+{
+	int nWidth;
+	int nHeight;
+
+	ST_UI_SIZE() : nWidth(0), nHeight(0) { }
+	ST_UI_SIZE(int _nWidth, int _nHeight) : nWidth(_nWidth), nHeight(_nHeight) { }
+};
+
 #include "cCamera.h"
 #include "cObject.h"
 #include "cGameObject.h"

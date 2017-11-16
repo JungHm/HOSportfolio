@@ -162,27 +162,27 @@ void cObjLoader::LoadMtlLib(char * szFolder, char * szMtlFile)
 			{
 				float r, g, b;
 				sscanf_s(szBuf, "%*s %f %f %f", &r, &g, &b);
-				m_mapMtlTex[sMtlName]->GetMaterial().Ambient.r = r;
-				m_mapMtlTex[sMtlName]->GetMaterial().Ambient.g = g;
-				m_mapMtlTex[sMtlName]->GetMaterial().Ambient.b = b;
+				m_mapMtlTex[sMtlName]->GetMaterial().Ambient.r = 1;
+				m_mapMtlTex[sMtlName]->GetMaterial().Ambient.g = 1;
+				m_mapMtlTex[sMtlName]->GetMaterial().Ambient.b = 1;
 				m_mapMtlTex[sMtlName]->GetMaterial().Ambient.a = 1.0f;
 			}
 			if (szBuf[1] == 'd')
 			{
 				float r, g, b;
 				sscanf_s(szBuf, "%*s %f %f %f", &r, &g, &b);
-				m_mapMtlTex[sMtlName]->GetMaterial().Diffuse.r = r;
-				m_mapMtlTex[sMtlName]->GetMaterial().Diffuse.g = g;
-				m_mapMtlTex[sMtlName]->GetMaterial().Diffuse.b = b;
+				m_mapMtlTex[sMtlName]->GetMaterial().Diffuse.r = 1;
+				m_mapMtlTex[sMtlName]->GetMaterial().Diffuse.g = 1;
+				m_mapMtlTex[sMtlName]->GetMaterial().Diffuse.b = 1;
 				m_mapMtlTex[sMtlName]->GetMaterial().Diffuse.a = 1.0f;
 			}
 			if (szBuf[1] == 's')
 			{
 				float r, g, b;
 				sscanf_s(szBuf, "%*s %f %f %f", &r, &g, &b);
-				m_mapMtlTex[sMtlName]->GetMaterial().Specular.r = r;
-				m_mapMtlTex[sMtlName]->GetMaterial().Specular.g = g;
-				m_mapMtlTex[sMtlName]->GetMaterial().Specular.b = b;
+				m_mapMtlTex[sMtlName]->GetMaterial().Specular.r = 1;
+				m_mapMtlTex[sMtlName]->GetMaterial().Specular.g = 1;
+				m_mapMtlTex[sMtlName]->GetMaterial().Specular.b = 1;
 				m_mapMtlTex[sMtlName]->GetMaterial().Specular.a = 1.0f;
 			}
 		}
@@ -319,7 +319,7 @@ LPD3DXMESH cObjLoader::LoadMesh(OUT vector<cMtlTex*>& vecMtlTex, IN char * szFol
 		}
 		else if (szBuf[0] == 'f')
 		{
-			int nIndex[3][3];
+			int nIndex[3][3];		
 			sscanf_s(szBuf, "%*s %d/%d/%d %d/%d/%d %d/%d/%d",
 				&nIndex[0][0], &nIndex[0][1], &nIndex[0][2],
 				&nIndex[1][0], &nIndex[1][1], &nIndex[1][2],

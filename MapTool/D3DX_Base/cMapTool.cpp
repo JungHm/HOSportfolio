@@ -4,10 +4,12 @@
 #include "cInfomation.h"
 #include "cPicking.h"
 #include "cSaveLoad.h"
+#include "cHeightMap.h"
 
 cMapTool::cMapTool()
 	: m_pGrid(NULL)
 	, m_pInfo(NULL)
+	, m_pHeightMap(NULL)
 	, m_isPicking(false)
 	, m_isAllocate(false)
 {
@@ -15,10 +17,11 @@ cMapTool::cMapTool()
 
 cMapTool::~cMapTool()
 {	
+	SAFE_RELEASE(m_sObj.pMesh);
 	SAFE_DELETE(m_pGrid);
 	SAFE_DELETE(m_pInfo);
+	SAFE_DELETE(m_pHeightMap);
 	SAFE_DELETE(m_pSaveLoad);
-	SAFE_RELEASE(m_sObj.pMesh);
 }
 
 void cMapTool::SetUpPickingObj()
@@ -36,6 +39,9 @@ void cMapTool::SetUpPickingObj()
 void cMapTool::Setup()
 {
 	SetUpPickingObj();
+
+	m_pHeightMap = new cHeightMap;
+	m_pHeightMap->Setup("HeightMap/", "backGround.raw", "HeightMap.jpg");
 
 	m_pSaveLoad = new cSaveLoad;
 
@@ -58,7 +64,8 @@ void cMapTool::Setup()
 
 void cMapTool::Update()
 {
-	ObjAllocate();
+	if (m_isAllocate) ObjAllocate();
+
 	m_pInfo->SetScale(m_sObj.vScaling.x);
 	m_pInfo->SetRotation(m_sObj.fAngleY);
 	m_pInfo->SetPosition(m_sObj.vPosition);
@@ -71,21 +78,25 @@ void cMapTool::Render()
 	if (m_pInfo) m_pInfo->Render();
 	if (m_pGrid) m_pGrid->Render();
 	if (m_pSaveLoad) m_pSaveLoad->CreateObjRender();
-
-	D3DXMatrixScaling(&m_sObj.matScal, m_sObj.vScaling.x, m_sObj.vScaling.y, m_sObj.vScaling.z);
-	D3DXMatrixRotationY(&m_sObj.matRotY, m_sObj.fAngleY);
-	D3DXMatrixTranslation(&m_sObj.matTrans, m_sObj.vPosition.x, m_sObj.vPosition.y, m_sObj.vPosition.z);
-
-	m_sObj.matWorld = m_sObj.matScal * m_sObj.matRotY * m_sObj.matTrans;
-
-	g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(130, 255, 255, 255));
-	g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_sObj.matWorld);
-
-	for (size_t i = 0; i < m_pSaveLoad->GetMapObjMtltex(m_nIndex).size(); i++)
+	if (m_pHeightMap) m_pHeightMap->Render();
+	
+	if (m_isAllocate)
 	{
-		g_pD3DDevice->SetMaterial(&m_pSaveLoad->GetMapObjMtltex(m_nIndex)[i]->GetMaterial());
-		g_pD3DDevice->SetTexture(0, m_pSaveLoad->GetMapObjMtltex(m_nIndex)[i]->GetTexture());
-		m_sObj.pMesh->DrawSubset(i);
+		D3DXMatrixScaling(&m_sObj.matScal, m_sObj.vScaling.x, m_sObj.vScaling.y, m_sObj.vScaling.z);
+		D3DXMatrixRotationY(&m_sObj.matRotY, m_sObj.fAngleY);
+		D3DXMatrixTranslation(&m_sObj.matTrans, m_sObj.vPosition.x, m_sObj.vPosition.y, m_sObj.vPosition.z);
+
+		m_sObj.matWorld = m_sObj.matScal * m_sObj.matRotY * m_sObj.matTrans;
+
+		g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(130, 255, 255, 255));
+		g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_sObj.matWorld);
+
+		for (size_t i = 0; i < m_pSaveLoad->GetMapObjMtltex(m_nIndex).size(); i++)
+		{
+			g_pD3DDevice->SetMaterial(&m_pSaveLoad->GetMapObjMtltex(m_nIndex)[i]->GetMaterial());
+			g_pD3DDevice->SetTexture(0, m_pSaveLoad->GetMapObjMtltex(m_nIndex)[i]->GetTexture());
+			m_sObj.pMesh->DrawSubset(i);
+		}
 	}
 }
 
@@ -97,7 +108,7 @@ void cMapTool::ObjPicking(IN UINT message, IN WPARAM wParam, IN LPARAM lParam)
 	switch (message)
 	{
 	case WM_MOUSEMOVE:
-		if (!m_isAllocate)
+		if (m_isAllocate)
 		{
 			for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
 			{

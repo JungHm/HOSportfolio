@@ -18,7 +18,7 @@ cPicking cPicking::CalcVeiwSpace(IN int nMouseX, IN int nMouseY)
 
 	D3DXMATRIXA16 matProj;
 	g_pD3DDevice->GetTransform(D3DTS_PROJECTION, &matProj);
-
+	
 	cPicking ray;
 	ray.m_vDirection.x = ((2.0f * nMouseX) / vp.Width - 1.0f) / matProj._11;
 	ray.m_vDirection.y = ((-2.0f * nMouseY) / vp.Height + 1.0f) / matProj._22;

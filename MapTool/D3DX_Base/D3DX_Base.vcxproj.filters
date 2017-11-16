@@ -49,6 +49,9 @@
     <Filter Include="MapToolUI">
       <UniqueIdentifier>{07b0f007-2917-4e11-b835-9d32c2433bfe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HeightMap">
+      <UniqueIdentifier>{2ffbc344-10f6-4743-8239-14fa2e6ca702}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -177,6 +180,21 @@
     <ClInclude Include="cSaveLoad.h">
       <Filter>SaveLoad</Filter>
     </ClInclude>
+    <ClInclude Include="cHeightMap.h">
+      <Filter>HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="cUIObject.h">
+      <Filter>MapToolUI</Filter>
+    </ClInclude>
+    <ClInclude Include="cUIButton.h">
+      <Filter>MapToolUI</Filter>
+    </ClInclude>
+    <ClInclude Include="cUIImageView.h">
+      <Filter>MapToolUI</Filter>
+    </ClInclude>
+    <ClInclude Include="cUIObjView.h">
+      <Filter>MapToolUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cCube.cpp">
@@ -292,6 +310,21 @@
     </ClCompile>
     <ClCompile Include="cSaveLoad.cpp">
       <Filter>SaveLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="cHeightMap.cpp">
+      <Filter>HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="cUIButton.cpp">
+      <Filter>MapToolUI</Filter>
+    </ClCompile>
+    <ClCompile Include="cUIObject.cpp">
+      <Filter>MapToolUI</Filter>
+    </ClCompile>
+    <ClCompile Include="cUIImageView.cpp">
+      <Filter>MapToolUI</Filter>
+    </ClCompile>
+    <ClCompile Include="cUIObjView.cpp">
+      <Filter>MapToolUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

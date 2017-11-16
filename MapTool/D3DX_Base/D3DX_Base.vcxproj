@@ -101,6 +101,7 @@
     <ClInclude Include="cGrid.h" />
     <ClInclude Include="cGroup.h" />
     <ClInclude Include="cHead.h" />
+    <ClInclude Include="cHeightMap.h" />
     <ClInclude Include="cInfomation.h" />
     <ClInclude Include="cInterpolation.h" />
     <ClInclude Include="cKeyManager.h" />
@@ -119,6 +120,10 @@
     <ClInclude Include="cSaveLoad.h" />
     <ClInclude Include="cTextureManager.h" />
     <ClInclude Include="cTimeManager.h" />
+    <ClInclude Include="cUIButton.h" />
+    <ClInclude Include="cUIImageView.h" />
+    <ClInclude Include="cUIObject.h" />
+    <ClInclude Include="cUIObjView.h" />
     <ClInclude Include="D3DX_Base.h" />
     <ClInclude Include="iMap.h" />
     <ClInclude Include="Resource.h" />
@@ -143,6 +148,7 @@
     <ClCompile Include="cGrid.cpp" />
     <ClCompile Include="cGroup.cpp" />
     <ClCompile Include="cHead.cpp" />
+    <ClCompile Include="cHeightMap.cpp" />
     <ClCompile Include="cInfomation.cpp" />
     <ClCompile Include="cInterpolation.cpp" />
     <ClCompile Include="cKeyManager.cpp" />
@@ -161,6 +167,10 @@
     <ClCompile Include="cSaveLoad.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
     <ClCompile Include="cTimeManager.cpp" />
+    <ClCompile Include="cUIButton.cpp" />
+    <ClCompile Include="cUIImageView.cpp" />
+    <ClCompile Include="cUIObject.cpp" />
+    <ClCompile Include="cUIObjView.cpp" />
     <ClCompile Include="D3DX_Base.cpp" />
     <ClCompile Include="iMap.cpp" />
     <ClCompile Include="stdafx.cpp">
