@@ -14,6 +14,7 @@ public:
 	void Destroy();
 	void Update();
 	void Render();
+	void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 
 	void AddScene(char* SceneName, iScene* pScene);

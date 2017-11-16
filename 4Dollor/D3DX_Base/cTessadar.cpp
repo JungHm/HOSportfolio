@@ -71,31 +71,17 @@ void cTessadar::Update()
 	XFile->GetAniCtrl(xKey)->AdvanceTime(0.018f, NULL);
 	double a = XFile->GetAniCtrl(xKey)->GetTime();
 	LPD3DXANIMATIONSET pAS;
-	if (GetAsyncKeyState('1') & 0x8000)
-	{
-		m_State = dwAttack;
-	}
-	if (GetAsyncKeyState('2') & 0x8000)
-	{
-		m_State = dwSpell;
-	}
-	if (GetAsyncKeyState('3') & 0x8000)
-	{
-		m_State = dwStand;
-	}
-	if (GetAsyncKeyState('4') & 0x8000)
-	{
-		m_State = dwWalk;
-	}
+
 	ChangeAni();
 	XFile->GetXFile(xKey)->Update();
 
-	
+
+
 }
 
-void cTessadar::Render()
+void cTessadar::Render(D3DXMATRIXA16& matRT)
 {
-	XFile->GetXFile(xKey)->Render();
+	XFile->GetXFile(xKey)->Render(matRT);
 	D3DXMATRIXA16 matR; D3DXMatrixIdentity(&matR);
 
 }
@@ -124,7 +110,7 @@ void cTessadar::ChangeAni()
 			XFile->GetAniCtrl(xKey)->SetTrackPosition(0, 0);
 		}
 		break;
-	case SPELL:
+	case SPELL_Q:
 		XFile->GetAniCtrl(xKey)->GetAnimationSet(dwSpell, &pAS);
 		XFile->GetAniCtrl(xKey)->GetTrackAnimationSet(0, &pASCompare);
 		if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
@@ -141,7 +127,57 @@ void cTessadar::ChangeAni()
 			XFile->GetAniCtrl(xKey)->SetTrackPosition(0, 0);
 		}
 		break;
-
+	case SPELL_W:
+		XFile->GetAniCtrl(xKey)->GetAnimationSet(dwSpell, &pAS);
+		XFile->GetAniCtrl(xKey)->GetTrackAnimationSet(0, &pASCompare);
+		if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
+		{
+			XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &desc);
+			if (desc.Position + 0.2 >= pAS->GetPeriod())
+			{
+				m_State = STAND;
+			}
+		}
+		else
+		{
+			XFile->GetAniCtrl(xKey)->SetTrackAnimationSet(0, pAS);
+			XFile->GetAniCtrl(xKey)->SetTrackPosition(0, 0);
+		}
+		break;
+	case SPELL_E:
+		XFile->GetAniCtrl(xKey)->GetAnimationSet(dwSpell, &pAS);
+		XFile->GetAniCtrl(xKey)->GetTrackAnimationSet(0, &pASCompare);
+		if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
+		{
+			XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &desc);
+			if (desc.Position + 0.2 >= pAS->GetPeriod())
+			{
+				m_State = STAND;
+			}
+		}
+		else
+		{
+			XFile->GetAniCtrl(xKey)->SetTrackAnimationSet(0, pAS);
+			XFile->GetAniCtrl(xKey)->SetTrackPosition(0, 0);
+		}
+		break;
+	case SPELL_R:
+		XFile->GetAniCtrl(xKey)->GetAnimationSet(dwSpell, &pAS);
+		XFile->GetAniCtrl(xKey)->GetTrackAnimationSet(0, &pASCompare);
+		if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
+		{
+			XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &desc);
+			if (desc.Position + 0.2 >= pAS->GetPeriod())
+			{
+				m_State = STAND;
+			}
+		}
+		else
+		{
+			XFile->GetAniCtrl(xKey)->SetTrackAnimationSet(0, pAS);
+			XFile->GetAniCtrl(xKey)->SetTrackPosition(0, 0);
+		}
+		break;
 	case STAND:
 		XFile->GetAniCtrl(xKey)->GetAnimationSet(dwStand, &pAS);
 		XFile->GetAniCtrl(xKey)->GetTrackAnimationSet(0, &pASCompare);

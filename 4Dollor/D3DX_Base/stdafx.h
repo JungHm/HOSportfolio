@@ -65,6 +65,9 @@ public:\
 		}\
 	}
 
+#define MATRIX16_FIX public: void* operator new(size_t i){return _mm_malloc(i, 16);}\
+			public: void operator delete(void* p){_mm_free(p);}
+
 // 텍스쳐 비율
 #define MAX_XPIXEL   1187
 #define MAX_YPIXEL   601
@@ -107,3 +110,5 @@ struct ST_PNT_VERTEXT
 #include "cSceneManager.h"
 #include "cFontManager.h"
 #include "cXFileManager.h"
+
+//UTIL

@@ -70,4 +70,5 @@ void cMainGame::Render()
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	g_Cam->WndProc(hWnd, message, wParam, lParam);
+	g_Scene->WndProc(hWnd, message, wParam, lParam);
 }

@@ -3,6 +3,9 @@
 #include "cGrid.h"
 #include "cCamera.h"
 #include "cTessadar.h"
+#include "cPlayer.h"
+#include "cUtil.h"
+
 
 
 cMainMenu::cMainMenu()
@@ -22,15 +25,19 @@ void cMainMenu::SetUp()
 {
 
 
+
 	D3DXVECTOR2 temp;
 	g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
 
 	m_pGrid = new cGrid;
 	m_pGrid->Setup("Grid", "field.png", 80, 160, 1.0f);
 
-	m_pTessadar = new cTessadar;
-	m_pTessadar->SetUp();
 
+	cTessadar*	m_pTessadar;
+	m_pTessadar = new cTessadar;
+	m_pPlayer = new cPlayer;
+	m_pPlayer->SetCharacter(m_pTessadar);
+	m_pPlayer->Setup();
 }
 
 void cMainMenu::Destroy()
@@ -47,20 +54,49 @@ void cMainMenu::Update()
 	{
 		g_Scene->ChangeScene("game");
 	}
-	m_pTessadar->Update();
+
+
+	if (GetAsyncKeyState(VK_RBUTTON) & 0x0001)
+	{
+		D3DXVECTOR3 pickPosition;
+		for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
+		{
+			if (Util::IntersectTri(Util::D3DXVec2TransformArray(m_ptMouse.x, m_ptMouse.y),
+				m_pGrid->GetPicVertex()[i].p,
+				m_pGrid->GetPicVertex()[i + 1].p,
+				m_pGrid->GetPicVertex()[i + 2].p,
+				pickPosition))
+			{
+				D3DXVECTOR3 dir = pickPosition - m_pPlayer->GetPosition();
+				D3DXVec3Normalize(&dir, &dir);
+				m_pPlayer->SetDir(dir);
+				m_pPlayer->SetFrom(pickPosition);
+				break;
+			}
+		}
+	}
+
+	m_pPlayer->Update();
 }
 
 void cMainMenu::Render()
 {
-	g_pSprite->BeginScene();
-	g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
-	g_pSprite->End();
+	//g_pSprite->BeginScene();
+	//g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
+	//g_pSprite->End();
 
 	if (m_pGrid)
 		m_pGrid->Render();
 
-	m_pTessadar->Render();
+	m_pPlayer->Render();
 
+
+}
+
+void cMainMenu::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	m_ptMouse.x = LOWORD(lParam);
+	m_ptMouse.y = HIWORD(lParam);
 }
 
 void cMainMenu::SetLight()

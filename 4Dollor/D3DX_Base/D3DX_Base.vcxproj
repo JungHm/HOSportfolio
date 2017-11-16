@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClInclude Include="cAllocateHierarchy.h" />
     <ClInclude Include="cCamera.h" />
+    <ClInclude Include="cCharacter.h" />
     <ClInclude Include="cDeviceManager.h" />
     <ClInclude Include="cFontManager.h" />
     <ClInclude Include="cGrid.h" />
@@ -98,12 +99,14 @@
     <ClInclude Include="cObjectManager.h" />
     <ClInclude Include="cObjLoader.h" />
     <ClInclude Include="cObjMap.h" />
+    <ClInclude Include="cPlayer.h" />
     <ClInclude Include="cSceneManager.h" />
     <ClInclude Include="cSpriteManager.h" />
     <ClInclude Include="cTessadar.h" />
     <ClInclude Include="cTextureManager.h" />
     <ClInclude Include="cTimeManager.h" />
     <ClInclude Include="cUnit.h" />
+    <ClInclude Include="cUtil.h" />
     <ClInclude Include="cXFileManager.h" />
     <ClInclude Include="cXLoader.h" />
     <ClInclude Include="D3DX_Base.h" />
@@ -116,6 +119,7 @@
   <ItemGroup>
     <ClCompile Include="cAllocateHierarchy.cpp" />
     <ClCompile Include="cCamera.cpp" />
+    <ClCompile Include="cCharacter.cpp" />
     <ClCompile Include="cDeviceManager.cpp" />
     <ClCompile Include="cFontManager.cpp" />
     <ClCompile Include="cGrid.cpp" />
@@ -129,6 +133,7 @@
     <ClCompile Include="cObjectManager.cpp" />
     <ClCompile Include="cObjLoader.cpp" />
     <ClCompile Include="cObjMap.cpp" />
+    <ClCompile Include="cPlayer.cpp" />
     <ClCompile Include="cSceneManager.cpp" />
     <ClCompile Include="cSpriteManager.cpp" />
     <ClCompile Include="cTessadar.cpp" />
