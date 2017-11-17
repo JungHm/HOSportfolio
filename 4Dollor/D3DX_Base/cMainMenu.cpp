@@ -109,10 +109,10 @@ void cMainMenu::Destroy()
 void cMainMenu::Update()
 {
 	//m_pRootNode->Update(m_pRootNode->GetKeyFrame(), NULL);
-	if (GetAsyncKeyState(VK_LBUTTON) & 0001)
-	{
-		g_Scene->ChangeScene("game");
-	}
+	//if (GetAsyncKeyState(VK_LBUTTON) & 0001)
+	//{
+	//	g_Scene->ChangeScene("game");
+	//}
 	if (m_UI && !m_UILoading) m_UI->update();	// 버튼이 있으므로 update
 	else if (m_UILoading)
 	{
