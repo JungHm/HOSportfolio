@@ -3,15 +3,13 @@
 class cUILoadingClientBegin : public cUIObject
 {
 private:
-	bool m_LoadingEnd;
 
 public:
 	cUILoadingClientBegin();
 	~cUILoadingClientBegin();
 
+	SYNTHESIZE(bool, m_LoadingEnd, LoadingEnd);
+
 	void updateButtonOverCallback(int num);
 	void updateButtonCallback(int num);
-
-	bool getLoadingEnd() { return m_LoadingEnd; }
 };
-

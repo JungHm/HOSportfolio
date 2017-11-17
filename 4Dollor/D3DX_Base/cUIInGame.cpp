@@ -3,6 +3,7 @@
 
 
 cUIInGame::cUIInGame()
+	: m_GameEnd(false)
 {
 }
 
@@ -19,6 +20,6 @@ void cUIInGame::updateButtonCallback(int num)
 {
 	if (num == UIBUTTONCALLBACK_INGAME_HOME)
 	{
-		g_Scene->ChangeScene("menu");
+		m_GameEnd = true;
 	}
 }

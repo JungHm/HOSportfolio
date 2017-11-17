@@ -2,6 +2,9 @@
 #include "cUIObject.h"
 class cUIMainMenu : public cUIObject
 {
+private:
+	SYNTHESIZE(bool, m_GameStart, GameStart);
+
 public:
 	cUIMainMenu();
 	~cUIMainMenu();

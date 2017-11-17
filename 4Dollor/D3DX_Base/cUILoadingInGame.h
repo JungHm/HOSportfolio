@@ -3,15 +3,14 @@
 class cUILoadingInGame : public cUIObject
 {
 private:
-	bool m_LoadingEnd;
 
 public:
 	cUILoadingInGame();
 	~cUILoadingInGame();
 
+	SYNTHESIZE(bool, m_LoadingEnd, LoadingEnd);
+
 	void updateButtonOverCallback(int num);
 	void updateButtonCallback(int num);
-
-	bool getLoadingEnd() { return m_LoadingEnd; }
 };
 

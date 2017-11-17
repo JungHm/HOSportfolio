@@ -3,6 +3,7 @@
 
 
 cUIMainMenu::cUIMainMenu()
+	: m_GameStart(false)
 {
 }
 
@@ -15,7 +16,7 @@ void cUIMainMenu::updateButtonCallback(int num)
 {
 	if (num == UIBUTTONCALLBACK_MAIN_READY)
 	{
-		g_Scene->ChangeScene("ingame");
+		m_GameStart = true;
 	}
 	else if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_ABILITY)
 	{

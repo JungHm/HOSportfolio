@@ -38,6 +38,11 @@ void cInGame::SetUp()
 
 void cInGame::Destroy()
 {
+	if (m_UI)
+	{
+		m_UI->destroy();
+		SAFE_DELETE(m_UI);
+	}
 }
 
 void cInGame::Update()
@@ -48,11 +53,18 @@ void cInGame::Update()
 	//}
 
 
-	if (m_UI && !m_UILoading) m_UI->update();	// 버튼이 있으므로 update
+	if (m_UI && !m_UILoading)
+	{
+		m_UI->update();	// 버튼이 있으므로 update
+		if (m_UI->GetGameEnd())
+		{
+			g_Scene->ChangeScene("menu");
+		}
+	}
 	else if (m_UILoading)
 	{
 		m_UILoading->update();
-		if (m_UILoading->getLoadingEnd())
+		if (m_UILoading->GetLoadingEnd())
 		{
 			m_UILoading->destroy();
 			SAFE_DELETE(m_UILoading);
