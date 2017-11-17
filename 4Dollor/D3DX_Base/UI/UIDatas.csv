@@ -7,7 +7,7 @@ cUILoadingClientBegin,,,,,,,,,
 cUILoadingInGame,,,,,,,,,
 2,PT.xy,BG,IndexName,Button,Func,normal,over,select,disenable
 300,100,0,l1,1,1001,mainmenu_btn_ready_1.dds,mainmenu_btn_ready_2.dds,mainmenu_btn_ready_2.dds,mainmenu_btn_ready_3.dds
-0,0,1,bg,0,0,ingame_loading_bg2.dds,0,0,0
+0,0,1,bg,0,0,ingame_loading_bg11.dds,0,0,0
 ,,,,,,,,,
 cMainMenu,,,,,,,,,
 3,PT.xy,BG,IndexName,Button,Func,normal,over,select,disenable
