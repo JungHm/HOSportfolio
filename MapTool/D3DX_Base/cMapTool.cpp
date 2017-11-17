@@ -11,7 +11,7 @@ cMapTool::cMapTool()
 	, m_pInfo(NULL)
 	, m_pHeightMap(NULL)
 	, m_isPicking(false)
-	, m_isAllocate(false)
+	, m_isAllocate(true)
 {
 }
 
@@ -140,17 +140,17 @@ void cMapTool::ObjPicking(IN UINT message, IN WPARAM wParam, IN LPARAM lParam)
 	if (KEY->isOnceKeyDown('Q')) m_sObj.fAngleY -= D3DX_PI / 18;
 	if (KEY->isOnceKeyDown('E')) m_sObj.fAngleY += D3DX_PI / 18;
 
-	if (KEY->isOnceKeyDown('X'))
-	{
-		if (m_nIndex == 0) return;
-		m_nIndex--;
-	}
+	//if (KEY->isOnceKeyDown('X'))
+	//{
+	//	if (m_nIndex == 0) return;
+	//	m_nIndex--;
+	//}
 
-	if (KEY->isOnceKeyDown('C'))
-	{
-		if (m_nIndex == OBJNUM - 1) return;
-		m_nIndex++;
-	}
+	//if (KEY->isOnceKeyDown('C'))
+	//{
+	//	if (m_nIndex == OBJNUM - 1) return;
+	//	m_nIndex++;
+	//}
 
 	m_sObj.pMesh = m_pSaveLoad->GetObjMesh(m_nIndex);
 	m_sObj.nKind = m_nIndex;

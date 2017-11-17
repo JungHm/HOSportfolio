@@ -47,7 +47,7 @@ void cUIButton::Update()
 
 	if (PtInRect(&rc, pt))
 	{
-		if (KEY->isOnceKeyDown(VK_LBUTTON))
+		if (KEY->isOnceKeyDown(VK_RBUTTON))
 		{
 			if (m_eButtonState == BTN_MOUSE_OVER)
 			{
