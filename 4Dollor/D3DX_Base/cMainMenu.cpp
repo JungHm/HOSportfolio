@@ -56,7 +56,7 @@ void cMainMenu::Update()
 	}
 
 
-	if (GetAsyncKeyState(VK_RBUTTON) & 0x0001)
+	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
 	{
 		D3DXVECTOR3 pickPosition;
 		for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)

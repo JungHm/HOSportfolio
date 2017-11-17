@@ -107,7 +107,7 @@ STDMETHODIMP cAllocateHierarchy::CreateMeshContainer(LPCSTR Name, CONST D3DXMESH
 	pBoneMesh->pCurrentBoneMatrices = new D3DXMATRIXA16[nNumBones];
 	pBoneMesh->ppBoneMatrixPtrs = new LPD3DXMATRIX[nNumBones];
 	// step 4. 동적 할당된 pBoneOffsetMatrices 매트릭스에 값 저장.
-	for (int i = 0; i < nNumBones; ++i)
+	for (UINT i = 0; i < nNumBones; ++i)
 	{
 		pBoneMesh->pBoneOffsetMatrices[i] = *(pSkinInfo->GetBoneOffsetMatrix(i));
 	}
@@ -118,6 +118,10 @@ STDMETHODIMP cAllocateHierarchy::CreateMeshContainer(LPCSTR Name, CONST D3DXMESH
 
 STDMETHODIMP cAllocateHierarchy::DestroyFrame(LPD3DXFRAME pFrameToFree)
 {
+	//ST_BONE_MESH* pBoneMesh = (ST_BONE_MESH*)pFrameToFree;
+	//SAFE_DELETE_ARRAY(pBoneMesh->Name);
+	//
+	//SAFE_DELETE(pFrameToFree);
 	delete pFrameToFree;
 
 	return S_OK;
@@ -126,6 +130,7 @@ STDMETHODIMP cAllocateHierarchy::DestroyFrame(LPD3DXFRAME pFrameToFree)
 STDMETHODIMP cAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerToFree)
 {
 	ST_BONE_MESH* pBoneMesh = (ST_BONE_MESH*)pMeshContainerToFree;
+	
 	SAFE_RELEASE(pBoneMesh->MeshData.pMesh);
 	SAFE_RELEASE(pBoneMesh->pOrigMesh);
 	for each(auto p in pBoneMesh->vecMtlTex)

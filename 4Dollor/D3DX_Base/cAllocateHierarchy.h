@@ -4,6 +4,7 @@ using namespace std;
 class cMtlTex;
 struct ST_BONE : public D3DXFRAME
 {
+	MATRIX16_FIX;
 	D3DXMATRIXA16 matWorldTM; //각 Bone의 월드 매트릭스. D3DXFRAME안에는 변환매트릭스(Local?)만 있음.
 };
 
@@ -20,6 +21,7 @@ struct ST_BONE_MESH : public D3DXMESHCONTAINER
 class cAllocateHierarchy : public ID3DXAllocateHierarchy
 {
 public:
+	
 	cAllocateHierarchy();
 	~cAllocateHierarchy();
 

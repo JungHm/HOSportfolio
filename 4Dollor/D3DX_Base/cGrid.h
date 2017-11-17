@@ -22,6 +22,7 @@ private:
 	SYNTHESIZE(vector<ST_PC_VERTEXT>, m_vecPicVertex, PicVertex); // 피킹용 버텍스
 
 public:
+	MATRIX16_FIX;
 	cGrid();
 	~cGrid();
 

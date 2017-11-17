@@ -111,7 +111,7 @@ void cXLoader::XfileLoad(IN wstring m_sPath)
 	//SetupWorldMatrix(m_pFrameRoot, &matW);
 	SetupBoneMatrixPtrs((ST_BONE*)m_pFrameRoot);
 
-	for (int i = 0; i < m_pAnimControl->GetMaxNumTracks(); i++)
+	for (UINT i = 0; i < m_pAnimControl->GetMaxNumTracks(); i++)
 	{
 		m_pAnimControl->SetTrackEnable(i, TRUE);
 	} //animation Track 비활성화.
@@ -120,59 +120,7 @@ void cXLoader::XfileLoad(IN wstring m_sPath)
 	//SAFE_DELETE(m_pAlloc);
 }
 
-//void cXLoader::SetUp()
-//{
-//	m_pAlloc = new cAllocateHierarchy;
-//
-//	HRESULT hr = D3DXLoadMeshHierarchyFromX(m_sPath.c_str(),
-//		D3DXMESH_MANAGED,
-//		g_pD3DDevice,
-//		m_pAlloc,
-//		NULL,
-//		&m_pFrameRoot,
-//		&m_pAnimControl);
-//	//assert(hr == S_OK);
-//	D3DXMATRIX matW;
-//	D3DXMatrixIdentity(&matW);
-//
-//	D3DXMatrixTranslation(&matW, 0, 0, 0);
-//
-//	//SetupWorldMatrix(m_pFrameRoot, &matW);
-//	SetupBoneMatrixPtrs((ST_BONE*)m_pFrameRoot);
-//
-//	for (int i = 0; i < m_pAnimControl->GetMaxNumTracks(); i++)
-//	{
-//		m_pAnimControl->SetTrackEnable(i, TRUE);
-//	} //animation Track 비활성화.
-//	m_pAnimControl->SetTrackEnable(0, TRUE);
-//	LPD3DXANIMATIONSET pAS;
-//
-//	for (DWORD i = 0; i < m_pAnimControl->GetNumAnimationSets(); ++i)
-//	{
-//		m_pAnimControl->GetAnimationSet(i, &pAS);
-//
-//		if (!strncmp(pAS->GetName(), "Attack ", strlen(pAS->GetName())))
-//		{
-//			dwAttack = i;
-//		}
-//		else if (!strncmp(pAS->GetName(), "Spell ", strlen(pAS->GetName())))
-//		{
-//			dwSpell = i;
-//		}
-//		else if (!strncmp(pAS->GetName(), "Stand ", strlen(pAS->GetName())))
-//		{
-//			dwStand = i;
-//		}
-//		else if (!strncmp(pAS->GetName(), "Walk ", strlen(pAS->GetName())))
-//		{
-//			dwWalk = i;
-//		}
-//	}
-//
-//	m_pAnimControl->GetAnimationSet(dwAttack, &pAS);
-//	m_pAnimControl->SetTrackAnimationSet(0, pAS);
-//	m_pAnimControl->ResetTime();
-//}
+
 
 void cXLoader::Update()
 {

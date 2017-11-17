@@ -13,5 +13,6 @@ public:
 	virtual void Render(D3DXMATRIXA16& matRT) = 0;
 
 	virtual void ChangeAni() = 0;
+	virtual void BlendAni(int State) = 0;
 };
 

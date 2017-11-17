@@ -27,22 +27,19 @@ void cPlayer::Update()
 	m_pChar->Update();
 	if (GetAsyncKeyState('Q') & 0x8001)
 	{
-		m_pChar->SetState(SPELL_Q);
+		m_pChar->BlendAni(SPELL_Q);
 		Skill = SPELL_Q;
 	}
 	if (GetAsyncKeyState('W') & 0x8001)
 	{
-		m_pChar->SetState(SPELL_W);
 		Skill = SPELL_W;
 	}
 	if (GetAsyncKeyState('E') & 0x8001)
 	{
-		m_pChar->SetState(SPELL_E);
 		Skill = SPELL_E;
 	}
 	if (GetAsyncKeyState('R') & 0x8001)
 	{
-		m_pChar->SetState(SPELL_R);
 		Skill = SPELL_R;
 	}
 
@@ -51,11 +48,17 @@ void cPlayer::Update()
 		if (Skill != NULL)// 스킬에 예약된 무언가가 있다면 
 		{
 
+			m_pChar->BlendAni(Skill);
+			Skill = NULL;//스킬 사용후 NULL로
 		}
 	}
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8001)
 	{
 		Skill = NULL;
+	}
+	if (Attack == true)
+	{
+		m_pChar->BlendAni(ATTACK);
 	}
 
 	D3DXVec3Normalize(&m_vDirection, &m_vDirection);
@@ -76,12 +79,12 @@ void cPlayer::moveTo()
 {
 	if ((int)m_vPosition.x == (int)m_vFrom.x || (int)m_vPosition.z == (int)m_vFrom.z)
 	{
-		m_pChar->SetState(STAND);
+		m_pChar->BlendAni(STAND);
 		return;
 	}
 
 	m_vPosition += (m_vDirection / 10) * 5;
-	m_pChar->SetState(WALK);
+	m_pChar->BlendAni(WALK);
 }
 
 

@@ -27,6 +27,9 @@ private:
 
 	double m_dTimeCurrent;
 
+	float	m_fBlendTime;
+	float	m_fPassedBlendTime;
+
 	DWORD dwAttack, dwSpell, dwWalk, dwStand;
 
 	//SYNTHESIZE(int, m_State, State);
@@ -35,6 +38,7 @@ private:
 
 
 public:
+	MATRIX16_FIX;
 	cTessadar();
 	~cTessadar();
 	virtual void AnimSetUp() override;
@@ -42,6 +46,6 @@ public:
 	virtual void Update()override;
 	virtual void Render(D3DXMATRIXA16& matRT)override;
 	virtual void ChangeAni()override;
-
+	virtual void BlendAni(int State)override;
 };
 

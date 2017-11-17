@@ -46,6 +46,7 @@ private:
 	int m_State;
 
 public:
+	MATRIX16_FIX;
 	cXLoader();
 	~cXLoader();
 
