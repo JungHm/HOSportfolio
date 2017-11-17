@@ -7,6 +7,8 @@
 #include "cObjMap.h"
 #include "cAseNode.h"
 #include "cAseLoader.h"
+#include "cUIMainMenu.h"
+#include "cUILoadingClientBegin.h"
 
 
 cMainMenu::cMainMenu()
@@ -17,6 +19,7 @@ cMainMenu::cMainMenu()
 	, m_pObjLoader(NULL)
 	, m_pObjMap(NULL)
 	//, m_pRootNode(NULL)
+	, m_UI(NULL)
 {
 }
 
@@ -29,6 +32,19 @@ cMainMenu::~cMainMenu()
 	SAFE_RELEASE(m_pD3DTexture);
 	SAFE_RELEASE(m_pD3DTexture1);
 	SAFE_RELEASE(m_pFont);
+
+
+	if (m_UI)
+	{
+		m_UI->destroy();
+		SAFE_DELETE(m_UI);
+	}
+
+	if (m_UILoading)
+	{
+		m_UILoading->destroy();
+		SAFE_DELETE(m_UILoading);
+	}
 
 	for each (auto p in m_vecGroup)
 	{
@@ -79,6 +95,11 @@ void cMainMenu::SetUp()
 
 	//LoadSurface();
 
+	m_UI = new cUIMainMenu;
+	m_UI->setup("cMainMenu");	// 테이블 내 분류된 이름을 참조하므로 클래스 이름을 복붙
+
+	m_UILoading = new cUILoadingClientBegin;
+	m_UILoading->setup("cUILoadingClientBegin");
 }
 
 void cMainMenu::Destroy()
@@ -91,6 +112,16 @@ void cMainMenu::Update()
 	if (GetAsyncKeyState(VK_LBUTTON) & 0001)
 	{
 		g_Scene->ChangeScene("game");
+	}
+	if (m_UI && !m_UILoading) m_UI->update();	// 버튼이 있으므로 update
+	else if (m_UILoading)
+	{
+		m_UILoading->update();
+		if (m_UILoading->getLoadingEnd())
+		{
+			m_UILoading->destroy();
+			SAFE_DELETE(m_UILoading);
+		}
 	}
 }
 
@@ -113,6 +144,9 @@ void cMainMenu::Render()
 	&m_vecTriVertex[0],
 	sizeof(ST_PT_VERTEXT));*/
 
+	if (m_UI && !m_UILoading) m_UI->renderBG();	// 배경 먼저 띄워야 함
+	else if (m_UILoading) m_UILoading->renderBG();
+
 	g_pSprite->BeginScene();
 	g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
 	g_pSprite->End();
@@ -124,6 +158,9 @@ void cMainMenu::Render()
 	//	m_pRootNode->Render();
 
 	//RenderObjFile();
+
+	if (m_UI && !m_UILoading) m_UI->render();	// 배경 외 UI 관련된 내용
+	else if (m_UILoading) m_UILoading->render();
 }
 
 void cMainMenu::RenderObjFile()

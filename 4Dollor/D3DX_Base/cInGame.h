@@ -1,8 +1,15 @@
 #pragma once
 #include "iScene.h"
+class cUILoadingInGame;
+class cUIInGame;
+
 class cInGame :
 	public iScene
 {
+private:
+	cUILoadingInGame*	m_UILoading;
+	cUIInGame*			m_UI;
+
 public:
 	cInGame();
 	~cInGame();

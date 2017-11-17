@@ -1,5 +1,0 @@
-4,PT.xy,BG,IndexName,Button,fileDir,fileDir2,fileDir3,fileDir4,Func
-0,0,1,BG1,0,UI\mainmenu_img_bg_1.dds,0,0,0,0
-50,50,0,hinfoa1,1,UI\mainmenu_btn_heroinfo_ability_0.dds,UI\mainmenu_btn_heroinfo_ability_1.dds,UI\mainmenu_btn_heroinfo_ability_2.dds,UI\mainmenu_btn_heroinfo_ability_3.dds,UIBUTTONCALLBACK_MAIN_HEROINFO_EQUIP
-100,50,0,hinfoa2,1,UI\mainmenu_btn_heroinfo_ability_0.dds,UI\mainmenu_btn_heroinfo_ability_1.dds,UI\mainmenu_btn_heroinfo_ability_2.dds,UI\mainmenu_btn_heroinfo_ability_3.dds,UIBUTTONCALLBACK_MAIN_HEROINFO_ABILITY
-150,100,0,hinfoa3,1,UI\mainmenu_btn_heroinfo_ability_0.dds,UI\mainmenu_btn_heroinfo_ability_1.dds,UI\mainmenu_btn_heroinfo_ability_2.dds,UI\mainmenu_btn_heroinfo_ability_3.dds,UIBUTTONCALLBACK_MAIN_HEROINFO_TALENT

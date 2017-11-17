@@ -9,7 +9,8 @@
 
 cUIObject::cUIObject()
 	: m_UIScale(0.5f)
-	, m_CollisionRectReduce(0.5f)
+	, m_CollisionRectReduce(0.7f)
+	, m_DataLoad(false)
 {
 }
 
@@ -57,6 +58,7 @@ void cUIObject::AddSprite(tagUISpriteLoadData &spriteData)
 			D3DXMatrixIdentity(&uisAdd->matWorld);
 			uisAdd->pt = spriteData.pt;
 			SetRect(&uisAdd->drawRc, 0, 0, uisAdd->imgInfo.Width, uisAdd->imgInfo.Height);	// 파일상에서 이미지를 가져올 범위(크기)
+			uisAdd->buttonFunc = spriteData.buttonFunc;
 		}
 	}
 	else if (spriteData.BG)	// 배경용 이미지라면 BG에 저장
@@ -129,10 +131,10 @@ void cUIObject::AddSprite(tagUISpriteLoadData &spriteData)
 	}
 }
 
-void cUIObject::setup(string WhereIsClass)
+void cUIObject::setup(string className)
 {
-	static bool firstLoad = false;	// 처음에만 파일들을 불러오고 그 이후에는 불러온 데이터를 hide로 제어
-	if (!firstLoad)
+	// 씬 전환 등 동적 할당 여부에 따라 m_DataLoad 원리를 변경해야 함.
+	if (!m_DataLoad)
 	{
 		vector<tagUISpriteLoadData> vUIData;
 		int dataCount = 0;
@@ -142,8 +144,18 @@ void cUIObject::setup(string WhereIsClass)
 
 		// ---------------------------------- 데이터 읽기(파싱) 시작
 		FILE *file;
-		string thereis = "UI\\UI_" + WhereIsClass + ".csv";
+		string thereis = "UI\\UIDatas.csv";
 		fopen_s(&file, thereis.c_str(), "r");
+
+		while (true)
+		{
+			char str1[128];
+			char *str2 = str1;
+			fgets(str1, sizeof(str1), file);
+			strtok_s(str1, ",", &str2);
+			if (str1 == className)
+				break;	// 해당 데이터 불러오기 위한 비교
+		}
 
 		{
 			char str1[128];
@@ -163,16 +175,23 @@ void cUIObject::setup(string WhereIsClass)
 			ld.BG = atoi(strtok_s(str2, ",", &str2));
 			ld.indexName = strtok_s(str2, ",", &str2);
 			ld.button = atoi(strtok_s(str2, ",", &str2));
+			ld.buttonFunc = atoi(strtok_s(str2, ",", &str2));
 			if (ld.button)	// 버튼이면 4개 이미지 추가
 			{
-				ld.file[0] = strtok_s(str2, ",", &str2);
-				ld.file[1] = strtok_s(str2, ",", &str2);
-				ld.file[2] = strtok_s(str2, ",", &str2);
-				ld.file[3] = strtok_s(str2, "\n", &str2);
+				string st1 = strtok_s(str2, ",", &str2);
+				string st2 = strtok_s(str2, ",", &str2);
+				string st3 = strtok_s(str2, ",", &str2);
+				string st4 = strtok_s(str2, "\n", &str2);
+
+				ld.file[0] = "UI\\" + st1;
+				ld.file[1] = "UI\\" + st2;
+				ld.file[2] = "UI\\" + st3;
+				ld.file[3] = "UI\\" + st4;
 			}
 			else	// 버튼이 아니면 1개 이미지 추가
 			{
-				ld.file[0] = strtok_s(str2, ",", &str2);
+				string st1 = strtok_s(str2, ",", &str2);
+				ld.file[0] = "UI\\" + st1;
 			}
 			vUIData.push_back(ld);
 		}
@@ -186,7 +205,7 @@ void cUIObject::setup(string WhereIsClass)
 		
 		// vUIData는 알아서 클리어 됨. 아마도
 
-		firstLoad = true;	// static이므로 담부터 여기 안올거임
+		m_DataLoad = true;
 	}
 }
 
@@ -231,7 +250,7 @@ void cUIObject::updateCollisionRect(RECT &rc, D3DXIMAGE_INFO imgInfo, D3DXVECTOR
 	// 히오스 UI는 Sprite 같은걸 안쓰고 모두 3D(픽킹) 처리를 한 것 같음
 }
 
-void cUIObject::updateButtonState(D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt, int &buttonState, UIBUTTONCALLBACK buttonFunc)
+void cUIObject::updateButtonState(D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt, int &buttonState, int buttonFunc)
 {
 	// 버튼 충돌 처리
 	RECT rc;
@@ -284,6 +303,8 @@ void cUIObject::renderBG()
 	{
 		m_MUISpriteBGIt->second.sprite->Begin(D3DXSPRITE_ALPHABLEND);
 
+		updateMatWorld(m_MUISpriteBGIt->second.matWorld, m_MUISpriteBGIt->second.pt);
+
 		m_MUISpriteBGIt->second.sprite->SetTransform(&m_MUISpriteBGIt->second.matWorld);
 
 		m_MUISpriteBGIt->second.sprite->Draw(m_MUISpriteBGIt->second.texture,
@@ -302,6 +323,7 @@ void cUIObject::renderButton()
 	{
 		m_MUIButtonIt->second.sprite->Begin(D3DXSPRITE_ALPHABLEND);
 
+		updateMatWorld(m_MUIButtonIt->second.matWorld, m_MUIButtonIt->second.pt);
 		m_MUIButtonIt->second.sprite->SetTransform(&m_MUIButtonIt->second.matWorld);
 
 		m_MUIButtonIt->second.sprite->Draw(m_MUIButtonIt->second.texture[m_MUIButtonIt->second.buttonState],
@@ -320,6 +342,7 @@ void cUIObject::renderNormal()
 	{
 		m_MUISpriteIt->second.sprite->Begin(D3DXSPRITE_ALPHABLEND);
 
+		updateMatWorld(m_MUISpriteIt->second.matWorld, m_MUISpriteIt->second.pt);
 		m_MUISpriteIt->second.sprite->SetTransform(&m_MUISpriteIt->second.matWorld);
 
 		m_MUISpriteIt->second.sprite->Draw(m_MUISpriteIt->second.texture,
@@ -329,5 +352,29 @@ void cUIObject::renderNormal()
 			D3DCOLOR_ARGB(255, 255, 255, 255));
 
 		m_MUISpriteIt->second.sprite->End();
+	}
+}
+
+void cUIObject::destroy()
+{
+	for (m_MUISpriteIt = m_MUISprite.begin(); m_MUISpriteIt != m_MUISprite.end(); m_MUISpriteIt++)
+	{
+		m_MUISpriteIt->second.sprite->Release();
+		m_MUISpriteIt->second.texture->Release();
+	}
+
+	for (m_MUIButtonIt = m_MUIButton.begin(); m_MUIButtonIt != m_MUIButton.end(); m_MUIButtonIt++)
+	{
+		m_MUIButtonIt->second.sprite->Release();
+		m_MUIButtonIt->second.texture[0]->Release();
+		m_MUIButtonIt->second.texture[1]->Release();
+		m_MUIButtonIt->second.texture[2]->Release();
+		m_MUIButtonIt->second.texture[3]->Release();
+	}
+
+	for (m_MUISpriteBGIt = m_MUISpriteBG.begin(); m_MUISpriteBGIt != m_MUISpriteBG.end(); m_MUISpriteBGIt++)
+	{
+		m_MUISpriteBGIt->second.sprite->Release();
+		m_MUISpriteBGIt->second.texture->Release();
 	}
 }

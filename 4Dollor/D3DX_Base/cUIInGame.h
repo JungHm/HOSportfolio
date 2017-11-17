@@ -7,7 +7,7 @@ public:
 	cUIInGame();
 	~cUIInGame();
 
-	//void updateButtonCallback();
-	//void updateButtonOverCallback();
+	void updateButtonOverCallback(int num);
+	void updateButtonCallback(int num);
 };
 

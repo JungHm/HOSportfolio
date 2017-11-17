@@ -7,6 +7,9 @@ class cObjLoader;
 class cGroup;
 class cObjMap;
 class cAseNode;
+class cUIMainMenu;
+class cUILoadingClientBegin;
+
 
 class cMainMenu : public iScene
 {
@@ -17,6 +20,8 @@ private:
 	cObjLoader*		m_pObjLoader;
 	cObjMap*		m_pObjMap;
 	//cAseNode*		m_pRootNode;
+	cUIMainMenu*	m_UI;
+	cUILoadingClientBegin* m_UILoading;
 
 	std::vector<cGroup*>	m_vecGroup;
 	std::vector<ST_PT_VERTEXT>	m_vecTriVertex;

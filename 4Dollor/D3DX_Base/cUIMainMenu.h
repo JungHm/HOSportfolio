@@ -6,7 +6,7 @@ public:
 	cUIMainMenu();
 	~cUIMainMenu();
 
-	void updateButtonCallback(UIBUTTONCALLBACK num);
-	void updateButtonOverCallback(UIBUTTONCALLBACK num);
+	void updateButtonCallback(int num);
+	void updateButtonOverCallback(int num);
 };
 

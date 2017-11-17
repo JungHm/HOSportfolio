@@ -19,6 +19,7 @@ protected:
 
 	float m_CollisionRectReduce;	// Rect를 이미지 크기보다 작게 해야 이쁘게  됨. 그것을 위한 사이즈 조정용 변수
 	float m_UIScale;	// UI 전체 크기를 변경. 현재 이미지들이 겜에 비해 너무 큼.
+	bool m_DataLoad;
 
 public:
 	cUIObject();
@@ -28,18 +29,18 @@ public:
 	
 
 	// 아래 전부다 virtual 붙여야 됨.
-	virtual void setup(string WhereIsClass);	// 메인메뉴면 mainmenu, 인게임이면 ingame으로 입력
-												// 추가 시 테이블도 같이 만들어야 함
+	virtual void setup(string className);
 	virtual void update();
 	virtual void updateButton();
 	virtual void updateMatWorld(D3DXMATRIXA16 &matWorld, D3DXVECTOR3 pt);
 	virtual void updateCollisionRect(RECT &rc, D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt);
-	virtual void updateButtonState(D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt, int &buttonState, UIBUTTONCALLBACK buttonFunc);
-	virtual void updateButtonOverCallback(UIBUTTONCALLBACK num) = 0;
-	virtual void updateButtonCallback(UIBUTTONCALLBACK num) = 0;
+	virtual void updateButtonState(D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt, int &buttonState, int buttonFunc);
+	virtual void updateButtonOverCallback(int num) = 0;
+	virtual void updateButtonCallback(int num) = 0;
 	virtual void render();
 	virtual void renderBG();
 	virtual void renderButton();
 	virtual void renderNormal();
+	virtual void destroy();
 	// setupHide는 안해도 될거 같음. 어짜피 scene이 전환되면 update, render를 실행하지 않으므로..
 };
