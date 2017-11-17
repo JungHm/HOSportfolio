@@ -10,7 +10,6 @@
 cUIObject::cUIObject()
 	: m_UIScale(0.5f)
 	, m_CollisionRectReduce(0.7f)
-	, m_DataLoad(false)
 {
 }
 
@@ -22,6 +21,9 @@ void cUIObject::AddSprite(tagUISpriteLoadData &spriteData)
 {
 	// 텍스쳐 등록은 텍스쳐 매니저로 해야됨. 현재 텍스쳐 매니저를 확장하지 않았으므로 여기에서 등록
 	spriteData.indexName = "UI_" + spriteData.indexName;
+
+	// D3DXCreateTextureFromFileEx 얘가 로딩시간 꽤 오래 걸림. 이미지가 클수록 오래 걸림.
+	// 현재 배경 이미지 띄우는데 1.500ms 정도
 
 	if (spriteData.button)	// 버튼이면 총 4개의 이미지 등록 필요 (기본.오버.클릭.비활성)
 	{
@@ -133,79 +135,71 @@ void cUIObject::AddSprite(tagUISpriteLoadData &spriteData)
 
 void cUIObject::setup(string className)
 {
-	// 씬 전환 등 동적 할당 여부에 따라 m_DataLoad 원리를 변경해야 함.
-	if (!m_DataLoad)
+	vector<tagUISpriteLoadData> vUIData;
+	int dataCount = 0;
+	tagUISpriteLoadData ld;
+	ZeroMemory(&ld, sizeof(tagUISpriteLoadData));
+	// csv에서 파일 데이터 읽은 후 AddSprite
+
+	// ---------------------------------- 데이터 읽기(파싱) 시작
+	FILE *file;
+	string thereis = "UI\\UIDatas.csv";
+	fopen_s(&file, thereis.c_str(), "r");
+
+	while (true)
 	{
-		vector<tagUISpriteLoadData> vUIData;
-		int dataCount = 0;
-		tagUISpriteLoadData ld;
-		ZeroMemory(&ld, sizeof(tagUISpriteLoadData));
-		// csv에서 파일 데이터 읽은 후 AddSprite
+		char str1[128];
+		char *str2 = str1;
+		fgets(str1, sizeof(str1), file);
+		strtok_s(str1, ",", &str2);
+		if (str1 == className)
+			break;	// 해당 데이터 불러오기 위한 비교
+	}
 
-		// ---------------------------------- 데이터 읽기(파싱) 시작
-		FILE *file;
-		string thereis = "UI\\UIDatas.csv";
-		fopen_s(&file, thereis.c_str(), "r");
+	{
+		char str1[128];
+		char *str2 = str1;
+		fgets(str1, sizeof(str1), file);
+		strtok_s(str1, ",", &str2);
+		dataCount = atoi(str1);
+	}
 
-		while (true)
+	for (int i = 0; i < dataCount; i++)
+	{
+		char str1[512];
+		char *str2 = str1;
+		fgets(str1, sizeof(str1), file);
+		ld.pt.x = atoi(strtok_s(str2, ",", &str2));
+		ld.pt.y = atoi(strtok_s(str2, ",", &str2));
+		ld.BG = atoi(strtok_s(str2, ",", &str2));
+		ld.indexName = strtok_s(str2, ",", &str2);
+		ld.button = atoi(strtok_s(str2, ",", &str2));
+		ld.buttonFunc = atoi(strtok_s(str2, ",", &str2));
+		if (ld.button)	// 버튼이면 4개 이미지 추가
 		{
-			char str1[128];
-			char *str2 = str1;
-			fgets(str1, sizeof(str1), file);
-			strtok_s(str1, ",", &str2);
-			if (str1 == className)
-				break;	// 해당 데이터 불러오기 위한 비교
-		}
+			string st1 = strtok_s(str2, ",", &str2);
+			string st2 = strtok_s(str2, ",", &str2);
+			string st3 = strtok_s(str2, ",", &str2);
+			string st4 = strtok_s(str2, "\n", &str2);
 
+			ld.file[0] = "UI\\" + st1;
+			ld.file[1] = "UI\\" + st2;
+			ld.file[2] = "UI\\" + st3;
+			ld.file[3] = "UI\\" + st4;
+		}
+		else	// 버튼이 아니면 1개 이미지 추가
 		{
-			char str1[128];
-			char *str2 = str1;
-			fgets(str1, sizeof(str1), file);
-			strtok_s(str1, ",", &str2);
-			dataCount = atoi(str1);
+			string st1 = strtok_s(str2, ",", &str2);
+			ld.file[0] = "UI\\" + st1;
 		}
+		vUIData.push_back(ld);
+	}
 
-		for (int i = 0; i < dataCount; i++)
-		{
-			char str1[512];
-			char *str2 = str1;
-			fgets(str1, sizeof(str1), file);
-			ld.pt.x = atoi(strtok_s(str2, ",", &str2));
-			ld.pt.y = atoi(strtok_s(str2, ",", &str2));
-			ld.BG = atoi(strtok_s(str2, ",", &str2));
-			ld.indexName = strtok_s(str2, ",", &str2);
-			ld.button = atoi(strtok_s(str2, ",", &str2));
-			ld.buttonFunc = atoi(strtok_s(str2, ",", &str2));
-			if (ld.button)	// 버튼이면 4개 이미지 추가
-			{
-				string st1 = strtok_s(str2, ",", &str2);
-				string st2 = strtok_s(str2, ",", &str2);
-				string st3 = strtok_s(str2, ",", &str2);
-				string st4 = strtok_s(str2, "\n", &str2);
+	// ---------------------------------- 데이터 읽기(파싱) 완료
 
-				ld.file[0] = "UI\\" + st1;
-				ld.file[1] = "UI\\" + st2;
-				ld.file[2] = "UI\\" + st3;
-				ld.file[3] = "UI\\" + st4;
-			}
-			else	// 버튼이 아니면 1개 이미지 추가
-			{
-				string st1 = strtok_s(str2, ",", &str2);
-				ld.file[0] = "UI\\" + st1;
-			}
-			vUIData.push_back(ld);
-		}
-		
-		// ---------------------------------- 데이터 읽기(파싱) 완료
-
-		for (int i = 0; i < vUIData.size(); i++)	// 파싱한 데이터 추가
-		{
-			AddSprite(vUIData[i]);
-		}
-		
-		// vUIData는 알아서 클리어 됨. 아마도
-
-		m_DataLoad = true;
+	for (int i = 0; i < vUIData.size(); i++)	// 파싱한 데이터 추가
+	{
+		AddSprite(vUIData[i]);
 	}
 }
 

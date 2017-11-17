@@ -109,6 +109,11 @@ void cMainMenu::Destroy()
 		m_UI->destroy();
 		SAFE_DELETE(m_UI);
 	}
+	if (m_UILoading)
+	{
+		m_UILoading->destroy();
+		SAFE_DELETE(m_UILoading);
+	}
 }
 
 void cMainMenu::Update()
