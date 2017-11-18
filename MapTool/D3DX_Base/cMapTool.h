@@ -29,7 +29,11 @@ public:
 	void SetUpPickingObj();
 	// 오브젝트 피킹, 배치전 S * R * T 조정 함수
 	void ObjPicking(IN UINT message, IN WPARAM wParam, IN LPARAM lParam);
-	// 오브젝트 배치, 삭제, 세이브, 로드
-	void ObjAllocate();
+	// 오브젝트 세이브
+	void ObjSave();
+	// 오브젝트 로드
+	void ObjLoad();
+	// 오브젝트 지우기
+	void ObjRemove();
 };
 

@@ -3,11 +3,13 @@
 
 #include "cMapTool.h"
 #include "cUIButton.h"
+#include "cSkyBox.h"
 
 cMainGame::cMainGame()
 	: m_pMapTool(NULL)
 	, m_pSprite(NULL)
 	, m_pRootUI(NULL)
+	, m_pSkyBox(NULL)
 	, m_nIndex(0)
 {
 	m_sUIObj[GATE_01] = "MapToolUI/Ui_Gate.png";
@@ -28,6 +30,8 @@ cMainGame::~cMainGame()
 	
 	m_pRootUI->Destroy();
 	SAFE_DELETE(m_pSprite);
+
+	SAFE_DELETE(m_pSkyBox);
 	
 	g_pFontManager->Destroy();
 	g_pTextureManager->Destroy();
@@ -37,9 +41,12 @@ cMainGame::~cMainGame()
 
 void cMainGame::Setup()
 {
+	g_cCamera->Setup();
+	
 	UISetup();
 
-	g_cCamera->Setup();
+	m_pSkyBox = new cSkyBox;
+	m_pSkyBox->Setup();
 
 	m_pMapTool = new cMapTool;
 	m_pMapTool->Setup();
@@ -60,14 +67,16 @@ void cMainGame::Update()
 	if (m_pRootUI) m_pRootUI->Update();
 
 	m_pImageCursor->SetPosition(m_nMousePos.x, m_nMousePos.y);
+	cout << m_nMousePos.x << "  " << m_nMousePos.y << endl;
 }
 
 void cMainGame::Render()
 {
-	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0);
 	g_pD3DDevice->BeginScene();
 	//===================================
 	if (m_pMapTool) m_pMapTool->Render();
+	if (m_pSkyBox) m_pSkyBox->Render();
 	if (m_pRootUI) m_pRootUI->Render(m_pSprite);
 	//===================================
 	g_pD3DDevice->EndScene();
@@ -147,6 +156,57 @@ void cMainGame::UISetup()
 	pObjImageViewRight->SetTag(UI_OBJ_IMAGE3);
 	pImageViewRightPanel->AddChild(pObjImageViewRight);
 
+	// 세이브 버튼
+	cUIButton* pSaveButton = new cUIButton;
+	pSaveButton->SetScaling(D3DXVECTOR3(0.7f, 0.7f, 0.7f));
+	pSaveButton->SetPosition(WINSIZEX - 300, WINSIZEY - 160);
+	pSaveButton->SetTexture("MapToolUI/save_normal.png", "MapToolUI/save_over.png", "MapToolUI/save_selected.png");
+	pSaveButton->SetDelegate(this);
+	pSaveButton->SetTag(UI_SAVE_BUTTON);
+	m_pRootUI->AddChild(pSaveButton);
+
+	// 세이브 이미지
+	cUIImageView* pSaveView = new cUIImageView;
+	pSaveView->SetScaling(D3DXVECTOR3(0.7f, 0.7f, 0.7f));
+	pSaveView->SetTexture("MapToolUI/save.png");
+	pSaveView->SetPosition(0, 0);
+	pSaveView->SetTag(UI_SAVE_IMAGE);
+	pSaveButton->AddChild(pSaveView);
+
+	// 로드 버튼
+	cUIButton* pLoadButton = new cUIButton;
+	pLoadButton->SetScaling(D3DXVECTOR3(0.7f, 0.7f, 0.7f));
+	pLoadButton->SetPosition(WINSIZEX - 200, WINSIZEY - 160);
+	pLoadButton->SetTexture("MapToolUI/save_normal.png", "MapToolUI/save_over.png", "MapToolUI/save_selected.png");
+	pLoadButton->SetDelegate(this);
+	pLoadButton->SetTag(UI_LOAD_BUTTON);
+	m_pRootUI->AddChild(pLoadButton);
+
+	// 로드 이미지
+	cUIImageView* pLoadView = new cUIImageView;
+	pLoadView->SetScaling(D3DXVECTOR3(0.7f, 0.7f, 0.7f));
+	pLoadView->SetTexture("MapToolUI/load.png");
+	pLoadView->SetPosition(0, 0);
+	pLoadView->SetTag(UI_LOAD_IMAGE);
+	pLoadButton->AddChild(pLoadView);
+
+	// 삭제 버튼
+	cUIButton* pRemoveButton = new cUIButton;
+	pRemoveButton->SetScaling(D3DXVECTOR3(0.7f, 0.7f, 0.7f));
+	pRemoveButton->SetPosition(WINSIZEX - 400, WINSIZEY - 160);
+	pRemoveButton->SetTexture("MapToolUI/save_normal.png", "MapToolUI/save_over.png", "MapToolUI/save_selected.png");
+	pRemoveButton->SetDelegate(this);
+	pRemoveButton->SetTag(UI_REMOVE_BUTTON);
+	m_pRootUI->AddChild(pRemoveButton);
+
+	// 삭제 이미지
+	cUIImageView* pRemoveView = new cUIImageView;
+	pRemoveView->SetScaling(D3DXVECTOR3(0.5f, 0.5f, 0.5f));
+	pRemoveView->SetTexture("MapToolUI/remove.png");
+	pRemoveView->SetPosition(10, 10);
+	pRemoveView->SetTag(UI_REMOVE_IMAGE);
+	pRemoveButton->AddChild(pRemoveView);
+
 	// 마우스 커서 이미지
 	m_pImageCursor = new cUIImageView;
 	m_pImageCursor->SetTexture("MapToolUI/Cursor.png");
@@ -160,16 +220,29 @@ void cMainGame::OnClick(cUIButton * pSender)
 	cUIImageView* pLeft = (cUIImageView*)m_pRootUI->FindChildByTag(UI_OBJ_IMAGE2);
 	cUIImageView* pRight = (cUIImageView*)m_pRootUI->FindChildByTag(UI_OBJ_IMAGE3);
 
-	if (pSender->GetTag() == UI_LEFT_BUTTON)
+	switch (pSender->GetTag())
 	{
+	case UI_LEFT_BUTTON:
 		if (m_nIndex == 9) return;
 		m_nIndex++;
-	}
+		break;
 
-	if (pSender->GetTag() == UI_RIGHT_BUTTON)
-	{
+	case UI_RIGHT_BUTTON:
 		if (m_nIndex == 0) return;
 		m_nIndex--;
+		break;
+
+	case UI_SAVE_BUTTON:
+		m_pMapTool->ObjSave();
+		break;
+
+	case UI_LOAD_BUTTON:
+		m_pMapTool->ObjLoad();
+		break;
+
+	case UI_REMOVE_BUTTON:
+		m_pMapTool->ObjRemove();
+		break;
 	}
 
 	pLeft->SetTexture(m_sUIObj[m_nIndex - 1]);
@@ -177,15 +250,15 @@ void cMainGame::OnClick(cUIButton * pSender)
 	if (m_nIndex < 9) pRight->SetTexture(m_sUIObj[m_nIndex + 1]);	
 	if (m_nIndex == 9) pRight->SetTexture("MapToolUI/Ui_None.png");
 	
-	m_pMapTool->SetIndex(m_nIndex);		// 맵툴 에서 현재 선택되는 오브젝트를 바꿔준다
+	m_pMapTool->SetIndex(m_nIndex);		// 맵툴에서 현재 선택되는 오브젝트를 바꿔준다
 }
 
 void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	g_cCamera->WndProc(hWnd, message, wParam, lParam);
 
-	if (m_pMapTool && !g_cCamera->GetButtonDown()) m_pMapTool->ObjPicking(message, wParam, lParam);
-	
 	m_nMousePos.x = LOWORD(lParam);
 	m_nMousePos.y = HIWORD(lParam);
+
+	if (m_pMapTool && !g_cCamera->GetButtonDown()) m_pMapTool->ObjPicking(message, wParam, lParam);
 }

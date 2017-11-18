@@ -4,6 +4,7 @@
 
 class cMapTool;
 class cUIObject;
+class cSkyBox;
 
 enum
 {
@@ -12,6 +13,12 @@ enum
 	UI_IMAGE_RIGHT_PANEL = 31,
 	UI_LEFT_BUTTON = 41,
 	UI_RIGHT_BUTTON = 51,
+	UI_SAVE_BUTTON = 61,
+	UI_LOAD_BUTTON = 71,
+	UI_REMOVE_BUTTON = 81,
+	UI_REMOVE_IMAGE,
+	UI_SAVE_IMAGE,
+	UI_LOAD_IMAGE,
 	UI_OBJ_IMAGE,
 	UI_OBJ_IMAGE2,
 	UI_OBJ_IMAGE3
@@ -26,6 +33,7 @@ private:
 	D3DXIMAGE_INFO  m_stImageInfo;
 	string			m_sUIObj[OBJNUM]; // 텍스쳐 파일 이름
 	cUIImageView*	m_pImageCursor;
+	cSkyBox*		m_pSkyBox;
 	int				m_nIndex;
 	POINT			m_nMousePos;
 

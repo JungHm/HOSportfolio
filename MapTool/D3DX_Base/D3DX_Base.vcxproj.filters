@@ -52,6 +52,9 @@
     <Filter Include="HeightMap">
       <UniqueIdentifier>{2ffbc344-10f6-4743-8239-14fa2e6ca702}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SkyBox">
+      <UniqueIdentifier>{af992819-1e12-4859-a244-5ec255b61dab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -192,8 +195,8 @@
     <ClInclude Include="cUIImageView.h">
       <Filter>MapToolUI</Filter>
     </ClInclude>
-    <ClInclude Include="cUIObjView.h">
-      <Filter>MapToolUI</Filter>
+    <ClInclude Include="cSkyBox.h">
+      <Filter>SkyBox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -323,8 +326,8 @@
     <ClCompile Include="cUIImageView.cpp">
       <Filter>MapToolUI</Filter>
     </ClCompile>
-    <ClCompile Include="cUIObjView.cpp">
-      <Filter>MapToolUI</Filter>
+    <ClCompile Include="cSkyBox.cpp">
+      <Filter>SkyBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

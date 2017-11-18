@@ -64,7 +64,14 @@ void cMapTool::Setup()
 
 void cMapTool::Update()
 {
-	if (m_isAllocate) ObjAllocate();
+	if (KEY->isOnceKeyDown(VK_LBUTTON))
+		m_pSaveLoad->CreateObj(
+			m_nIndex,
+			m_sObj.pMesh,
+			m_pSaveLoad->GetMapObjMtltex(m_nIndex),
+			m_pSaveLoad->GetFileName(m_nIndex),
+			m_sObj.vScaling, m_sObj.vPosition,
+			m_sObj.fAngleY);
 
 	m_pInfo->SetScale(m_sObj.vScaling.x);
 	m_pInfo->SetRotation(m_sObj.fAngleY);
@@ -140,34 +147,21 @@ void cMapTool::ObjPicking(IN UINT message, IN WPARAM wParam, IN LPARAM lParam)
 	if (KEY->isOnceKeyDown('Q')) m_sObj.fAngleY -= D3DX_PI / 18;
 	if (KEY->isOnceKeyDown('E')) m_sObj.fAngleY += D3DX_PI / 18;
 
-	//if (KEY->isOnceKeyDown('X'))
-	//{
-	//	if (m_nIndex == 0) return;
-	//	m_nIndex--;
-	//}
-
-	//if (KEY->isOnceKeyDown('C'))
-	//{
-	//	if (m_nIndex == OBJNUM - 1) return;
-	//	m_nIndex++;
-	//}
-
 	m_sObj.pMesh = m_pSaveLoad->GetObjMesh(m_nIndex);
 	m_sObj.nKind = m_nIndex;
 }
 
-void cMapTool::ObjAllocate()
+void cMapTool::ObjSave()
 {
-	if (KEY->isOnceKeyDown(VK_LBUTTON))
-		m_pSaveLoad->CreateObj(
-			m_nIndex, 
-			m_sObj.pMesh, 
-			m_pSaveLoad->GetMapObjMtltex(m_nIndex), 
-			m_pSaveLoad->GetFileName(m_nIndex), 
-			m_sObj.vScaling, m_sObj.vPosition, 
-			m_sObj.fAngleY);
-	
-	if (KEY->isOnceKeyDown('F')) m_pSaveLoad->RemoveObj();
-	if (KEY->isOnceKeyDown('G')) m_pSaveLoad->SaveFieldObj();
-	if (KEY->isOnceKeyDown('H')) m_pSaveLoad->LoadFieldObj();
+	m_pSaveLoad->SaveFieldObj();
+}
+
+void cMapTool::ObjLoad()
+{
+	m_pSaveLoad->LoadFieldObj();
+}
+
+void cMapTool::ObjRemove()
+{
+	m_pSaveLoad->RemoveObj();
 }
