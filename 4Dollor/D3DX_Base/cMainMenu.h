@@ -5,6 +5,9 @@ class cGrid;
 class cCamera;
 class cTessadar;
 class cPlayer;
+class cSaveLoad;
+class cHeightMap;
+class cSkyBox;
 
 class cMainMenu : public iScene
 {
@@ -13,6 +16,9 @@ private:
 	cGrid*		m_pGrid;
 	cCamera*	m_pCamera;
 	cPlayer*	m_pPlayer;
+	cSaveLoad*  m_pLoadMap;
+	cHeightMap* m_pHeightMap;
+	cSkyBox*    m_pSkyBox;
 
 	LPDIRECT3DTEXTURE9		m_pD3DTexture;
 
