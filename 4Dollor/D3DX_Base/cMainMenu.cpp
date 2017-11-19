@@ -83,8 +83,8 @@ void cMainMenu::SetUp()
 	//SetLight();
 
 	
-	D3DXVECTOR2 temp;
-	g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
+	//D3DXVECTOR2 temp;
+	//g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
 	//D3DXCreateTextureFromFile(g_pD3DDevice, L"Black Dragon NEW/textures/Dragon_Bump_Col2.jpg", &m_pD3DTexture1);
 
 	m_pGrid = new cGrid;
@@ -164,9 +164,9 @@ void cMainMenu::Render()
 	if (m_UI && !m_UILoading) m_UI->renderBG();	// 배경 먼저 띄워야 함
 	else if (m_UILoading) m_UILoading->renderBG();
 
-	g_pSprite->BeginScene();
-	g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
-	g_pSprite->End();
+	//g_pSprite->BeginScene();
+	//g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
+	//g_pSprite->End();
 
 	if (m_pGrid)
 		m_pGrid->Render();

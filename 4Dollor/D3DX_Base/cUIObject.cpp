@@ -59,6 +59,7 @@ void cUIObject::AddSprite(tagUISpriteLoadData &spriteData)
 
 			D3DXMatrixIdentity(&uisAdd->matWorld);
 			uisAdd->pt = spriteData.pt;
+			uisAdd->rotSpd = spriteData.rotSpd;
 			SetRect(&uisAdd->drawRc, 0, 0, uisAdd->imgInfo.Width, uisAdd->imgInfo.Height);	// 파일상에서 이미지를 가져올 범위(크기)
 			uisAdd->buttonFunc = spriteData.buttonFunc;
 		}
@@ -94,6 +95,7 @@ void cUIObject::AddSprite(tagUISpriteLoadData &spriteData)
 
 			D3DXMatrixIdentity(&uisAdd->matWorld);
 			uisAdd->pt = spriteData.pt;
+			uisAdd->rotSpd = spriteData.rotSpd;
 			SetRect(&uisAdd->drawRc, 0, 0, uisAdd->imgInfo.Width, uisAdd->imgInfo.Height);
 		}
 	}
@@ -128,6 +130,7 @@ void cUIObject::AddSprite(tagUISpriteLoadData &spriteData)
 
 			D3DXMatrixIdentity(&uisAdd->matWorld);
 			uisAdd->pt = spriteData.pt;
+			uisAdd->rotSpd = spriteData.rotSpd;
 			SetRect(&uisAdd->drawRc, 0, 0, uisAdd->imgInfo.Width, uisAdd->imgInfo.Height);
 		}
 	}
@@ -173,6 +176,8 @@ void cUIObject::setup(string className)
 		ld.pt.y = atoi(strtok_s(str2, ",", &str2));
 		ld.BG = atoi(strtok_s(str2, ",", &str2));
 		ld.indexName = strtok_s(str2, ",", &str2);
+		ld.rotate = atof(strtok_s(str2, ",", &str2));
+		ld.rotSpd = atof(strtok_s(str2, ",", &str2));
 		ld.button = atoi(strtok_s(str2, ",", &str2));
 		ld.buttonFunc = atoi(strtok_s(str2, ",", &str2));
 		if (ld.button)	// 버튼이면 4개 이미지 추가
@@ -220,7 +225,7 @@ void cUIObject::updateButton()
 
 void cUIObject::updateMatWorld(D3DXMATRIXA16 &matWorld, D3DXVECTOR3 pt)
 {
-	D3DXMATRIXA16 matS, matT;
+	D3DXMATRIXA16 matS, matR, matT;
 	D3DXMatrixIdentity(&matS);
 	D3DXMatrixIdentity(&matT);
 	
@@ -303,8 +308,8 @@ void cUIObject::renderBG()
 
 		m_MUISpriteBGIt->second.sprite->Draw(m_MUISpriteBGIt->second.texture,
 			&m_MUISpriteBGIt->second.drawRc,
-			&D3DXVECTOR3(0, 0, 0),	// 중심점. 회전시킬꺼면 imgInfo에서 Width / 2, Height / 2 넣으면 될듯
-			&D3DXVECTOR3(0, 0, 0),
+			NULL,	// 중심점. 회전시킬꺼면 imgInfo에서 Width / 2, Height / 2 넣으면 될듯
+			NULL,
 			D3DCOLOR_ARGB(255, 255, 255, 255));
 
 		m_MUISpriteBGIt->second.sprite->End();
@@ -322,8 +327,8 @@ void cUIObject::renderButton()
 
 		m_MUIButtonIt->second.sprite->Draw(m_MUIButtonIt->second.texture[m_MUIButtonIt->second.buttonState],
 			&m_MUIButtonIt->second.drawRc,
-			&D3DXVECTOR3(0, 0, 0),	// 중심점. 회전시킬꺼면 imgInfo에서 Width / 2, Height / 2 넣으면 될듯
-			&D3DXVECTOR3(0, 0, 0),
+			NULL,	// 중심점. 회전시킬꺼면 imgInfo에서 Width / 2, Height / 2 넣으면 될듯
+			NULL,
 			D3DCOLOR_ARGB(255, 255, 255, 255));
 
 		m_MUIButtonIt->second.sprite->End();
@@ -336,14 +341,31 @@ void cUIObject::renderNormal()
 	{
 		m_MUISpriteIt->second.sprite->Begin(D3DXSPRITE_ALPHABLEND);
 
-		updateMatWorld(m_MUISpriteIt->second.matWorld, m_MUISpriteIt->second.pt);
+		D3DXMatrixAffineTransformation2D(&m_MUISpriteIt->second.matWorld,
+			m_UIScale,
+			NULL,	// 회전 중심점을 넣어도 적용이 안됨
+			m_MUISpriteIt->second.rotate,
+			&D3DXVECTOR2(m_MUISpriteIt->second.pt.x, m_MUISpriteIt->second.pt.y));
+		//updateMatWorld(m_MUISpriteIt->second.matWorld, m_MUISpriteIt->second.pt);
 		m_MUISpriteIt->second.sprite->SetTransform(&m_MUISpriteIt->second.matWorld);
 
-		m_MUISpriteIt->second.sprite->Draw(m_MUISpriteIt->second.texture,
-			&m_MUISpriteIt->second.drawRc,
-			&D3DXVECTOR3(0, 0, 0),	// 중심점. 회전시킬꺼면 imgInfo에서 Width / 2, Height / 2 넣으면 될듯
-			&D3DXVECTOR3(0, 0, 0),
-			D3DCOLOR_ARGB(255, 255, 255, 255));
+		if (m_MUISpriteIt->second.rotSpd != 0)
+		{
+			m_MUISpriteIt->second.rotate += m_MUISpriteIt->second.rotSpd;
+			m_MUISpriteIt->second.sprite->Draw(m_MUISpriteIt->second.texture,
+				&m_MUISpriteIt->second.drawRc,
+				&D3DXVECTOR3(m_MUISpriteIt->second.imgInfo.Width / 2, m_MUISpriteIt->second.imgInfo.Height / 2, 0),	// 중심점. 회전시킬꺼면 imgInfo에서 Width / 2, Height / 2 넣으면 될듯
+				NULL,
+				D3DCOLOR_ARGB(255, 255, 255, 255));
+		}
+		else
+		{
+			m_MUISpriteIt->second.sprite->Draw(m_MUISpriteIt->second.texture,
+				&m_MUISpriteIt->second.drawRc,
+				NULL,	// 중심점. 회전시킬꺼면 imgInfo에서 Width / 2, Height / 2 넣으면 될듯
+				NULL,
+				D3DCOLOR_ARGB(255, 255, 255, 255));
+		}
 
 		m_MUISpriteIt->second.sprite->End();
 	}
