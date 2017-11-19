@@ -2,92 +2,31 @@
 #include "cMainMenu.h"
 #include "cGrid.h"
 #include "cCamera.h"
-#include "cObjLoader.h"
-#include "cGroup.h"
-#include "cObjMap.h"
-#include "cAseNode.h"
-#include "cAseLoader.h"
-#include "cUIMainMenu.h"
-#include "cUILoadingClientBegin.h"
-
-
+#include "cTessadar.h"
+#include "cPlayer.h"
+#include "cUtil.h"
+#include "cSaveLoad.h"
+#include "cHeightMap.h"
+#include "cSkyBox.h"
 
 cMainMenu::cMainMenu()
 	: m_pGrid(NULL)
 	, m_pCamera(NULL)
 	, m_pD3DTexture(NULL)
-	, m_pFont(NULL)
-	, m_pObjLoader(NULL)
-	, m_pObjMap(NULL)
-	//, m_pRootNode(NULL)
-	, m_UI(NULL)
-
+	, m_pLoadMap(NULL)
+	, m_pHeightMap(NULL)
+	, m_pSkyBox(NULL)
 {
 }
 
 cMainMenu::~cMainMenu()
 {
-	SAFE_DELETE(m_pGrid);
-	SAFE_DELETE(m_pObjLoader);
-	SAFE_DELETE(m_pObjMap);
-	SAFE_RELEASE(m_pD3DTexture);
-	SAFE_RELEASE(m_pD3DTexture1);
-	SAFE_RELEASE(m_pFont);
-
-
-	if (m_UI)
-	{
-		m_UI->destroy();
-		SAFE_DELETE(m_UI);
-	}
-
-	if (m_UILoading)
-	{
-		m_UILoading->destroy();
-		SAFE_DELETE(m_UILoading);
-	}
-
-	for each (auto p in m_vecGroup)
-	{
-		SAFE_RELEASE(p);
-	}
-	m_vecGroup.clear();
-
-	//m_pRootNode->Destroy();
 }
 
 void cMainMenu::SetUp()
 {
-	//// ASE Loader
-	////cAseLoader	loader;
-	////m_pRootNode = loader.Load("woman/woman_01_all.ASE");
-	//// font
-	//D3DXFONT_DESC fd;
-	//ZeroMemory(&fd, sizeof(D3DXFONT_DESC));
-	//fd.Height = 25;
-	//fd.Width = 12;
-	//fd.Weight = FW_BOLD;
-	//fd.Italic = false;
-	//fd.CharSet = DEFAULT_CHARSET;
-	//fd.OutputPrecision = OUT_DEFAULT_PRECIS;
-	//fd.PitchAndFamily = FF_DONTCARE;
-
-	////WCHAR str[36] = L"����ü";
-	////wsprintf(str, fd.FaceName);
-
-	////char szFaceName[32] = "����ü";
-	////char* p = szFaceName;
-	////strcpy_s(fd.FaceName, 32, L"����ü");
-
-	//D3DXCreateFontIndirect(g_pD3DDevice, &fd, &m_pFont);
-
-	//SetLight();
-
-	
-	//D3DXVECTOR2 temp;
-	//g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
-	//D3DXCreateTextureFromFile(g_pD3DDevice, L"Black Dragon NEW/textures/Dragon_Bump_Col2.jpg", &m_pD3DTexture1);
-
+	D3DXVECTOR2 temp;
+	g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
 
 	m_pLoadMap = new cSaveLoad;
 	m_pLoadMap->LoadFieldObj();
@@ -98,92 +37,87 @@ void cMainMenu::SetUp()
 	m_pSkyBox = new cSkyBox;
 	m_pSkyBox->Setup();
 
-	m_UI = new cUIMainMenu;
-	m_UI->setup("cMainMenu");	// ���̺� �� �з�� �̸�� ����ϹǷ� Ŭ���� �̸�� ����
+	m_pGrid = new cGrid;
+	m_pGrid->Setup("Grid", "field2.png", 160, 280, 2.0f);
 
-	m_UILoading = new cUILoadingClientBegin;
-	m_UILoading->setup("cUILoadingClientBegin");
-
+	cTessadar*	m_pTessadar;
+	m_pTessadar = new cTessadar;
+	m_pPlayer = new cPlayer;
+	m_pPlayer->SetCharacter(m_pTessadar);
+	m_pPlayer->Setup();
 }
 
 void cMainMenu::Destroy()
 {
-	if (m_UI)
-	{
-		m_UI->destroy();
-		SAFE_DELETE(m_UI);
-	}
-	if (m_UILoading)
-	{
-		m_UILoading->destroy();
-		SAFE_DELETE(m_UILoading);
-	}
+	SAFE_DELETE(m_pLoadMap);
+	SAFE_DELETE(m_pHeightMap);
+	SAFE_DELETE(m_pSkyBox);
 
+	SAFE_DELETE(m_pGrid);
+	SAFE_RELEASE(m_pD3DTexture);
+	XFile->Destroy();
+	//m_pRootNode->Destroy();
 }
 
 void cMainMenu::Update()
 {
-	//m_pRootNode->Update(m_pRootNode->GetKeyFrame(), NULL);
-	//if (GetAsyncKeyState(VK_LBUTTON) & 0001)
-	//{
-	//	g_Scene->ChangeScene("game");
-	//}
-	if (m_UI && !m_UILoading)
+	D3DXVECTOR3 pickPosition;
+	for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
 	{
-		m_UI->update();	// ��ư�� ����Ƿ� update
-		if (m_UI->GetGameStart())
+		if (Util::IntersectTri(Util::D3DXVec2TransformArray(m_ptMouse.x, m_ptMouse.y),
+			m_pGrid->GetPicVertex()[i].p,
+			m_pGrid->GetPicVertex()[i + 1].p,
+			m_pGrid->GetPicVertex()[i + 2].p,
+			pickPosition))
 		{
-			g_Scene->ChangeScene("ingame");
-		}
-	}
-	else if (m_UILoading)
-	{
-		m_UILoading->update();
-		if (m_UILoading->GetLoadingEnd())
-		{
-			m_UILoading->destroy();
-			SAFE_DELETE(m_UILoading);
-
+			m_pPlayer->SetMousePos(pickPosition);
+			break;
 		}
 	}
 
+	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
+	{
+		D3DXVECTOR3 pickPosition;
+		for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
+		{
+			if (Util::IntersectTri(Util::D3DXVec2TransformArray(m_ptMouse.x, m_ptMouse.y),
+				m_pGrid->GetPicVertex()[i].p,
+				m_pGrid->GetPicVertex()[i + 1].p,
+				m_pGrid->GetPicVertex()[i + 2].p,
+				pickPosition))
+			{
+				D3DXVECTOR3 dir = pickPosition - m_pPlayer->GetPosition();
+				D3DXVec3Normalize(&dir, &dir);
+				m_pPlayer->SetDir(dir);
+				m_pPlayer->SetFrom(pickPosition);
+				break;
+			}
+		}
+	}
 
+	m_pPlayer->Update();
+	
 }
 
 void cMainMenu::Render()
 {
-	/*RECT rc;
-	SetRect(&rc, 100, 100, 200, 200);
-	std::string s = "�̰��� ����ü��";
-	m_pFont->DrawTextA(NULL, s.c_str(), strlen(s.c_str()), &rc,
-	DT_LEFT | DT_TOP | DT_NOCLIP,
-	D3DCOLOR_XRGB(255, 255, 255));
-
-	D3DXMATRIXA16	matWorld;
-	D3DXMatrixIdentity(&matWorld);
-	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
-	g_pD3DDevice->SetTexture(0, m_pD3DTexture);
-	g_pD3DDevice->SetFVF(ST_PT_VERTEXT::FVF);
-	g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST,
-	m_vecTriVertex.size() / 3,
-	&m_vecTriVertex[0],
-	sizeof(ST_PT_VERTEXT));*/
-
-	if (m_UI && !m_UILoading) m_UI->renderBG();	// ��� ���� ���� ��
-	else if (m_UILoading) m_UILoading->renderBG();
-
 	//g_pSprite->BeginScene();
 	//g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
 	//g_pSprite->End();
 
-	//if (m_pRootNode)
-	//	m_pRootNode->Render();
+	if (m_pLoadMap)
+		m_pLoadMap->CreateObjRender();
 
-	//RenderObjFile();
+	if (m_pHeightMap)
+		m_pHeightMap->Render();
 
-	if (m_UI && !m_UILoading) m_UI->render();	// ��� �� UI ��õ� ����
-	else if (m_UILoading) m_UILoading->render();
+	if (m_pSkyBox)
+		m_pSkyBox->Render();
 
+	if (m_pGrid)
+		m_pGrid->Render();
+
+	m_pPlayer->Render();
 }
 
 void cMainMenu::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

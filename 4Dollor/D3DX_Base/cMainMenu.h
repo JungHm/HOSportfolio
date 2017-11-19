@@ -3,12 +3,11 @@
 
 class cGrid;
 class cCamera;
-class cObjLoader;
-class cGroup;
-class cObjMap;
-class cAseNode;
-class cUIMainMenu;
-class cUILoadingClientBegin;
+class cTessadar;
+class cPlayer;
+class cSaveLoad;
+class cHeightMap;
+class cSkyBox;
 
 
 
@@ -18,12 +17,10 @@ private:
 	std::vector<ST_PC_VERTEXT>	m_vecVertex;
 	cGrid*		m_pGrid;
 	cCamera*	m_pCamera;
-	cObjLoader*		m_pObjLoader;
-	cObjMap*		m_pObjMap;
-	//cAseNode*		m_pRootNode;
-	cUIMainMenu*	m_UI;
-	cUILoadingClientBegin* m_UILoading;
-
+	cPlayer*	m_pPlayer;
+	cSaveLoad*  m_pLoadMap;
+	cHeightMap* m_pHeightMap;
+	cSkyBox*    m_pSkyBox;
 
 	LPDIRECT3DTEXTURE9		m_pD3DTexture;
 
