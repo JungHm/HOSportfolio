@@ -90,6 +90,7 @@
     <ClInclude Include="cFontManager.h" />
     <ClInclude Include="cGrid.h" />
     <ClInclude Include="cGroup.h" />
+    <ClInclude Include="cHeightMap.h" />
     <ClInclude Include="cInGame.h" />
     <ClInclude Include="cKeyManager.h" />
     <ClInclude Include="cMainGame.h" />
@@ -100,7 +101,9 @@
     <ClInclude Include="cObjLoader.h" />
     <ClInclude Include="cObjMap.h" />
     <ClInclude Include="cPlayer.h" />
+    <ClInclude Include="cSaveLoad.h" />
     <ClInclude Include="cSceneManager.h" />
+    <ClInclude Include="cSkyBox.h" />
     <ClInclude Include="cSpriteManager.h" />
     <ClInclude Include="cTessadar.h" />
     <ClInclude Include="cTextureManager.h" />
@@ -124,6 +127,7 @@
     <ClCompile Include="cFontManager.cpp" />
     <ClCompile Include="cGrid.cpp" />
     <ClCompile Include="cGroup.cpp" />
+    <ClCompile Include="cHeightMap.cpp" />
     <ClCompile Include="cInGame.cpp" />
     <ClCompile Include="cKeyManager.cpp" />
     <ClCompile Include="cMainGame.cpp" />
@@ -134,7 +138,9 @@
     <ClCompile Include="cObjLoader.cpp" />
     <ClCompile Include="cObjMap.cpp" />
     <ClCompile Include="cPlayer.cpp" />
+    <ClCompile Include="cSaveLoad.cpp" />
     <ClCompile Include="cSceneManager.cpp" />
+    <ClCompile Include="cSkyBox.cpp" />
     <ClCompile Include="cSpriteManager.cpp" />
     <ClCompile Include="cTessadar.cpp" />
     <ClCompile Include="cTextureManager.cpp" />

@@ -5,33 +5,40 @@
 #include "cTessadar.h"
 #include "cPlayer.h"
 #include "cUtil.h"
-
-
+#include "cSaveLoad.h"
+#include "cHeightMap.h"
+#include "cSkyBox.h"
 
 cMainMenu::cMainMenu()
 	: m_pGrid(NULL)
 	, m_pCamera(NULL)
 	, m_pD3DTexture(NULL)
+	, m_pLoadMap(NULL)
+	, m_pHeightMap(NULL)
+	, m_pSkyBox(NULL)
 {
 }
 
-
 cMainMenu::~cMainMenu()
 {
-
 }
 
 void cMainMenu::SetUp()
 {
-
-
-
 	D3DXVECTOR2 temp;
 	g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
 
-	m_pGrid = new cGrid;
-	m_pGrid->Setup("Grid", "field.png", 80, 160, 1.0f);
+	m_pLoadMap = new cSaveLoad;
+	m_pLoadMap->LoadFieldObj();
 
+	m_pHeightMap = new cHeightMap;
+	m_pHeightMap->Setup("HeightMap/", "backGround.raw", "HeightMap.jpg");
+
+	m_pSkyBox = new cSkyBox;
+	m_pSkyBox->Setup();
+
+	m_pGrid = new cGrid;
+	m_pGrid->Setup("Grid", "field2.png", 160, 280, 2.0f);
 
 	cTessadar*	m_pTessadar;
 	m_pTessadar = new cTessadar;
@@ -42,6 +49,10 @@ void cMainMenu::SetUp()
 
 void cMainMenu::Destroy()
 {
+	SAFE_DELETE(m_pLoadMap);
+	SAFE_DELETE(m_pHeightMap);
+	SAFE_DELETE(m_pSkyBox);
+
 	SAFE_DELETE(m_pGrid);
 	SAFE_RELEASE(m_pD3DTexture);
 	XFile->Destroy();
@@ -94,12 +105,19 @@ void cMainMenu::Render()
 	//g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
 	//g_pSprite->End();
 
+	if (m_pLoadMap)
+		m_pLoadMap->CreateObjRender();
+
+	if (m_pHeightMap)
+		m_pHeightMap->Render();
+
+	if (m_pSkyBox)
+		m_pSkyBox->Render();
+
 	if (m_pGrid)
 		m_pGrid->Render();
 
 	m_pPlayer->Render();
-
-
 }
 
 void cMainMenu::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -124,7 +142,6 @@ void cMainMenu::SetLight()
 
 	g_pD3DDevice->LightEnable(0, true);
 
-
 	//D3DLIGHT9 lightPoint;
 	//ZeroMemory(&lightPoint, sizeof(D3DLIGHT9));
 	//lightPoint.Type = D3DLIGHT_POINT;
@@ -136,7 +153,6 @@ void cMainMenu::SetLight()
 	//g_pD3DDevice->SetLight(1, &lightPoint);
 
 	//g_pD3DDevice->LightEnable(1, true);
-
 
 	//D3DLIGHT9 lightSpot;
 	//ZeroMemory(&lightSpot, sizeof(D3DLIGHT9));

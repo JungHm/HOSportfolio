@@ -11,6 +11,5 @@ public:
 	virtual ~cUIImageView();
 
 	virtual void Render(LPD3DXSPRITE pSprite) override;
-	void SetTexture(char* szFullPath);
+	void SetTexture(string szFullPath);
 };
-

@@ -34,6 +34,9 @@
     <Filter Include="UTIL">
       <UniqueIdentifier>{943e6c09-9877-4193-bf31-00d93640068c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Map">
+      <UniqueIdentifier>{c06461c6-0d07-4bba-b831-2f18522786dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -135,6 +138,15 @@
     <ClInclude Include="cCharacter.h">
       <Filter>UNIT</Filter>
     </ClInclude>
+    <ClInclude Include="cSaveLoad.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="cHeightMap.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="cSkyBox.h">
+      <Filter>Map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -223,6 +235,15 @@
     </ClCompile>
     <ClCompile Include="cCharacter.cpp">
       <Filter>UNIT</Filter>
+    </ClCompile>
+    <ClCompile Include="cSaveLoad.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="cHeightMap.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="cSkyBox.cpp">
+      <Filter>Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

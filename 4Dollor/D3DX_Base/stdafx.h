@@ -69,10 +69,10 @@ public:\
 			public: void operator delete(void* p){_mm_free(p);}
 
 // 텍스쳐 비율
-#define MAX_XPIXEL   1187
-#define MAX_YPIXEL   601
-#define ONE_XPIXEL   MAX_XPIXEL / 160
-#define ONE_YPIXEL   MAX_YPIXEL / 80
+#define MAX_XPIXEL   1041
+#define MAX_YPIXEL   652
+#define ONE_XPIXEL   MAX_XPIXEL / 280
+#define ONE_YPIXEL   MAX_YPIXEL / 160
 #define ONE_XPER   (float)ONE_XPIXEL / (float)MAX_XPIXEL
 #define ONE_YPER   (float)ONE_YPIXEL / (float)MAX_YPIXEL
 
@@ -99,6 +99,15 @@ struct ST_PNT_VERTEXT
 	enum { FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1 };
 };
 
+enum OBJECTKIND
+{
+	GATE_01,
+	WALL_01, WALL_02, WALL_03, WALL_04, WALL_05,
+	FOUNTAIN,
+	ROCK_00, ROCK_04, ROCK_05,
+	OBJNUM
+};
+
 #include "cKeyManager.h"
 #include "cObject.h"
 #include "cObjectManager.h"
@@ -110,5 +119,21 @@ struct ST_PNT_VERTEXT
 #include "cSceneManager.h"
 #include "cFontManager.h"
 #include "cXFileManager.h"
+#include "cMtlTex.h"
+
+typedef struct tagObject
+{
+	int				nKind;			// 종류
+	LPD3DXMESH		pMesh;			// 매쉬
+	string			sFileName;		// 파일 이름
+	D3DXMATRIXA16	matWorld;		// 월드
+	D3DXMATRIXA16	matScal;		// 스케일링
+	D3DXMATRIXA16	matRotY;		// 로테이션 Y
+	D3DXMATRIXA16	matTrans;		// 트랜스 레이션
+	D3DXVECTOR3		vScaling;		// 스케일일 값
+	float			fAngleY;		// 로테이션 Y값
+	D3DXVECTOR3		vPosition;		// 로테이션 값
+	vector<cMtlTex*>	vecMtlTex;
+} OBJECT;
 
 //UTIL

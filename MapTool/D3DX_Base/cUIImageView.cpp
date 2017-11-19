@@ -30,7 +30,7 @@ void cUIImageView::Render(LPD3DXSPRITE pSprite)
 	cUIObject::Render(pSprite);
 }
 
-void cUIImageView::SetTexture(char * szFullPath)
+void cUIImageView::SetTexture(string szFullPath)
 {
 	D3DXIMAGE_INFO stImageInfo;
 
