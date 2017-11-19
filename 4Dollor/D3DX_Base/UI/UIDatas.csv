@@ -30,7 +30,7 @@ cMainMenu,,,,,,,,,,,
 ,,,,,,,,,,,
 ,,,,,,,,,,,
 cInGame,,,,,,,,,,,
-21,PT.xy,BG,IndexName,rotate,rotateSpd,Button,Func,normal,over,select,disenable
+23,PT.xy,BG,IndexName,rotate,rotateSpd,Button,Func,normal,over,select,disenable
 700,400,0,l1,0,0,1,150,mainmenu_btn_ready_1.dds,mainmenu_btn_ready_2.dds,mainmenu_btn_ready_2.dds,mainmenu_btn_ready_3.dds
 300,436,1,botboard,0,0,0,99,ingame_img_bottom_bord_bg.png,0,0,0
 356,410,0,abil1img,0,0,0,99,ingame_img_ability1.png,0,0,0
@@ -48,7 +48,9 @@ cInGame,,,,,,,,,,,
 602,435,0,gohomeimg,0,0,0,99,ingame_img_recall_1.png,0,0,0
 5,370,1,charport,0,0,1,99,ingame_btn_portrait_1.png,ingame_btn_portrait_2.png,ingame_btn_portrait_2.png,ingame_btn_portrait_1.png
 5,370,0,charportimg,0,0,0,0,ingame_img_portrait_char.png,0,0,0
-99,444,0,bothp,0,0,0,0,ingame_img_bottom_hp.png,0,0,0
-99,444,1,bothpbg,0,0,0,0,ingame_img_bottom_hp_bg.png,0,0,0
-95,454,0,botmp,0,0,0,0,ingame_img_bottom_mp.png,0,0,0
-95,454,1,botmpbg,0,0,0,0,ingame_img_bottom_mp_bg.png,0,0,0
+90,420,0,botbarbg,0,0,0,99,ingame_img_bottom_barbg_2.png,0,0,0
+116,423,0,bothp,0,0,0,0,ingame_img_bottom_hp.png,0,0,0
+116,423,1,bothpbg,0,0,0,0,ingame_img_bottom_hp_bg.png,0,0,0
+110,435,0,botmp,0,0,0,0,ingame_img_bottom_mp.png,0,0,0
+110,435,1,botmpbg,0,0,0,0,ingame_img_bottom_mp_bg.png,0,0,0
+93,453,1,healwellbtn1,0,0,1,99,ingame_btn_healwell_1.png,ingame_btn_healwell_2.png,ingame_btn_healwell_2.png,ingame_btn_healwell_4.png
