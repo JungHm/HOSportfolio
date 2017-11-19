@@ -9,6 +9,7 @@ cPlayer::cPlayer()
 	m_vFrom = m_vPosition;
 	D3DXMatrixIdentity(&matWorld);
 	D3DXMatrixIdentity(&matT); D3DXMatrixIdentity(&matR);
+	Attack = false;
 }
 
 
@@ -25,36 +26,35 @@ void cPlayer::Update()
 {
 
 	m_pChar->Update();
+	m_pChar->SetmousePos(m_ptMouse);
 	if (GetAsyncKeyState('Q') & 0x8001)
 	{
-		m_pChar->BlendAni(SPELL_Q);
-		Skill = SPELL_Q;
+		m_pChar->Setskill(SPELL_Q);
 	}
 	if (GetAsyncKeyState('W') & 0x8001)
 	{
-		Skill = SPELL_W;
+		m_pChar->Setskill(SPELL_W);
 	}
 	if (GetAsyncKeyState('E') & 0x8001)
 	{
-		Skill = SPELL_E;
+		m_pChar->Setskill(SPELL_E);
 	}
 	if (GetAsyncKeyState('R') & 0x8001)
 	{
-		Skill = SPELL_R;
+		m_pChar->Setskill(SPELL_R);
 	}
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8001)
 	{
-		if (Skill != NULL)// 스킬에 예약된 무언가가 있다면 
+		if (m_pChar->Getskill() != NULL)// 스킬에 예약된 무언가가 있다면 
 		{
-
-			m_pChar->BlendAni(Skill);
-			Skill = NULL;//스킬 사용후 NULL로
+			m_pChar->BlendAni(m_pChar->Getskill());
+			m_pChar->Setskill(NULL);//스킬 사용후 NULL로
 		}
 	}
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8001)
 	{
-		Skill = NULL;
+		m_pChar->Setskill(NULL);
 	}
 	if (Attack == true)
 	{
@@ -73,6 +73,10 @@ void cPlayer::Update()
 
 	if (m_pChar->GetState() == STAND || m_pChar->GetState() == WALK)
 		moveTo();
+}
+
+void cPlayer::Update(POINT mouse)
+{
 }
 
 void cPlayer::moveTo()

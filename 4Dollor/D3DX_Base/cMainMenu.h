@@ -6,6 +6,8 @@ class cCamera;
 class cTessadar;
 class cPlayer;
 
+
+
 class cMainMenu : public iScene
 {
 private:
@@ -18,6 +20,7 @@ private:
 
 private:
 	POINT m_ptMouse;
+	
 public:
 	cMainMenu();
 	~cMainMenu();

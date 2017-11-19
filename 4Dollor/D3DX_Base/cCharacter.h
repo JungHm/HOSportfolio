@@ -2,7 +2,9 @@
 class cCharacter
 {
 protected:
+	SYNTHESIZE(int, Skill, skill);
 	SYNTHESIZE(int, m_State, State);
+	SYNTHESIZE(D3DXVECTOR3, mouse, mousePos);
 public:
 	cCharacter();
 	~cCharacter();

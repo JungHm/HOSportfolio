@@ -50,11 +50,19 @@ void cMainMenu::Destroy()
 
 void cMainMenu::Update()
 {
-	if (GetAsyncKeyState(VK_LBUTTON) & 0001)
+	D3DXVECTOR3 pickPosition;
+	for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
 	{
-		g_Scene->ChangeScene("game");
+		if (Util::IntersectTri(Util::D3DXVec2TransformArray(m_ptMouse.x, m_ptMouse.y),
+			m_pGrid->GetPicVertex()[i].p,
+			m_pGrid->GetPicVertex()[i + 1].p,
+			m_pGrid->GetPicVertex()[i + 2].p,
+			pickPosition))
+		{
+			m_pPlayer->SetMousePos(pickPosition);
+			break;
+		}
 	}
-
 
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
 	{
@@ -77,6 +85,7 @@ void cMainMenu::Update()
 	}
 
 	m_pPlayer->Update();
+	
 }
 
 void cMainMenu::Render()

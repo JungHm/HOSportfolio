@@ -22,6 +22,8 @@ cTessadar::cTessadar()
 
 cTessadar::~cTessadar()
 {
+	SAFE_RELEASE(rangeTexture);
+	SAFE_RELEASE(hitTexture);
 }
 
 void cTessadar::AnimSetUp()
@@ -58,8 +60,37 @@ void cTessadar::AnimSetUp()
 
 void cTessadar::SetUp()
 {
+	D3DXVECTOR2 t;
+	g_pTextureManager->AddTexture(L"Tassadar/nontargetRange2_.png", rangeTexture, &t);
+	g_pTextureManager->AddTexture(L"Tassadar/nontargetRange2.png", hitTexture, &t);
+	/*
+		rangeTexture = g_pTextureManager->GetTexture(L"Tassadar/nontargetRange2_.png");
+		hitTexture = g_pTextureManager->GetTexture(L"Tassadar/nontargetRange2.png");*/
+
+	ST_PT_VERTEXT p;
+	p.p = D3DXVECTOR3(-1, 0.01f, -1);
+	p.t = D3DXVECTOR2(0, 1);
+	vecRange.push_back(p); vecHit.push_back(p);
+	p.p = D3DXVECTOR3(-1, 0.01f, 1);
+	p.t = D3DXVECTOR2(0, 0);
+	vecRange.push_back(p); vecHit.push_back(p);
+	p.p = D3DXVECTOR3(1, 0.01f, 1);
+	p.t = D3DXVECTOR2(1, 0);
+	vecRange.push_back(p); vecHit.push_back(p);
+
+	p.p = D3DXVECTOR3(-1, 0.01f, -1);
+	p.t = D3DXVECTOR2(0, 1);
+	vecRange.push_back(p); vecHit.push_back(p);
+	p.p = D3DXVECTOR3(1, 0.01f, 1);
+	p.t = D3DXVECTOR2(1, 0);
+	vecRange.push_back(p); vecHit.push_back(p);
+	p.p = D3DXVECTOR3(1, 0.01f, -1);
+	p.t = D3DXVECTOR2(1, 1);
+	vecRange.push_back(p); vecHit.push_back(p);
 	XFile->SetXFile(xKey, m_sPath);
 	this->AnimSetUp();
+
+
 }
 
 void cTessadar::Update()
@@ -85,24 +116,48 @@ void cTessadar::Update()
 
 
 
-	//m_ft += 0.01f;
-	//if (m_State != ATTACK)
-	//XFile->GetAniCtrl(xKey)->AdvanceTime(0.018f, NULL);
+
+
+
 	double a = XFile->GetAniCtrl(xKey)->GetTime();
-	//LPD3DXANIMATIONSET pAS;
-
 	ChangeAni();
-
 	XFile->GetXFile(xKey)->Update();
-
-
-
 }
 
 void cTessadar::Render(D3DXMATRIXA16& matRT)
 {
+	if (Skill != NULL)
+	{
+		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		g_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		g_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		g_pD3DDevice->SetFVF(ST_PT_VERTEXT::FVF);
+
+		D3DXMATRIXA16 matWorld; D3DXMatrixIdentity(&matWorld);
+
+		D3DXMatrixScaling(&matWorld, 10.0f, 10.0f, 10.0f);
+		D3DXMATRIXA16 hitMat;
+		D3DXMatrixTranslation(&hitMat, mouse.x, mouse.y, mouse.z);
+		matWorld *= hitMat;
+		g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
+		g_pD3DDevice->SetTexture(0, hitTexture);
+		g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vecHit.size() / 3, &vecHit[0], sizeof(ST_PT_VERTEXT));
+
+
+		D3DXMatrixScaling(&matWorld, 40.0f, 40.0f, 40.0f);
+		D3DXMATRIXA16 mat = matWorld*matRT;
+
+		g_pD3DDevice->SetTransform(D3DTS_WORLD, &mat);
+		g_pD3DDevice->SetTexture(0, rangeTexture);
+		g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vecRange.size() / 3, &vecRange[0], sizeof(ST_PT_VERTEXT));
+
+
+		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	}
+	else g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+
 	XFile->GetXFile(xKey)->Render(matRT);
-	D3DXMATRIXA16 matR; D3DXMatrixIdentity(&matR);
+
 
 }
 
@@ -165,38 +220,41 @@ void cTessadar::ChangeAni()
 		}
 		break;
 	case SPELL_E:
-		XFile->GetAniCtrl(xKey)->GetAnimationSet(dwSpell, &pAS);
-		XFile->GetAniCtrl(xKey)->GetTrackAnimationSet(0, &pASCompare);
-		if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
-		{
-			XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &desc);
-			if (desc.Position + 0.2 >= pAS->GetPeriod())
-			{
-				m_State = STAND;
-			}
-		}
-		else
-		{
-			XFile->GetAniCtrl(xKey)->SetTrackAnimationSet(0, pAS);
-			XFile->GetAniCtrl(xKey)->SetTrackPosition(0, 0);
-		}
+		//XFile->GetAniCtrl(xKey)->GetAnimationSet(dwSpell, &pAS);
+		//XFile->GetAniCtrl(xKey)->GetTrackAnimationSet(0, &pASCompare);
+		//if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
+		//{
+		//	XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &desc);
+		//	if (desc.Position + 0.2 >= pAS->GetPeriod())
+		//	{
+		//		m_State = STAND;
+		//	}
+		//}
+		//else
+		//{
+		//	XFile->GetAniCtrl(xKey)->SetTrackAnimationSet(0, pAS);
+		//	XFile->GetAniCtrl(xKey)->SetTrackPosition(0, 0);
+		//}
+		m_State = STAND;
 		break;
 	case SPELL_R:
-		XFile->GetAniCtrl(xKey)->GetAnimationSet(dwSpell, &pAS);
-		XFile->GetAniCtrl(xKey)->GetTrackAnimationSet(0, &pASCompare);
-		if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
-		{
-			XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &desc);
-			if (desc.Position + 0.2 >= pAS->GetPeriod())
-			{
-				m_State = STAND;
-			}
-		}
-		else
-		{
-			XFile->GetAniCtrl(xKey)->SetTrackAnimationSet(0, pAS);
-			XFile->GetAniCtrl(xKey)->SetTrackPosition(0, 0);
-		}
+		//XFile->GetAniCtrl(xKey)->GetAnimationSet(dwSpell, &pAS);
+		//XFile->GetAniCtrl(xKey)->GetTrackAnimationSet(0, &pASCompare);
+		//if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
+		//{
+		//	XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &desc);
+		//	if (desc.Position + 0.2 >= pAS->GetPeriod())
+		//	{
+		//		m_State = STAND;
+		//	}
+		//}
+		//else
+		//{
+		//	XFile->GetAniCtrl(xKey)->SetTrackAnimationSet(0, pAS);
+		//	XFile->GetAniCtrl(xKey)->SetTrackPosition(0, 0);
+		//}
+
+		m_State = STAND;
 		break;
 	case STAND:
 		XFile->GetAniCtrl(xKey)->GetAnimationSet(dwStand, &pAS);
@@ -286,7 +344,7 @@ void cTessadar::BlendAni(int State)
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(1, 1.0f);
 		break;
 	case SPELL_E:
-		XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &stTrackDesc);
+		/*XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &stTrackDesc);
 
 		XFile->GetAniCtrl(xKey)->GetTrackAnimationSet(0, &pCurrAnimSet);
 		XFile->GetAniCtrl(xKey)->SetTrackAnimationSet(1, pCurrAnimSet);
@@ -297,10 +355,10 @@ void cTessadar::BlendAni(int State)
 		XFile->GetAniCtrl(xKey)->SetTrackPosition(0, 0.0f);
 
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(0, 0.0f);
-		XFile->GetAniCtrl(xKey)->SetTrackWeight(1, 1.0f);
+		XFile->GetAniCtrl(xKey)->SetTrackWeight(1, 1.0f);*/
 		break;
 	case SPELL_R:
-		XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &stTrackDesc);
+		/*XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &stTrackDesc);
 
 		XFile->GetAniCtrl(xKey)->GetTrackAnimationSet(0, &pCurrAnimSet);
 		XFile->GetAniCtrl(xKey)->SetTrackAnimationSet(1, pCurrAnimSet);
@@ -311,7 +369,7 @@ void cTessadar::BlendAni(int State)
 		XFile->GetAniCtrl(xKey)->SetTrackPosition(0, 0.0f);
 
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(0, 0.0f);
-		XFile->GetAniCtrl(xKey)->SetTrackWeight(1, 1.0f);
+		XFile->GetAniCtrl(xKey)->SetTrackWeight(1, 1.0f);*/
 		break;
 	case STAND:
 		XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &stTrackDesc);
@@ -342,5 +400,9 @@ void cTessadar::BlendAni(int State)
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(1, 1.0f);
 		break;
 	}
+}
+
+void cTessadar::CaculrateMousePos(IN POINT mouse, OUT D3DXMATRIXA16 * mat)
+{
 }
 

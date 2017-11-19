@@ -36,6 +36,11 @@ private:
 
 	int xKey;
 
+private:
+	std::vector<ST_PT_VERTEXT> vecRange;
+	std::vector<ST_PT_VERTEXT> vecHit;
+	LPDIRECT3DTEXTURE9	rangeTexture;
+	LPDIRECT3DTEXTURE9	hitTexture;
 
 public:
 	MATRIX16_FIX;
@@ -47,5 +52,7 @@ public:
 	virtual void Render(D3DXMATRIXA16& matRT)override;
 	virtual void ChangeAni()override;
 	virtual void BlendAni(int State)override;
+
+	void CaculrateMousePos(IN POINT mouse, OUT D3DXMATRIXA16* mat);
 };
 
