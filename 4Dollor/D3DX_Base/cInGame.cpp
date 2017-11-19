@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "cInGame.h"
-#include "cUILoadingInGame.h"
-#include "cUIInGame.h"
 #include "cGrid.h"
 #include "cCamera.h"
 #include "cTessadar.h"
@@ -25,32 +23,11 @@ cInGame::cInGame()
 
 cInGame::~cInGame()
 {
-
-
-	
-	if (m_UI)
-	{
-		m_UI->destroy();
-		SAFE_DELETE(m_UI);
-	}
-
-	if (m_UILoading)
-	{
-		m_UILoading->destroy();
-		SAFE_DELETE(m_UILoading);
-	}
 }
 
 void cInGame::SetUp()
 {
-	m_UILoading = new cUILoadingInGame;
-	m_UILoading->setup("cUILoadingInGame");
-
-	m_UI = new cUIInGame;
-	m_UI->setup("cInGame");
-
-  
-  D3DXVECTOR2 temp;
+	D3DXVECTOR2 temp;
 	g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
 
 	m_pLoadMap = new cSaveLoad;
@@ -74,16 +51,6 @@ void cInGame::SetUp()
 
 void cInGame::Destroy()
 {
-	if (m_UI)
-	{
-		m_UI->destroy();
-		SAFE_DELETE(m_UI);
-	}
-	if (m_UILoading)
-	{
-		m_UILoading->destroy();
-		SAFE_DELETE(m_UILoading);
-	}
 	SAFE_DELETE(m_pLoadMap);
 	SAFE_DELETE(m_pHeightMap);
 	SAFE_DELETE(m_pSkyBox);
@@ -96,24 +63,6 @@ void cInGame::Destroy()
 
 void cInGame::Update()
 {
-	if (m_UI && !m_UILoading)
-	{
-		m_UI->update();	// ��ư�� ����Ƿ� update
-		if (m_UI->GetGameEnd())
-		{
-			g_Scene->ChangeScene("menu");
-		}
-	}
-	else if (m_UILoading)
-	{
-		m_UILoading->update();
-		if (m_UILoading->GetLoadingEnd())
-		{
-			m_UILoading->destroy();
-			SAFE_DELETE(m_UILoading);
-     }
-	}
-  
 	D3DXVECTOR3 pickPosition;
 	for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
 	{
@@ -125,8 +74,8 @@ void cInGame::Update()
 		{
 			m_pPlayer->SetMousePos(pickPosition);
 			break;
-    }
-  }
+		}
+	}
 
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
 	{
@@ -153,17 +102,7 @@ void cInGame::Update()
 
 void cInGame::Render()
 {
-	if (m_UI && !m_UILoading) m_UI->renderBG();	// ��� ���� ���� ��
-	else if (m_UILoading) m_UILoading->renderBG();
-
-
-
-
-
-	if (m_UI && !m_UILoading) m_UI->render();	// ��� �� UI ��õ� ����
-	else if (m_UILoading) m_UILoading->render();
-
-  //g_pSprite->BeginScene();
+	//g_pSprite->BeginScene();
 	//g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
 	//g_pSprite->End();
 

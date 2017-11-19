@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "cMainGame.h"
-#include "cInGame.h"
 
 
 
@@ -24,10 +23,6 @@ void cMainGame::Setup()
 	cMainMenu* m_pMenu = new cMainMenu;
 	g_Scene->AddScene("menu", m_pMenu);
 	//g_Scene->AddScene("game", m_pGame);
-
-	cInGame* m_pInGame = new cInGame;
-	g_Scene->AddScene("ingame", m_pInGame);
-
 	g_Scene->SetUp();
 
 	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
