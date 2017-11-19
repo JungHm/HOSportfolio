@@ -39,9 +39,10 @@ private:
 private:
 	std::vector<ST_PT_VERTEXT> vecRange;
 	std::vector<ST_PT_VERTEXT> vecHit;
+	std::vector<ST_PT_VERTEXT> vecBarrier;
 	LPDIRECT3DTEXTURE9	rangeTexture;
 	LPDIRECT3DTEXTURE9	hitTexture;
-
+	LPDIRECT3DTEXTURE9 BarrierTex;
 public:
 	MATRIX16_FIX;
 	cTessadar();
@@ -49,10 +50,10 @@ public:
 	virtual void AnimSetUp() override;
 	virtual void SetUp()override;
 	virtual void Update()override;
-	virtual void Render(D3DXMATRIXA16& matRT)override;
+	virtual void Render(D3DXMATRIXA16& matR, D3DXMATRIXA16& matT)override;
 	virtual void ChangeAni()override;
 	virtual void BlendAni(int State)override;
 
-	void CaculrateMousePos(IN POINT mouse, OUT D3DXMATRIXA16* mat);
+	void SkillUiVertex();
 };
 

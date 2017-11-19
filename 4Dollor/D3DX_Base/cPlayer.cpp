@@ -95,8 +95,8 @@ void cPlayer::moveTo()
 void cPlayer::Render()
 {
 	D3DXMatrixTranslation(&matT, m_vPosition.x, m_vPosition.y, m_vPosition.z);
-	matR *= matT;
-	m_pChar->Render(matR);
+	//matR *= matT;
+	m_pChar->Render(matR, matT);
 }
 
 void cPlayer::Destroy()
