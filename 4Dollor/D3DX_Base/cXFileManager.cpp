@@ -20,3 +20,9 @@ void cXFileManager::Destroy()
 	}
 	m_pXFile.clear();
 }
+
+void cXFileManager::KeyDestroy(int key)
+{
+	m_pXFile[key]->Destroy();
+	SAFE_DELETE(m_pXFile[key]);
+}

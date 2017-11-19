@@ -5,8 +5,6 @@
 #include "cObjLoader.h"
 #include "cGroup.h"
 #include "cObjMap.h"
-#include "cAseNode.h"
-#include "cAseLoader.h"
 #include "cUIMainMenu.h"
 #include "cUILoadingClientBegin.h"
 
@@ -16,10 +14,8 @@ cMainMenu::cMainMenu()
 	: m_pGrid(NULL)
 	, m_pCamera(NULL)
 	, m_pD3DTexture(NULL)
-	, m_pFont(NULL)
 	, m_pObjLoader(NULL)
 	, m_pObjMap(NULL)
-	//, m_pRootNode(NULL)
 	, m_UI(NULL)
 
 {
@@ -31,8 +27,6 @@ cMainMenu::~cMainMenu()
 	SAFE_DELETE(m_pObjLoader);
 	SAFE_DELETE(m_pObjMap);
 	SAFE_RELEASE(m_pD3DTexture);
-	SAFE_RELEASE(m_pD3DTexture1);
-	SAFE_RELEASE(m_pFont);
 
 
 	if (m_UI)
@@ -47,56 +41,13 @@ cMainMenu::~cMainMenu()
 		SAFE_DELETE(m_UILoading);
 	}
 
-	for each (auto p in m_vecGroup)
-	{
-		SAFE_RELEASE(p);
-	}
-	m_vecGroup.clear();
-
-	//m_pRootNode->Destroy();
 }
 
 void cMainMenu::SetUp()
 {
-	//// ASE Loader
-	////cAseLoader	loader;
-	////m_pRootNode = loader.Load("woman/woman_01_all.ASE");
-	//// font
-	//D3DXFONT_DESC fd;
-	//ZeroMemory(&fd, sizeof(D3DXFONT_DESC));
-	//fd.Height = 25;
-	//fd.Width = 12;
-	//fd.Weight = FW_BOLD;
-	//fd.Italic = false;
-	//fd.CharSet = DEFAULT_CHARSET;
-	//fd.OutputPrecision = OUT_DEFAULT_PRECIS;
-	//fd.PitchAndFamily = FF_DONTCARE;
-
-	////WCHAR str[36] = L"����ü";
-	////wsprintf(str, fd.FaceName);
-
-	////char szFaceName[32] = "����ü";
-	////char* p = szFaceName;
-	////strcpy_s(fd.FaceName, 32, L"����ü");
-
-	//D3DXCreateFontIndirect(g_pD3DDevice, &fd, &m_pFont);
-
-	//SetLight();
-
-	
-	//D3DXVECTOR2 temp;
-	//g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
-	//D3DXCreateTextureFromFile(g_pD3DDevice, L"Black Dragon NEW/textures/Dragon_Bump_Col2.jpg", &m_pD3DTexture1);
 
 
-	m_pLoadMap = new cSaveLoad;
-	m_pLoadMap->LoadFieldObj();
 
-	m_pHeightMap = new cHeightMap;
-	m_pHeightMap->Setup("HeightMap/", "backGround.raw", "HeightMap.jpg");
-
-	m_pSkyBox = new cSkyBox;
-	m_pSkyBox->Setup();
 
 	m_UI = new cUIMainMenu;
 	m_UI->setup("cMainMenu");	// ���̺� �� �з�� �̸�� ����ϹǷ� Ŭ���� �̸�� ����
@@ -133,7 +84,7 @@ void cMainMenu::Update()
 		m_UI->update();	// ��ư�� ����Ƿ� update
 		if (m_UI->GetGameStart())
 		{
-			g_Scene->ChangeScene("ingame");
+			g_Scene->ChangeScene("game");
 		}
 	}
 	else if (m_UILoading)
@@ -152,34 +103,11 @@ void cMainMenu::Update()
 
 void cMainMenu::Render()
 {
-	/*RECT rc;
-	SetRect(&rc, 100, 100, 200, 200);
-	std::string s = "�̰��� ����ü��";
-	m_pFont->DrawTextA(NULL, s.c_str(), strlen(s.c_str()), &rc,
-	DT_LEFT | DT_TOP | DT_NOCLIP,
-	D3DCOLOR_XRGB(255, 255, 255));
-
-	D3DXMATRIXA16	matWorld;
-	D3DXMatrixIdentity(&matWorld);
-	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
-	g_pD3DDevice->SetTexture(0, m_pD3DTexture);
-	g_pD3DDevice->SetFVF(ST_PT_VERTEXT::FVF);
-	g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST,
-	m_vecTriVertex.size() / 3,
-	&m_vecTriVertex[0],
-	sizeof(ST_PT_VERTEXT));*/
+	
 
 	if (m_UI && !m_UILoading) m_UI->renderBG();	// ��� ���� ���� ��
 	else if (m_UILoading) m_UILoading->renderBG();
 
-	//g_pSprite->BeginScene();
-	//g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
-	//g_pSprite->End();
-
-	//if (m_pRootNode)
-	//	m_pRootNode->Render();
-
-	//RenderObjFile();
 
 	if (m_UI && !m_UILoading) m_UI->render();	// ��� �� UI ��õ� ����
 	else if (m_UILoading) m_UILoading->render();
@@ -208,36 +136,5 @@ void cMainMenu::SetLight()
 
 	g_pD3DDevice->LightEnable(0, true);
 
-	//D3DLIGHT9 lightPoint;
-	//ZeroMemory(&lightPoint, sizeof(D3DLIGHT9));
-	//lightPoint.Type = D3DLIGHT_POINT;
-	//lightPoint.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightPoint.Diffuse = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
-	//lightPoint.Specular = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightPoint.Position = D3DXVECTOR3(2.0f, 2.0f, 2.0f);
-	//lightPoint.Range = 100.0f;
-	//g_pD3DDevice->SetLight(1, &lightPoint);
-
-	//g_pD3DDevice->LightEnable(1, true);
-
-	//D3DLIGHT9 lightSpot;
-	//ZeroMemory(&lightSpot, sizeof(D3DLIGHT9));
-	//lightSpot.Type = D3DLIGHT_SPOT;
-	//lightSpot.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightSpot.Diffuse = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);
-	//lightSpot.Specular = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightSpot.Position = D3DXVECTOR3(0.0f, -50.0f, 0.0f);
-	//lightSpot.Range = 1000.0f;
-	//lightSpot.Phi = 60.0f;
-	//lightSpot.Theta = 25.0f;
-	//lightSpot.Falloff = 1.0f;
-	////lightSpot.Attenuation0
-	////lightSpot.Attenuation1
-
-	//vDir = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	//D3DXVec3Normalize(&vDir, &vDir);
-	//lightSpot.Direction = vDir;
-	//g_pD3DDevice->SetLight(2, &lightSpot);
-
-	//g_pD3DDevice->LightEnable(2, true);
+	
 }

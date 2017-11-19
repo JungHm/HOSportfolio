@@ -31,7 +31,7 @@ STDMETHODIMP cAllocateHierarchy::CreateFrame(LPCSTR Name, LPD3DXFRAME * ppNewFra
 		strcpy(pFrame->Name, Name);
 		//strcpy_s(pFrame->Name, strlen(Name) + 1, Name);
 
-		
+
 	}
 	*ppNewFrame = pFrame;
 	return S_OK;
@@ -118,25 +118,25 @@ STDMETHODIMP cAllocateHierarchy::CreateMeshContainer(LPCSTR Name, CONST D3DXMESH
 
 STDMETHODIMP cAllocateHierarchy::DestroyFrame(LPD3DXFRAME pFrameToFree)
 {
-	//ST_BONE_MESH* pBoneMesh = (ST_BONE_MESH*)pFrameToFree;
-	//SAFE_DELETE_ARRAY(pBoneMesh->Name);
-	//
-	//SAFE_DELETE(pFrameToFree);
-	delete pFrameToFree;
+	ST_BONE* pBone = (ST_BONE*)pFrameToFree;
+	SAFE_DELETE_ARRAY(pBone->Name);
 
+	SAFE_DELETE(pFrameToFree);
 	return S_OK;
 }
 
 STDMETHODIMP cAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerToFree)
 {
 	ST_BONE_MESH* pBoneMesh = (ST_BONE_MESH*)pMeshContainerToFree;
-	
+
 	SAFE_RELEASE(pBoneMesh->MeshData.pMesh);
+	SAFE_RELEASE(pBoneMesh->pSkinInfo);
 	SAFE_RELEASE(pBoneMesh->pOrigMesh);
-	for each(auto p in pBoneMesh->vecMtlTex)
-	{
-		SAFE_RELEASE(p);
-	}
-	delete pBoneMesh;
+
+	SAFE_DELETE_ARRAY(pBoneMesh->pCurrentBoneMatrices);
+	SAFE_DELETE_ARRAY(pBoneMesh->pBoneOffsetMatrices);
+	SAFE_DELETE_ARRAY(pBoneMesh->ppBoneMatrixPtrs);
+	SAFE_DELETE(pBoneMesh);
+
 	return S_OK;
 }

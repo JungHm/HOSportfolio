@@ -4,105 +4,34 @@
 #include "cMtlTex.h"
 
 cXLoader::cXLoader()
-	: m_pAlloc(nullptr)
-	, m_pFrameRoot(nullptr)
-	, m_pMesh(nullptr)
-	, m_ft(0.1f)
-	, vPos(0, 0, 0)
-	, vDir(0, 0, 1)
+	: m_pFrameRoot(nullptr)
 {
-	m_dTimeCurrent = 0;
 	m_sPath = L"Tassadar/Tassadar.X";
-	D3DXMatrixIdentity(&matT);
-	D3DXMatrixIdentity(&matR);
-	dwCurr = 0;
+}
 
-	m_State = STAND;
+cXLoader::~cXLoader()
+{
+	cAllocateHierarchy m_pAlloc;
+	D3DXFrameDestroy(m_pFrameRoot, &m_pAlloc);
+	SAFE_RELEASE(m_pAnimControl);
 }
 
 void cXLoader::Destroy()
 {
-	D3DXFrameDestroy(m_pFrameRoot, m_pAlloc);
-	//m_pAlloc->DestroyFrame(m_pFrame);
-	SAFE_DELETE(m_pAlloc);
-	SAFE_RELEASE(m_pMesh);
 
-	SAFE_DELETE(m_pMtl);
-	for (DWORD i = 0; i < m_NumMtl; i++)
-	{
-		SAFE_DELETE(m_pTexture[i]);
-
-	}
-	/*m_pMesh->Release();*/
-}
-
-HRESULT cXLoader::InitGeometry()
-{
-	LPD3DXBUFFER pMtlBuffer; //파일에서 불러온 재질정보 *임시로* 저장할 버퍼.
-
-	if (FAILED(D3DXLoadMeshFromX(L"tiger.x",
-		D3DXMESH_SYSTEMMEM/*시스템 메모리에 버퍼 보관*/,
-		g_pD3DDevice,
-		NULL,/*ppAdjacency???*/
-		&pMtlBuffer,//파일에서 불러온 재질 임시로 저장할 버퍼.
-		NULL,
-		&m_NumMtl,//재질 개수
-		&m_pMesh//Mesh 정보 담을 객체.
-	)))
-	{
-		return E_FAIL;
-	}
-
-	//재질 정보와 텍스쳐 정보 따로 뽑아냄.
-
-	D3DXMATERIAL* d3dxmtl = (D3DXMATERIAL*)pMtlBuffer->GetBufferPointer();
-
-	//Material 개수만큼 Material구조체 배열 생성.
-	m_pMtl = new D3DMATERIAL9[m_NumMtl];
-
-	//Material 개수만큼 Texture 배열 생성.
-
-	m_pTexture = new LPDIRECT3DTEXTURE9[m_NumMtl];
-
-	for (DWORD i = 0; i < m_NumMtl; i++)
-	{
-		m_pMtl[i] = d3dxmtl[i].MatD3D; //Material정보 복사.
-		m_pMtl[i].Ambient = m_pMtl[i].Diffuse;
-		m_pTexture[i] = NULL; //texture 객체 NULL 초기화.
-
-		if (d3dxmtl[i].pTextureFilename != NULL && strlen(d3dxmtl[i].pTextureFilename) > 0)
-		{
-			if (FAILED(D3DXCreateTextureFromFile(g_pD3DDevice, (LPCWSTR)d3dxmtl[i].pTextureFilename, &m_pTexture[i])))
-			{
-				return E_FAIL;
-			}
-		}
-	}
-
-	pMtlBuffer->Release(); //임시 저장 버퍼 해제.
-
-						   //IDirect3DVertexBuffer9* Temp;
-						   //m_pMesh->GetVertexBuffer(&Temp);
-						   //ST_PNT_VERTEXT* vTemp;
-						   //Temp->Lock(0, 0, (void**)&vTemp, 0);
-						   //D3DXVECTOR3 x = vTemp[0].n;
-						   //	Temp->Unlock();
-	return S_OK;
 }
 
 void cXLoader::XfileLoad(IN wstring m_sPath)
 {
-
-	m_pAlloc = new cAllocateHierarchy;
+	cAllocateHierarchy m_pAlloc;
 
 	HRESULT hr = D3DXLoadMeshHierarchyFromX(m_sPath.c_str(),
 		D3DXMESH_MANAGED,
 		g_pD3DDevice,
-		m_pAlloc,
+		&m_pAlloc,
 		NULL,
 		&m_pFrameRoot,
 		&m_pAnimControl);
-	//assert(hr == S_OK);
 	D3DXMATRIX matW;
 	D3DXMatrixIdentity(&matW);
 
@@ -117,7 +46,6 @@ void cXLoader::XfileLoad(IN wstring m_sPath)
 	} //animation Track 비활성화.
 	m_pAnimControl->SetTrackEnable(0, TRUE);
 
-	//SAFE_DELETE(m_pAlloc);
 }
 
 
@@ -133,12 +61,9 @@ void cXLoader::Render(D3DXMATRIXA16& matRT)
 {
 	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	g_pD3DDevice->LightEnable(0, true);
-	//g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	//D3DXMatrixIdentity(&m_pFrame->TransformationMatrix);
 	ST_BONE* pBone = (ST_BONE*)m_pFrameRoot;
 	RecursiveFrameRender(pBone, &pBone->matWorldTM, matRT);
 	g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	//g_pD3DDevice->SetTexture(0, nullptr);
 
 }
 
@@ -274,7 +199,4 @@ void cXLoader::RecursiveFrameRender(D3DXFRAME * pParent, D3DXMATRIXA16 * pParent
 	}
 }
 
-cXLoader::~cXLoader()
-{
 
-}

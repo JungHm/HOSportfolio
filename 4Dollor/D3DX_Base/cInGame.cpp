@@ -13,12 +13,6 @@
 
 
 cInGame::cInGame()
-	: m_pGrid(NULL)
-	, m_pCamera(NULL)
-	, m_pD3DTexture(NULL)
-	, m_pLoadMap(NULL)
-	, m_pHeightMap(NULL)
-	, m_pSkyBox(NULL)
 {
 }
 
@@ -27,18 +21,7 @@ cInGame::~cInGame()
 {
 
 
-	
-	if (m_UI)
-	{
-		m_UI->destroy();
-		SAFE_DELETE(m_UI);
-	}
 
-	if (m_UILoading)
-	{
-		m_UILoading->destroy();
-		SAFE_DELETE(m_UILoading);
-	}
 }
 
 void cInGame::SetUp()
@@ -49,8 +32,8 @@ void cInGame::SetUp()
 	m_UI = new cUIInGame;
 	m_UI->setup("cInGame");
 
-  
-  D3DXVECTOR2 temp;
+
+	D3DXVECTOR2 temp;
 	g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
 
 	m_pLoadMap = new cSaveLoad;
@@ -90,7 +73,9 @@ void cInGame::Destroy()
 
 	SAFE_DELETE(m_pGrid);
 	SAFE_RELEASE(m_pD3DTexture);
-	XFile->Destroy();
+
+	m_pPlayer->Destroy();
+	SAFE_DELETE(m_pPlayer);
 	//m_pRootNode->Destroy();
 }
 
@@ -111,9 +96,9 @@ void cInGame::Update()
 		{
 			m_UILoading->destroy();
 			SAFE_DELETE(m_UILoading);
-     }
+		}
 	}
-  
+
 	D3DXVECTOR3 pickPosition;
 	for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
 	{
@@ -125,8 +110,8 @@ void cInGame::Update()
 		{
 			m_pPlayer->SetMousePos(pickPosition);
 			break;
-    }
-  }
+		}
+	}
 
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
 	{
@@ -149,6 +134,10 @@ void cInGame::Update()
 	}
 
 	m_pPlayer->Update();
+	if (GetAsyncKeyState(VK_LBUTTON) & 0001)
+	{
+		g_Scene->ChangeScene("menu");
+	}
 }
 
 void cInGame::Render()
@@ -163,9 +152,9 @@ void cInGame::Render()
 	if (m_UI && !m_UILoading) m_UI->render();	// ��� �� UI ��õ� ����
 	else if (m_UILoading) m_UILoading->render();
 
-  //g_pSprite->BeginScene();
-	//g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
-	//g_pSprite->End();
+	//g_pSprite->BeginScene();
+	  //g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
+	  //g_pSprite->End();
 
 	if (m_pLoadMap)
 		m_pLoadMap->CreateObjRender();
@@ -182,60 +171,8 @@ void cInGame::Render()
 	m_pPlayer->Render();
 }
 
-
-
 void cInGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	m_ptMouse.x = LOWORD(lParam);
 	m_ptMouse.y = HIWORD(lParam);
-}
-
-void cInGame::SetLight()
-{
-	D3DLIGHT9 light;
-
-	ZeroMemory(&light, sizeof(D3DLIGHT9));
-	light.Type = D3DLIGHT_DIRECTIONAL;
-	light.Ambient = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	light.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	light.Specular = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	D3DXVECTOR3 vDir(1.0f, -1.0f, 1.0f);
-	D3DXVec3Normalize(&vDir, &vDir);
-	light.Direction = vDir;
-	g_pD3DDevice->SetLight(0, &light);
-
-	g_pD3DDevice->LightEnable(0, true);
-
-	//D3DLIGHT9 lightPoint;
-	//ZeroMemory(&lightPoint, sizeof(D3DLIGHT9));
-	//lightPoint.Type = D3DLIGHT_POINT;
-	//lightPoint.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightPoint.Diffuse = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
-	//lightPoint.Specular = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightPoint.Position = D3DXVECTOR3(2.0f, 2.0f, 2.0f);
-	//lightPoint.Range = 100.0f;
-	//g_pD3DDevice->SetLight(1, &lightPoint);
-
-	//g_pD3DDevice->LightEnable(1, true);
-
-	//D3DLIGHT9 lightSpot;
-	//ZeroMemory(&lightSpot, sizeof(D3DLIGHT9));
-	//lightSpot.Type = D3DLIGHT_SPOT;
-	//lightSpot.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightSpot.Diffuse = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);
-	//lightSpot.Specular = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightSpot.Position = D3DXVECTOR3(0.0f, -50.0f, 0.0f);
-	//lightSpot.Range = 1000.0f;
-	//lightSpot.Phi = 60.0f;
-	//lightSpot.Theta = 25.0f;
-	//lightSpot.Falloff = 1.0f;
-	////lightSpot.Attenuation0
-	////lightSpot.Attenuation1
-
-	//vDir = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	//D3DXVec3Normalize(&vDir, &vDir);
-	//lightSpot.Direction = vDir;
-	//g_pD3DDevice->SetLight(2, &lightSpot);
-
-	//g_pD3DDevice->LightEnable(2, true);
 }
