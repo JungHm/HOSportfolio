@@ -75,6 +75,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		{
 			g_pMainGame->Update();
 			g_pMainGame->Render();
+			KEY->WireFrame();
 		}
 	}
 

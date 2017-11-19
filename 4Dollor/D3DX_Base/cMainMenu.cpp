@@ -11,6 +11,7 @@
 #include "cUILoadingClientBegin.h"
 
 
+
 cMainMenu::cMainMenu()
 	: m_pGrid(NULL)
 	, m_pCamera(NULL)
@@ -20,9 +21,9 @@ cMainMenu::cMainMenu()
 	, m_pObjMap(NULL)
 	//, m_pRootNode(NULL)
 	, m_UI(NULL)
+
 {
 }
-
 
 cMainMenu::~cMainMenu()
 {
@@ -71,12 +72,12 @@ void cMainMenu::SetUp()
 	//fd.OutputPrecision = OUT_DEFAULT_PRECIS;
 	//fd.PitchAndFamily = FF_DONTCARE;
 
-	////WCHAR str[36] = L"±¼¸²Ã¼";
+	////WCHAR str[36] = L"ï¿½ï¿½ï¿½ï¿½Ã¼";
 	////wsprintf(str, fd.FaceName);
 
-	////char szFaceName[32] = "±¼¸²Ã¼";
+	////char szFaceName[32] = "ï¿½ï¿½ï¿½ï¿½Ã¼";
 	////char* p = szFaceName;
-	////strcpy_s(fd.FaceName, 32, L"±¼¸²Ã¼");
+	////strcpy_s(fd.FaceName, 32, L"ï¿½ï¿½ï¿½ï¿½Ã¼");
 
 	//D3DXCreateFontIndirect(g_pD3DDevice, &fd, &m_pFont);
 
@@ -87,19 +88,22 @@ void cMainMenu::SetUp()
 	//g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
 	//D3DXCreateTextureFromFile(g_pD3DDevice, L"Black Dragon NEW/textures/Dragon_Bump_Col2.jpg", &m_pD3DTexture1);
 
-	m_pGrid = new cGrid;
-	m_pGrid->Setup();
 
-	//m_pObjLoader = new cObjLoader;
-	//m_pObjLoader->Load(m_vecGroup, "obj", "map.obj");
+	m_pLoadMap = new cSaveLoad;
+	m_pLoadMap->LoadFieldObj();
 
-	//LoadSurface();
+	m_pHeightMap = new cHeightMap;
+	m_pHeightMap->Setup("HeightMap/", "backGround.raw", "HeightMap.jpg");
+
+	m_pSkyBox = new cSkyBox;
+	m_pSkyBox->Setup();
 
 	m_UI = new cUIMainMenu;
-	m_UI->setup("cMainMenu");	// Å×ÀÌºí ³» ºÐ·ùµÈ ÀÌ¸§À» ÂüÁ¶ÇÏ¹Ç·Î Å¬·¡½º ÀÌ¸§À» º¹ºÙ
+	m_UI->setup("cMainMenu");	// ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ ï¿½Ð·ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¹Ç·ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 	m_UILoading = new cUILoadingClientBegin;
 	m_UILoading->setup("cUILoadingClientBegin");
+
 }
 
 void cMainMenu::Destroy()
@@ -114,6 +118,7 @@ void cMainMenu::Destroy()
 		m_UILoading->destroy();
 		SAFE_DELETE(m_UILoading);
 	}
+
 }
 
 void cMainMenu::Update()
@@ -125,7 +130,7 @@ void cMainMenu::Update()
 	//}
 	if (m_UI && !m_UILoading)
 	{
-		m_UI->update();	// ¹öÆ°ÀÌ ÀÖÀ¸¹Ç·Î update
+		m_UI->update();	// ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ update
 		if (m_UI->GetGameStart())
 		{
 			g_Scene->ChangeScene("ingame");
@@ -138,15 +143,18 @@ void cMainMenu::Update()
 		{
 			m_UILoading->destroy();
 			SAFE_DELETE(m_UILoading);
+
 		}
 	}
+
+
 }
 
 void cMainMenu::Render()
 {
 	/*RECT rc;
 	SetRect(&rc, 100, 100, 200, 200);
-	std::string s = "ÀÌ°ÍÀÌ ±¼¸²Ã¼´Ù";
+	std::string s = "ï¿½Ì°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½";
 	m_pFont->DrawTextA(NULL, s.c_str(), strlen(s.c_str()), &rc,
 	DT_LEFT | DT_TOP | DT_NOCLIP,
 	D3DCOLOR_XRGB(255, 255, 255));
@@ -161,37 +169,27 @@ void cMainMenu::Render()
 	&m_vecTriVertex[0],
 	sizeof(ST_PT_VERTEXT));*/
 
-	if (m_UI && !m_UILoading) m_UI->renderBG();	// ¹è°æ ¸ÕÀú ¶ç¿ö¾ß ÇÔ
+	if (m_UI && !m_UILoading) m_UI->renderBG();	// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 	else if (m_UILoading) m_UILoading->renderBG();
 
 	//g_pSprite->BeginScene();
 	//g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
 	//g_pSprite->End();
 
-	if (m_pGrid)
-		m_pGrid->Render();
-
 	//if (m_pRootNode)
 	//	m_pRootNode->Render();
 
 	//RenderObjFile();
 
-	if (m_UI && !m_UILoading) m_UI->render();	// ¹è°æ ¿Ü UI °ü·ÃµÈ ³»¿ë
+	if (m_UI && !m_UILoading) m_UI->render();	// ï¿½ï¿½ï¿½ ï¿½ï¿½ UI ï¿½ï¿½Ãµï¿½ ï¿½ï¿½ï¿½ï¿½
 	else if (m_UILoading) m_UILoading->render();
+
 }
 
-void cMainMenu::RenderObjFile()
+void cMainMenu::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	D3DXMATRIXA16 matWorld, matS, matR;
-	D3DXMatrixScaling(&matS, 0.06f, 0.06f, 0.06f);
-	D3DXMatrixRotationX(&matR, -D3DX_PI / 2.0f);
-	matWorld = matS * matR;
-	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
-
-	for each (auto p in m_vecGroup)
-	{
-		p->Render();
-	}
+	m_ptMouse.x = LOWORD(lParam);
+	m_ptMouse.y = HIWORD(lParam);
 }
 
 void cMainMenu::SetLight()
@@ -210,7 +208,6 @@ void cMainMenu::SetLight()
 
 	g_pD3DDevice->LightEnable(0, true);
 
-
 	//D3DLIGHT9 lightPoint;
 	//ZeroMemory(&lightPoint, sizeof(D3DLIGHT9));
 	//lightPoint.Type = D3DLIGHT_POINT;
@@ -222,7 +219,6 @@ void cMainMenu::SetLight()
 	//g_pD3DDevice->SetLight(1, &lightPoint);
 
 	//g_pD3DDevice->LightEnable(1, true);
-
 
 	//D3DLIGHT9 lightSpot;
 	//ZeroMemory(&lightSpot, sizeof(D3DLIGHT9));
@@ -244,14 +240,4 @@ void cMainMenu::SetLight()
 	//g_pD3DDevice->SetLight(2, &lightSpot);
 
 	//g_pD3DDevice->LightEnable(2, true);
-}
-
-void cMainMenu::LoadSurface()
-{
-	D3DXMATRIXA16 matWorld, matS, matR;
-	D3DXMatrixScaling(&matS, 0.06f, 0.06f, 0.06f);
-	D3DXMatrixRotationX(&matR, -D3DX_PI / 2.0f);
-	matWorld = matS * matR;
-
-	m_pObjMap = new cObjMap("obj", "map_surface.obj", &matWorld);
 }

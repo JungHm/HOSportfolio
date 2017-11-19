@@ -83,14 +83,14 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Asciitok.h" />
-    <ClInclude Include="cAseLoader.h" />
-    <ClInclude Include="cAseNode.h" />
+    <ClInclude Include="cAllocateHierarchy.h" />
     <ClInclude Include="cCamera.h" />
+    <ClInclude Include="cCharacter.h" />
     <ClInclude Include="cDeviceManager.h" />
     <ClInclude Include="cFontManager.h" />
     <ClInclude Include="cGrid.h" />
     <ClInclude Include="cGroup.h" />
+    <ClInclude Include="cHeightMap.h" />
     <ClInclude Include="cInGame.h" />
     <ClInclude Include="cKeyManager.h" />
     <ClInclude Include="cMainGame.h" />
@@ -100,15 +100,26 @@
     <ClInclude Include="cObjectManager.h" />
     <ClInclude Include="cObjLoader.h" />
     <ClInclude Include="cObjMap.h" />
+    <ClInclude Include="cPlayer.h" />
+    <ClInclude Include="cSaveLoad.h" />
     <ClInclude Include="cSceneManager.h" />
+    <ClInclude Include="cSkyBox.h" />
     <ClInclude Include="cSpriteManager.h" />
+    <ClInclude Include="cTessadar.h" />
     <ClInclude Include="cTextureManager.h" />
     <ClInclude Include="cTimeManager.h" />
+
     <ClInclude Include="cUIInGame.h" />
     <ClInclude Include="cUILoadingClientBegin.h" />
     <ClInclude Include="cUILoadingInGame.h" />
     <ClInclude Include="cUIMainMenu.h" />
     <ClInclude Include="cUIObject.h" />
+
+    <ClInclude Include="cUnit.h" />
+    <ClInclude Include="cUtil.h" />
+    <ClInclude Include="cXFileManager.h" />
+    <ClInclude Include="cXLoader.h" />
+
     <ClInclude Include="D3DX_Base.h" />
     <ClInclude Include="iMap.h" />
     <ClInclude Include="iScene.h" />
@@ -118,13 +129,14 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cAseLoader.cpp" />
-    <ClCompile Include="cAseNode.cpp" />
+    <ClCompile Include="cAllocateHierarchy.cpp" />
     <ClCompile Include="cCamera.cpp" />
+    <ClCompile Include="cCharacter.cpp" />
     <ClCompile Include="cDeviceManager.cpp" />
     <ClCompile Include="cFontManager.cpp" />
     <ClCompile Include="cGrid.cpp" />
     <ClCompile Include="cGroup.cpp" />
+    <ClCompile Include="cHeightMap.cpp" />
     <ClCompile Include="cInGame.cpp" />
     <ClCompile Include="cKeyManager.cpp" />
     <ClCompile Include="cMainGame.cpp" />
@@ -134,15 +146,25 @@
     <ClCompile Include="cObjectManager.cpp" />
     <ClCompile Include="cObjLoader.cpp" />
     <ClCompile Include="cObjMap.cpp" />
+    <ClCompile Include="cPlayer.cpp" />
+    <ClCompile Include="cSaveLoad.cpp" />
     <ClCompile Include="cSceneManager.cpp" />
+    <ClCompile Include="cSkyBox.cpp" />
     <ClCompile Include="cSpriteManager.cpp" />
+    <ClCompile Include="cTessadar.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
     <ClCompile Include="cTimeManager.cpp" />
+
     <ClCompile Include="cUIInGame.cpp" />
     <ClCompile Include="cUILoadingClientBegin.cpp" />
     <ClCompile Include="cUILoadingInGame.cpp" />
     <ClCompile Include="cUIMainMenu.cpp" />
     <ClCompile Include="cUIObject.cpp" />
+
+    <ClCompile Include="cUnit.cpp" />
+    <ClCompile Include="cXFileManager.cpp" />
+    <ClCompile Include="cXLoader.cpp" />
+
     <ClCompile Include="D3DX_Base.cpp" />
     <ClCompile Include="iMap.cpp" />
     <ClCompile Include="iScene.cpp" />

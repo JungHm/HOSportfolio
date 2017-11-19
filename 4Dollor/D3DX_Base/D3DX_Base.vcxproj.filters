@@ -27,6 +27,17 @@
     </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{90ddeee4-ce90-47cf-ac5c-de3e4f3c6ac8}</UniqueIdentifier>
+    <Filter Include="XFile">
+      <UniqueIdentifier>{2621d4e7-078c-427e-8b3d-a2b5b80c6561}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UNIT">
+      <UniqueIdentifier>{30d792b0-8fa8-4847-9d31-d82c3c1962df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UTIL">
+      <UniqueIdentifier>{943e6c09-9877-4193-bf31-00d93640068c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Map">
+      <UniqueIdentifier>{c06461c6-0d07-4bba-b831-2f18522786dc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -65,15 +76,6 @@
     </ClInclude>
     <ClInclude Include="iMap.h">
       <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Asciitok.h">
-      <Filter>ASELoader</Filter>
-    </ClInclude>
-    <ClInclude Include="cAseLoader.h">
-      <Filter>ASELoader</Filter>
-    </ClInclude>
-    <ClInclude Include="cAseNode.h">
-      <Filter>ASELoader</Filter>
     </ClInclude>
     <ClInclude Include="cCamera.h">
       <Filter>Manager</Filter>
@@ -131,6 +133,38 @@
     </ClInclude>
     <ClInclude Include="structUI.h">
       <Filter>UI</Filter>
+    <ClInclude Include="cXLoader.h">
+      <Filter>XFile</Filter>
+    </ClInclude>
+    <ClInclude Include="cAllocateHierarchy.h">
+      <Filter>XFile</Filter>
+    </ClInclude>
+    <ClInclude Include="cUnit.h">
+      <Filter>UNIT</Filter>
+    </ClInclude>
+    <ClInclude Include="cTessadar.h">
+      <Filter>UNIT</Filter>
+    </ClInclude>
+    <ClInclude Include="cXFileManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="cPlayer.h">
+      <Filter>UNIT</Filter>
+    </ClInclude>
+    <ClInclude Include="cUtil.h">
+      <Filter>UTIL</Filter>
+    </ClInclude>
+    <ClInclude Include="cCharacter.h">
+      <Filter>UNIT</Filter>
+    </ClInclude>
+    <ClInclude Include="cSaveLoad.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="cHeightMap.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="cSkyBox.h">
+      <Filter>Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -161,12 +195,6 @@
     <ClCompile Include="iMap.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="cAseLoader.cpp">
-      <Filter>ASELoader</Filter>
-    </ClCompile>
-    <ClCompile Include="cAseNode.cpp">
-      <Filter>ASELoader</Filter>
-    </ClCompile>
     <ClCompile Include="cDeviceManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
@@ -187,9 +215,6 @@
     </ClCompile>
     <ClCompile Include="cKeyManager.cpp">
       <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="cMainGame.cpp">
-      <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="cMainMenu.cpp">
       <Filter>Scene</Filter>
@@ -220,6 +245,38 @@
     </ClCompile>
     <ClCompile Include="cUIObject.cpp">
       <Filter>UI</Filter>
+    <ClCompile Include="cXLoader.cpp">
+      <Filter>XFile</Filter>
+    </ClCompile>
+    <ClCompile Include="cAllocateHierarchy.cpp">
+      <Filter>XFile</Filter>
+    </ClCompile>
+    <ClCompile Include="cUnit.cpp">
+      <Filter>UNIT</Filter>
+    </ClCompile>
+    <ClCompile Include="cMainGame.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="cTessadar.cpp">
+      <Filter>UNIT</Filter>
+    </ClCompile>
+    <ClCompile Include="cXFileManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="cPlayer.cpp">
+      <Filter>UNIT</Filter>
+    </ClCompile>
+    <ClCompile Include="cCharacter.cpp">
+      <Filter>UNIT</Filter>
+    </ClCompile>
+    <ClCompile Include="cSaveLoad.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="cHeightMap.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="cSkyBox.cpp">
+      <Filter>Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,7 +5,7 @@
 
 #pragma once
 // 콘솔 창 사용
-#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+//#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
 #include "targetver.h"
 
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용은 Windows 헤더에서 제외합니다.
@@ -71,16 +71,16 @@ public:\
 	}
 
 // 텍스쳐 비율
-#define MAX_XPIXEL   1187
-#define MAX_YPIXEL   601
-#define ONE_XPIXEL   MAX_XPIXEL / 120
-#define ONE_YPIXEL   MAX_YPIXEL / 60
+#define MAX_XPIXEL   1041	
+#define MAX_YPIXEL   652
+#define ONE_XPIXEL   MAX_XPIXEL / 280
+#define ONE_YPIXEL   MAX_YPIXEL / 160
 #define ONE_XPER   (float)ONE_XPIXEL / (float)MAX_XPIXEL
 #define ONE_YPER   (float)ONE_YPIXEL / (float)MAX_YPIXEL
 
 // 윈도우 시작점, 사이즈
-#define WINSTARTX 300
-#define WINSTARTY 100
+#define WINSTARTX -7
+#define WINSTARTY -50
 #define WINSIZEX  1500	
 #define WINSIZEY  900
 
@@ -136,6 +136,30 @@ enum eFontType
 	FT_QUEST,
 };
 
+enum CAMMODE
+{
+	BASE, WORLD
+};
+
+enum OBJECTKIND
+{
+	GATE_01,
+	WALL_01, WALL_02, WALL_03, WALL_04, WALL_05,
+	FOUNTAIN, 
+	ROCK_00, ROCK_04, ROCK_05,
+	OBJNUM
+};
+
+struct ST_UI_SIZE
+{
+	int nWidth;
+	int nHeight;
+
+	ST_UI_SIZE() : nWidth(0), nHeight(0) { }
+	ST_UI_SIZE(int _nWidth, int _nHeight) : nWidth(_nWidth), nHeight(_nHeight) { }
+};
+
+#include "cCamera.h"
 #include "cObject.h"
 #include "cGameObject.h"
 #include "cObjectManager.h"
@@ -144,3 +168,19 @@ enum eFontType
 #include "cTextureManager.h"
 #include "cFontManager.h"
 #include "cKeyManager.h"
+#include "cMtlTex.h"
+
+typedef struct tagObject
+{
+	int				nKind;			// 종류
+	LPD3DXMESH		pMesh;			// 매쉬
+	string			sFileName;		// 파일 이름
+	D3DXMATRIXA16	matWorld;		// 월드
+	D3DXMATRIXA16	matScal;		// 스케일링
+	D3DXMATRIXA16	matRotY;		// 로테이션 Y
+	D3DXMATRIXA16	matTrans;		// 트랜스 레이션
+	D3DXVECTOR3		vScaling;		// 스케일일 값
+	float			fAngleY;		// 로테이션 Y값
+	D3DXVECTOR3		vPosition;		// 로테이션 값
+	vector<cMtlTex*>	vecMtlTex;
+} OBJECT;

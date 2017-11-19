@@ -1,17 +1,17 @@
-// stdafx.h : ÀÚÁÖ »ç¿ëÇÏÁö¸¸ ÀÚÁÖ º¯°æµÇÁö´Â ¾Ê´Â
-// Ç¥ÁØ ½Ã½ºÅÛ Æ÷ÇÔ ÆÄÀÏ ¹× ÇÁ·ÎÁ§Æ® °ü·Ã Æ÷ÇÔ ÆÄÀÏÀÌ
-// µé¾î ÀÖ´Â Æ÷ÇÔ ÆÄÀÏÀÔ´Ï´Ù.
+// stdafx.h : ìì£¼ ì‚¬ìš©í•˜ì§€ë§Œ ìì£¼ ë³€ê²½ë˜ì§€ëŠ” ì•ŠëŠ”
+// í‘œì¤€ ì‹œìŠ¤í…œ í¬í•¨ íŒŒì¼ ë° í”„ë¡œì íŠ¸ ê´€ë ¨ í¬í•¨ íŒŒì¼ì´
+// ë“¤ì–´ ìˆëŠ” í¬í•¨ íŒŒì¼ì…ë‹ˆë‹¤.
 //
 
 #pragma once
 
 #include "targetver.h"
-
-#define WIN32_LEAN_AND_MEAN             // °ÅÀÇ »ç¿ëµÇÁö ¾Ê´Â ³»¿ëÀº Windows Çì´õ¿¡¼­ Á¦¿ÜÇÕ´Ï´Ù.
-// Windows Çì´õ ÆÄÀÏ:
+#define _CRT_SECURE_NO_DEPRECATE      // C4996 ì˜¤ë¥˜ ë¬´ì‹œ. ê³¼ê±° ë¬¸ìì—´(_sê°€ ì—†ëŠ” ê²ƒ)ì„ ì‚¬ìš©í•˜ì§€ ë§ˆë¼ëŠ” ì •ë„ì˜ ì˜¤ë¥˜// Windows í—¤ë” íŒŒì¼:
+#define WIN32_LEAN_AND_MEAN             // ê±°ì˜ ì‚¬ìš©ë˜ì§€ ì•ŠëŠ” ë‚´ìš©ì€ Windows í—¤ë”ì—ì„œ ì œì™¸í•©ë‹ˆë‹¤.
+// Windows í—¤ë” íŒŒì¼:
 #include <windows.h>
 
-// C ·±Å¸ÀÓ Çì´õ ÆÄÀÏÀÔ´Ï´Ù.
+// C ëŸ°íƒ€ì„ í—¤ë” íŒŒì¼ì…ë‹ˆë‹¤.
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
@@ -23,7 +23,7 @@
 #include <map>
 
 
-// TODO: ÇÁ·Î±×·¥¿¡ ÇÊ¿äÇÑ Ãß°¡ Çì´õ´Â ¿©±â¿¡¼­ ÂüÁ¶ÇÕ´Ï´Ù.
+// TODO: í”„ë¡œê·¸ë¨ì— í•„ìš”í•œ ì¶”ê°€ í—¤ë”ëŠ” ì—¬ê¸°ì—ì„œ ì°¸ì¡°í•©ë‹ˆë‹¤.
 #include <d3dx9.h>
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
@@ -40,7 +40,7 @@ public:\
 		static class_name instance;\
 		return &instance;\
 	}
-
+#define SAFE_DELETE_ARRAY(p) {if(p) delete [] p; p = NULL; }
 #define SAFE_DELETE(p) { if(p) delete p; p = NULL; }
 #define SAFE_RELEASE(p) { if(p) p->Release(); p = NULL; }
 
@@ -66,6 +66,17 @@ public:\
 		}\
 	}
 
+#define MATRIX16_FIX public: void* operator new(size_t i){return _mm_malloc(i, 16);}\
+			public: void operator delete(void* p){_mm_free(p);}
+
+// í…ìŠ¤ì³ ë¹„ìœ¨
+#define MAX_XPIXEL   1041
+#define MAX_YPIXEL   652
+#define ONE_XPIXEL   MAX_XPIXEL / 280
+#define ONE_YPIXEL   MAX_YPIXEL / 160
+#define ONE_XPER   (float)ONE_XPIXEL / (float)MAX_XPIXEL
+#define ONE_YPER   (float)ONE_YPIXEL / (float)MAX_YPIXEL
+
 struct ST_PC_VERTEXT
 {
 	D3DXVECTOR3	p;
@@ -80,13 +91,22 @@ struct ST_PT_VERTEXT
 	enum { FVF = D3DFVF_XYZ | D3DFVF_TEX1 };
 };
 
-// PNT//jPNT
+// PNT
 struct ST_PNT_VERTEXT
 {
 	D3DXVECTOR3	p;
 	D3DXVECTOR3	n;
 	D3DXVECTOR2	t;
 	enum { FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1 };
+};
+
+enum OBJECTKIND
+{
+	GATE_01,
+	WALL_01, WALL_02, WALL_03, WALL_04, WALL_05,
+	FOUNTAIN,
+	ROCK_00, ROCK_04, ROCK_05,
+	OBJNUM
 };
 
 #include "cKeyManager.h"
@@ -99,3 +119,22 @@ struct ST_PNT_VERTEXT
 #include "cCamera.h"
 #include "cSceneManager.h"
 #include "cFontManager.h"
+#include "cXFileManager.h"
+#include "cMtlTex.h"
+
+typedef struct tagObject
+{
+	int				nKind;			// ì¢…ë¥˜
+	LPD3DXMESH		pMesh;			// ë§¤ì‰¬
+	string			sFileName;		// íŒŒì¼ ì´ë¦„
+	D3DXMATRIXA16	matWorld;		// ì›”ë“œ
+	D3DXMATRIXA16	matScal;		// ìŠ¤ì¼€ì¼ë§
+	D3DXMATRIXA16	matRotY;		// ë¡œí…Œì´ì…˜ Y
+	D3DXMATRIXA16	matTrans;		// íŠ¸ëœìŠ¤ ë ˆì´ì…˜
+	D3DXVECTOR3		vScaling;		// ìŠ¤ì¼€ì¼ì¼ ê°’
+	float			fAngleY;		// ë¡œí…Œì´ì…˜ Yê°’
+	D3DXVECTOR3		vPosition;		// ë¡œí…Œì´ì…˜ ê°’
+	vector<cMtlTex*>	vecMtlTex;
+} OBJECT;
+
+//UTIL

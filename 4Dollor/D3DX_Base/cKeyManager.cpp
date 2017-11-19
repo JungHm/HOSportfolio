@@ -72,3 +72,15 @@ bool cKeyManager::isToggleKey(int key)
 	if (GetKeyState(key) & 0x0001) return true;
 	return false;
 }
+
+void cKeyManager::WireFrame()
+{
+	if (KEY->isOnceKeyDown('Z'))
+	{
+		if (!m_isWireFrame) m_isWireFrame = true;
+		else m_isWireFrame = false;
+	}
+
+	if (m_isWireFrame) g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	else g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+}
