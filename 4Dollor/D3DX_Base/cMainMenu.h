@@ -11,6 +11,7 @@ class cUIMainMenu;
 class cUILoadingClientBegin;
 
 
+
 class cMainMenu : public iScene
 {
 private:
@@ -23,12 +24,12 @@ private:
 	cUIMainMenu*	m_UI;
 	cUILoadingClientBegin* m_UILoading;
 
-	std::vector<cGroup*>	m_vecGroup;
-	std::vector<ST_PT_VERTEXT>	m_vecTriVertex;
-	std::vector<ST_PNT_VERTEXT>	m_vecFbxVertex;
+
 	LPDIRECT3DTEXTURE9		m_pD3DTexture;
-	LPDIRECT3DTEXTURE9		m_pD3DTexture1;
-	LPD3DXFONT				m_pFont;
+
+private:
+	POINT m_ptMouse;
+	
 public:
 	cMainMenu();
 	~cMainMenu();
@@ -37,10 +38,8 @@ public:
 	virtual void Destroy() override;
 	virtual void Update() override;
 	virtual void Render() override;
-
-	void RenderObjFile();
+	virtual void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 	void SetLight();
 
-	void LoadSurface();
 };
 

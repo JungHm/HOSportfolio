@@ -15,9 +15,12 @@ private:
 	int   m_nCol;			// 열 개수
 	int   m_nTotalVertex;	// 총 버덱스 개수
 	int	  m_nTotalIndex;	// 총 인덱스 개수
-	float m_fTileSize;		// 그리드 간격
+	float m_fTileSize;		// 그리드 간격(크기)
 	float m_fStartPosX;		// 그리드 생성 시작 x좌표
 	float m_fStartPosZ;		// 그리드 생성 시작 z좌표
+
+private:
+	SYNTHESIZE(vector<ST_PC_VERTEXT>, m_vecPicVertex, PicVertex); // 피킹용 버텍스
 
 public:
 	cGrid();

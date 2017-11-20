@@ -10,9 +10,9 @@ public:
 		FT_DEFAULT,
 		FT_QUEST,
 	};
+	SINGLETONE(cFontManager);
 
 private:
-	SINGLETONE(cFontManager);
 	std::map<eFontType, LPD3DXFONT>	m_mapFont;
 
 public:

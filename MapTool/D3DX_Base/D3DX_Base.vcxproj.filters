@@ -40,6 +40,21 @@
     <Filter Include="Infomation">
       <UniqueIdentifier>{0da4e465-8042-4242-aa66-a0a95812280a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Picking">
+      <UniqueIdentifier>{2d5ff53c-9dfb-41c1-a8ac-f0fe60ca8901}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SaveLoad">
+      <UniqueIdentifier>{eabb5f91-6ba7-43d2-b8e2-8b7c8c43ffa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MapToolUI">
+      <UniqueIdentifier>{07b0f007-2917-4e11-b835-9d32c2433bfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HeightMap">
+      <UniqueIdentifier>{2ffbc344-10f6-4743-8239-14fa2e6ca702}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SkyBox">
+      <UniqueIdentifier>{af992819-1e12-4859-a244-5ec255b61dab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -159,6 +174,30 @@
     <ClInclude Include="cInfomation.h">
       <Filter>Infomation</Filter>
     </ClInclude>
+    <ClInclude Include="cPicking.h">
+      <Filter>Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="cMapTool.h">
+      <Filter>MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="cSaveLoad.h">
+      <Filter>SaveLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="cHeightMap.h">
+      <Filter>HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="cUIObject.h">
+      <Filter>MapToolUI</Filter>
+    </ClInclude>
+    <ClInclude Include="cUIButton.h">
+      <Filter>MapToolUI</Filter>
+    </ClInclude>
+    <ClInclude Include="cUIImageView.h">
+      <Filter>MapToolUI</Filter>
+    </ClInclude>
+    <ClInclude Include="cSkyBox.h">
+      <Filter>SkyBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cCube.cpp">
@@ -265,6 +304,30 @@
     </ClCompile>
     <ClCompile Include="cInfomation.cpp">
       <Filter>Infomation</Filter>
+    </ClCompile>
+    <ClCompile Include="cPicking.cpp">
+      <Filter>Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="cMapTool.cpp">
+      <Filter>MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="cSaveLoad.cpp">
+      <Filter>SaveLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="cHeightMap.cpp">
+      <Filter>HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="cUIButton.cpp">
+      <Filter>MapToolUI</Filter>
+    </ClCompile>
+    <ClCompile Include="cUIObject.cpp">
+      <Filter>MapToolUI</Filter>
+    </ClCompile>
+    <ClCompile Include="cUIImageView.cpp">
+      <Filter>MapToolUI</Filter>
+    </ClCompile>
+    <ClCompile Include="cSkyBox.cpp">
+      <Filter>SkyBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
