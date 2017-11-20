@@ -145,6 +145,9 @@ void cUIObject::setup(string className)
 	// csv에서 파일 데이터 읽은 후 AddSprite
 
 	// ---------------------------------- 데이터 읽기(파싱) 시작
+	// 데이터 파싱을 수업 코드로 할 필요 없다.
+	// 파싱해야될 데이터의 위치와 인자는 항상 동일하기 때문.
+	// 아래 같은 파싱이 오히려 빠름.
 	FILE *file;
 	string thereis = "UI\\UIDatas.csv";
 	fopen_s(&file, thereis.c_str(), "r");
@@ -202,7 +205,7 @@ void cUIObject::setup(string className)
 
 	// ---------------------------------- 데이터 읽기(파싱) 완료
 
-	for (int i = 0; i < vUIData.size(); i++)	// 파싱한 데이터 추가
+	for (int i = 0; i < vUIData.size(); i++)	// 파싱한 데이터를 sprite로 생성(추가)
 	{
 		AddSprite(vUIData[i]);
 	}
