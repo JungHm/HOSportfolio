@@ -17,6 +17,9 @@ private:
 	D3DXVECTOR3		m_vCamRotAngle;
 
 	SYNTHESIZE(bool, ingame, InGame);
+
+	GETTER(D3DXMATRIXA16, matView, View);
+	GETTER(D3DXMATRIXA16, matProj, Proj);
 public:
 
 

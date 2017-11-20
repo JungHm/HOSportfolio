@@ -38,10 +38,10 @@ cSaveLoad::~cSaveLoad()
 		SAFE_RELEASE(m_pObjMesh[i]);
 	}
 
-	for (unsigned int i = 0; i < m_vecFieldObj.size(); i++)
+	/*for (unsigned int i = 0; i < m_vecFieldObj.size(); i++)
 	{
 		SAFE_RELEASE(m_vecFieldObj[i].pMesh);
-	}
+	}*/
 	
 	SAFE_DELETE(m_pObjLoader);
 }

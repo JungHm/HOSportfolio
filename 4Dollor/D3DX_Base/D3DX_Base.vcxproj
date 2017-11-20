@@ -88,6 +88,7 @@
     <ClInclude Include="cCharacter.h" />
     <ClInclude Include="cDeviceManager.h" />
     <ClInclude Include="cFontManager.h" />
+    <ClInclude Include="cFxLoad.h" />
     <ClInclude Include="cGrid.h" />
     <ClInclude Include="cGroup.h" />
     <ClInclude Include="cHeightMap.h" />
@@ -108,6 +109,11 @@
     <ClInclude Include="cTessadar.h" />
     <ClInclude Include="cTextureManager.h" />
     <ClInclude Include="cTimeManager.h" />
+    <ClInclude Include="cUIInGame.h" />
+    <ClInclude Include="cUILoadingClientBegin.h" />
+    <ClInclude Include="cUILoadingInGame.h" />
+    <ClInclude Include="cUIMainMenu.h" />
+    <ClInclude Include="cUIObject.h" />
     <ClInclude Include="cUnit.h" />
     <ClInclude Include="cUtil.h" />
     <ClInclude Include="cXFileManager.h" />
@@ -117,6 +123,7 @@
     <ClInclude Include="iScene.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="structUI.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +132,7 @@
     <ClCompile Include="cCharacter.cpp" />
     <ClCompile Include="cDeviceManager.cpp" />
     <ClCompile Include="cFontManager.cpp" />
+    <ClCompile Include="cFxLoad.cpp" />
     <ClCompile Include="cGrid.cpp" />
     <ClCompile Include="cGroup.cpp" />
     <ClCompile Include="cHeightMap.cpp" />
@@ -145,6 +153,11 @@
     <ClCompile Include="cTessadar.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
     <ClCompile Include="cTimeManager.cpp" />
+    <ClCompile Include="cUIInGame.cpp" />
+    <ClCompile Include="cUILoadingClientBegin.cpp" />
+    <ClCompile Include="cUILoadingInGame.cpp" />
+    <ClCompile Include="cUIMainMenu.cpp" />
+    <ClCompile Include="cUIObject.cpp" />
     <ClCompile Include="cUnit.cpp" />
     <ClCompile Include="cXFileManager.cpp" />
     <ClCompile Include="cXLoader.cpp" />

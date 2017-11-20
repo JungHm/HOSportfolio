@@ -18,7 +18,7 @@ cCamera::cCamera()
 	RECT rc;
 	GetClientRect(g_hWnd, &rc);
 
-	D3DXMATRIXA16 matProj;
+	//D3DXMATRIXA16 matProj;
 	D3DXMatrixPerspectiveFovLH(&matProj,
 		D3DX_PI / 4.0f,
 		rc.right / (float)rc.bottom,
@@ -72,7 +72,7 @@ void cCamera::Update()
 
 	//m_vEye.z += (m_fCameraDistance + (1 - m_fCameraDistance) / 2);
 
-	D3DXMATRIXA16 matView;
+	//D3DXMATRIXA16 matView;
 	D3DXMatrixLookAtLH(&matView, &m_vEye, &m_vLookAt, &m_vUp);
 	g_pD3DDevice->SetTransform(D3DTS_VIEW, &matView);
 }

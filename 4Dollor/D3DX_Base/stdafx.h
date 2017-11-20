@@ -1,17 +1,17 @@
-// stdafx.h : ÀÚÁÖ »ç¿ëÇÏÁö¸¸ ÀÚÁÖ º¯°æµÇÁö´Â ¾Ê´Â
-// Ç¥ÁØ ½Ã½ºÅÛ Æ÷ÇÔ ÆÄÀÏ ¹× ÇÁ·ÎÁ§Æ® °ü·Ã Æ÷ÇÔ ÆÄÀÏÀÌ
-// µé¾î ÀÖ´Â Æ÷ÇÔ ÆÄÀÏÀÔ´Ï´Ù.
+// stdafx.h : ìì£¼ ì‚¬ìš©í•˜ì§€ë§Œ ìì£¼ ë³€ê²½ë˜ì§€ëŠ” ì•ŠëŠ”
+// í‘œì¤€ ì‹œìŠ¤í…œ í¬í•¨ íŒŒì¼ ë° í”„ë¡œì íŠ¸ ê´€ë ¨ í¬í•¨ íŒŒì¼ì´
+// ë“¤ì–´ ìˆëŠ” í¬í•¨ íŒŒì¼ì…ë‹ˆë‹¤.
 //
 
 #pragma once
 
 #include "targetver.h"
-#define _CRT_SECURE_NO_DEPRECATE      // C4996 ¿À·ù ¹«½Ã. °ú°Å ¹®ÀÚ¿­(_s°¡ ¾ø´Â °Í)À» »ç¿ëÇÏÁö ¸¶¶ó´Â Á¤µµÀÇ ¿À·ù// Windows Çì´õ ÆÄÀÏ:
-#define WIN32_LEAN_AND_MEAN             // °ÅÀÇ »ç¿ëµÇÁö ¾Ê´Â ³»¿ëÀº Windows Çì´õ¿¡¼­ Á¦¿ÜÇÕ´Ï´Ù.
-// Windows Çì´õ ÆÄÀÏ:
+#define _CRT_SECURE_NO_DEPRECATE      // C4996 ì˜¤ë¥˜ ë¬´ì‹œ. ê³¼ê±° ë¬¸ìì—´(_sê°€ ì—†ëŠ” ê²ƒ)ì„ ì‚¬ìš©í•˜ì§€ ë§ˆë¼ëŠ” ì •ë„ì˜ ì˜¤ë¥˜// Windows í—¤ë” íŒŒì¼:
+#define WIN32_LEAN_AND_MEAN             // ê±°ì˜ ì‚¬ìš©ë˜ì§€ ì•ŠëŠ” ë‚´ìš©ì€ Windows í—¤ë”ì—ì„œ ì œì™¸í•©ë‹ˆë‹¤.
+// Windows í—¤ë” íŒŒì¼:
 #include <windows.h>
 
-// C ·±Å¸ÀÓ Çì´õ ÆÄÀÏÀÔ´Ï´Ù.
+// C ëŸ°íƒ€ì„ í—¤ë” íŒŒì¼ì…ë‹ˆë‹¤.
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
@@ -23,10 +23,11 @@
 #include <map>
 
 
-// TODO: ÇÁ·Î±×·¥¿¡ ÇÊ¿äÇÑ Ãß°¡ Çì´õ´Â ¿©±â¿¡¼­ ÂüÁ¶ÇÕ´Ï´Ù.
+// TODO: í”„ë¡œê·¸ë¨ì— í•„ìš”í•œ ì¶”ê°€ í—¤ë”ëŠ” ì—¬ê¸°ì—ì„œ ì°¸ì¡°í•©ë‹ˆë‹¤.
 #include <d3dx9.h>
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
+
 extern HWND g_hWnd;
 
 #define SINGLETONE(class_name)	\
@@ -42,6 +43,15 @@ public:\
 #define SAFE_DELETE_ARRAY(p) {if(p) delete [] p; p = NULL; }
 #define SAFE_DELETE(p) { if(p) delete p; p = NULL; }
 #define SAFE_RELEASE(p) { if(p) p->Release(); p = NULL; }
+
+#define GETTER(varType, varName, funcName)\
+	protected: varType varName;\
+	public: varType Get##funcName(void) const { return varName; }
+
+#define SETTER(varType, varName, funcName)\
+	protected: varType varName;\
+	public: void Set##funcName(varType var) { varName = var; }
+
 
 #define SYNTHESIZE(varType, varName, funcName)\
 	protected: varType varName;\
@@ -68,7 +78,7 @@ public:\
 #define MATRIX16_FIX public: void* operator new(size_t i){return _mm_malloc(i, 16);}\
 			public: void operator delete(void* p){_mm_free(p);}
 
-// ÅØ½ºÃÄ ºñÀ²
+// í…ìŠ¤ì³ ë¹„ìœ¨
 #define MAX_XPIXEL   1041
 #define MAX_YPIXEL   652
 #define ONE_XPIXEL   MAX_XPIXEL / 280
@@ -120,19 +130,20 @@ enum OBJECTKIND
 #include "cFontManager.h"
 #include "cXFileManager.h"
 #include "cMtlTex.h"
+#include "cFxLoad.h"
 
 typedef struct tagObject
 {
-	int				nKind;			// Á¾·ù
-	LPD3DXMESH		pMesh;			// ¸Å½¬
-	string			sFileName;		// ÆÄÀÏ ÀÌ¸§
-	D3DXMATRIXA16	matWorld;		// ¿ùµå
-	D3DXMATRIXA16	matScal;		// ½ºÄÉÀÏ¸µ
-	D3DXMATRIXA16	matRotY;		// ·ÎÅ×ÀÌ¼Ç Y
-	D3DXMATRIXA16	matTrans;		// Æ®·£½º ·¹ÀÌ¼Ç
-	D3DXVECTOR3		vScaling;		// ½ºÄÉÀÏÀÏ °ª
-	float			fAngleY;		// ·ÎÅ×ÀÌ¼Ç Y°ª
-	D3DXVECTOR3		vPosition;		// ·ÎÅ×ÀÌ¼Ç °ª
+	int				nKind;			// ì¢…ë¥˜
+	LPD3DXMESH		pMesh;			// ë§¤ì‰¬
+	string			sFileName;		// íŒŒì¼ ì´ë¦„
+	D3DXMATRIXA16	matWorld;		// ì›”ë“œ
+	D3DXMATRIXA16	matScal;		// ìŠ¤ì¼€ì¼ë§
+	D3DXMATRIXA16	matRotY;		// ë¡œí…Œì´ì…˜ Y
+	D3DXMATRIXA16	matTrans;		// íŠ¸ëœìŠ¤ ë ˆì´ì…˜
+	D3DXVECTOR3		vScaling;		// ìŠ¤ì¼€ì¼ì¼ ê°’
+	float			fAngleY;		// ë¡œí…Œì´ì…˜ Yê°’
+	D3DXVECTOR3		vPosition;		// ë¡œí…Œì´ì…˜ ê°’
 	vector<cMtlTex*>	vecMtlTex;
 } OBJECT;
 

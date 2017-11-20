@@ -18,5 +18,6 @@ public:
 	LPD3DXANIMATIONCONTROLLER GetAniCtrl(int key) { return m_pXFile[key]->getAnimCtrl(); }
 
 	void Destroy();
+	void KeyDestroy(int key);
 };
 
