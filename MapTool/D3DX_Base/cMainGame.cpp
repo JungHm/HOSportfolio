@@ -43,6 +43,18 @@ void cMainGame::Setup()
 {
 	g_cCamera->Setup();
 	
+	D3DLIGHT9 light;
+	ZeroMemory(&light, sizeof(D3DLIGHT9));
+	light.Type = D3DLIGHT_DIRECTIONAL;
+	light.Ambient = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	light.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	light.Specular = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	D3DXVECTOR3 vDir(0.0f, -1.0f, 0.0f);
+	D3DXVec3Normalize(&vDir, &vDir);
+	light.Direction = vDir;
+	g_pD3DDevice->SetLight(0, &light);
+	g_pD3DDevice->LightEnable(0, true);
+
 	UISetup();
 
 	m_pSkyBox = new cSkyBox;
@@ -51,7 +63,7 @@ void cMainGame::Setup()
 	m_pMapTool = new cMapTool;
 	m_pMapTool->Setup();
 
-	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, false);
+	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, true);
 	g_pD3DDevice->SetRenderState(D3DRS_AMBIENT, 0x00202020);
 	g_pD3DDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	g_pD3DDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
@@ -72,11 +84,11 @@ void cMainGame::Update()
 
 void cMainGame::Render()
 {
-	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0);
+	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(127, 127, 127), 1.0f, 0);
 	g_pD3DDevice->BeginScene();
 	//===================================
-	if (m_pMapTool) m_pMapTool->Render();
 	if (m_pSkyBox) m_pSkyBox->Render();
+	if (m_pMapTool) m_pMapTool->Render();
 	if (m_pRootUI) m_pRootUI->Render(m_pSprite);
 	//===================================
 	g_pD3DDevice->EndScene();
