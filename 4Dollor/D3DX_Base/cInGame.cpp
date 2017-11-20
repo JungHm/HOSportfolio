@@ -74,7 +74,6 @@ void cInGame::Destroy()
 	SAFE_DELETE(m_pGrid);
 	SAFE_RELEASE(m_pD3DTexture);
 
-	m_pPlayer->Destroy();
 	SAFE_DELETE(m_pPlayer);
 	//m_pRootNode->Destroy();
 }
@@ -87,6 +86,7 @@ void cInGame::Update()
 		if (m_UI->GetGameEnd())
 		{
 			g_Scene->ChangeScene("menu");
+			return;
 		}
 	}
 	else if (m_UILoading)

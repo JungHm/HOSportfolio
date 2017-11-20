@@ -4,9 +4,10 @@
 #include "cMtlTex.h"
 
 cXLoader::cXLoader()
-	: m_pFrameRoot(nullptr)
+	: m_pFrameRoot(NULL)
 {
 	m_sPath = L"Tassadar/Tassadar.X";
+	ShaderSet = false;
 }
 
 cXLoader::~cXLoader()
@@ -16,10 +17,7 @@ cXLoader::~cXLoader()
 	SAFE_RELEASE(m_pAnimControl);
 }
 
-void cXLoader::Destroy()
-{
 
-}
 
 void cXLoader::XfileLoad(IN wstring m_sPath)
 {
@@ -46,6 +44,11 @@ void cXLoader::XfileLoad(IN wstring m_sPath)
 	} //animation Track 비활성화.
 	m_pAnimControl->SetTrackEnable(0, TRUE);
 
+	//FX settings
+	/*ST_BONE* pBone = (ST_BONE*)m_pFrameRoot;
+	ST_BONE_MESH* pBoneMesh = (ST_BONE_MESH*)pBone->pMeshContainer;
+	g_FXLoad->InitFx(pBoneMesh->MeshData.pMesh->GetFVF());*/
+
 }
 
 
@@ -62,6 +65,8 @@ void cXLoader::Render(D3DXMATRIXA16& matRT)
 	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	g_pD3DDevice->LightEnable(0, true);
 	ST_BONE* pBone = (ST_BONE*)m_pFrameRoot;
+
+	
 	RecursiveFrameRender(pBone, &pBone->matWorldTM, matRT);
 	g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
@@ -182,9 +187,35 @@ void cXLoader::RecursiveFrameRender(D3DXFRAME * pParent, D3DXMATRIXA16 * pParent
 		//g_pD3DDevice->SetTexture(0, pFrame->pMeshContainer->pMaterials);
 		for (size_t i = 0; i < pBoneMesh->numSubset; ++i)
 		{
+			
 			g_pD3DDevice->SetTexture(0, pBoneMesh->vecMtlTex[i]->GetTexture());
 			g_pD3DDevice->SetMaterial(&pBoneMesh->vecMtlTex[i]->GetMaterial());
 			pBoneMesh->MeshData.pMesh->DrawSubset(i);
+
+
+			//쉐이더 적용 모자이크ㅋㅋㅋㅋㅋㅋㅋ
+
+			//if (!ShaderSet)
+			//{
+			//	g_FXLoad->InitFx(pBoneMesh->MeshData.pMesh->GetFVF());
+			//	ShaderSet = true;
+			//}
+			//g_pD3DDevice->SetTexture(0, pBoneMesh->vecMtlTex[i]->GetTexture());
+			//g_pD3DDevice->SetMaterial(&pBoneMesh->vecMtlTex[i]->GetMaterial());
+			//g_FXLoad->SetupFx(pBoneMesh->vecMtlTex[i]->GetTexture(), pBoneMesh->pCurrentBoneMatrices);
+
+			////g_pD3DDevice->SetVertexDeclaration(g_sDecl);
+			//
+
+			//D3DXHANDLE hTech = g_sEffect->GetTechniqueByName("Mosaik");
+			//g_sEffect->SetTechnique(hTech);
+			//g_sEffect->Begin(NULL, NULL);
+			//g_sEffect->BeginPass(0);
+			//
+			//pBoneMesh->MeshData.pMesh->DrawSubset(i);
+
+			//g_sEffect->EndPass();
+			//g_sEffect->End();
 		}
 	}
 	//자식

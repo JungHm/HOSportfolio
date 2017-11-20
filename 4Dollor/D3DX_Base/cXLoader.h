@@ -22,14 +22,11 @@ private:
 	LPD3DXFRAME					m_pFrameRoot;
 	LPD3DXANIMATIONCONTROLLER	m_pAnimControl;
 	wstring						m_sPath = wstring(L"Tassadar/Tassadar.X");
-
+	bool ShaderSet;
 public:
 	MATRIX16_FIX;
 	cXLoader();
 	~cXLoader();
-
-	void Destroy();
-
 
 	//xfile 로드 하는겁니다
 	void XfileLoad(IN wstring m_sPath);

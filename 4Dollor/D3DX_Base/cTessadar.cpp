@@ -27,8 +27,11 @@ cTessadar::~cTessadar()
 {
 	vecRange.clear();
 	vecHit.clear();
+	vecBarrier.clear();
 	SAFE_RELEASE(rangeTexture);
 	SAFE_RELEASE(hitTexture);
+	SAFE_RELEASE(BarrierTex);
+
 	XFile->KeyDestroy(xKey);
 }
 
@@ -146,28 +149,7 @@ void cTessadar::Render(D3DXMATRIXA16& matR, D3DXMATRIXA16& matT)
 		}
 		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	}
-	if (SkillW && keepTime > fTime)
-	{
-		g_pD3DDevice->SetFVF(ST_PT_VERTEXT::FVF);
-		fTime += g_pTimeManager->GetEllapsedTime();
-		D3DXMATRIXA16 matWorld; D3DXMatrixIdentity(&matWorld);
-		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-		g_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		g_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		D3DXMatrixScaling(&matWorld, 10.0f, 10.0f, 10.0f);
-		D3DXMATRIXA16 tempT; D3DXMatrixTranslation(&tempT, 0, 8, 5);
-		D3DXMATRIXA16 mat = matWorld*matT*tempT;
 
-		g_pD3DDevice->SetTransform(D3DTS_WORLD, &mat);
-		g_pD3DDevice->SetTexture(0, BarrierTex);
-		g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vecBarrier.size() / 3, &vecBarrier[0], sizeof(ST_PT_VERTEXT));
-		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	}
-	else
-	{
-		fTime = 0.0f;
-		SkillW = false;
-	}
 	if (SkillQ && keepTime > QTime)
 	{
 		g_pD3DDevice->SetFVF(ST_PT_VERTEXT::FVF);
@@ -198,9 +180,56 @@ void cTessadar::Render(D3DXMATRIXA16& matR, D3DXMATRIXA16& matT)
 		QTime = 0.0f;
 		SkillQ = false;
 	}
+	if (SkillW && keepTime > fTime)
+	{
+		g_pD3DDevice->SetFVF(ST_PT_VERTEXT::FVF);
+		fTime += g_pTimeManager->GetEllapsedTime();
+		D3DXMATRIXA16 matWorld; D3DXMatrixIdentity(&matWorld);
+		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		g_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		g_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		D3DXMatrixScaling(&matWorld, 10.0f, 10.0f, 10.0f);
+		D3DXMATRIXA16 tempT; D3DXMatrixTranslation(&tempT, 0, 8, 5);
+		D3DXMATRIXA16 mat = matWorld*matT*tempT;
+
+		g_pD3DDevice->SetTransform(D3DTS_WORLD, &mat);
+		g_pD3DDevice->SetTexture(0, BarrierTex);
+		g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vecBarrier.size() / 3, &vecBarrier[0], sizeof(ST_PT_VERTEXT));
+		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	}
+	else
+	{
+		fTime = 0.0f;
+		SkillW = false;
+	}
+	
 	//else g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
+	if (SkillE && keepTime > ETime)
+	{
+		ETime += g_pTimeManager->GetEllapsedTime();
+		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR);
+		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TEXTURE);
+		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+		g_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		g_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(50, 255, 255, 255));
+	}
+	else
+	{
+		ETime = 0.0f;
+		SkillE = false;
+		g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
+	}
+
+
 	XFile->GetXFile(xKey)->Render(matRT);
+
+
+
+	//g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
+
 
 
 }

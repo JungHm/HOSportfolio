@@ -130,6 +130,7 @@ enum OBJECTKIND
 #include "cFontManager.h"
 #include "cXFileManager.h"
 #include "cMtlTex.h"
+#include "cFxLoad.h"
 
 typedef struct tagObject
 {

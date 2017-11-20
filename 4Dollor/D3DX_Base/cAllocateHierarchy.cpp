@@ -13,39 +13,31 @@ cAllocateHierarchy::~cAllocateHierarchy()
 
 STDMETHODIMP cAllocateHierarchy::CreateFrame(LPCSTR Name, LPD3DXFRAME * ppNewFrame)
 {
-	/*ST_BONE* pFrame = new ST_BONE;*/
-	ST_BONE* pFrame = new ST_BONE;
-	pFrame->Name = nullptr;
-	pFrame->pFrameFirstChild = nullptr;
-	pFrame->pFrameSibling = nullptr;
-	pFrame->pMeshContainer = nullptr;
-	D3DXMatrixIdentity(&pFrame->TransformationMatrix);
-	D3DXMatrixIdentity(&pFrame->matWorldTM);
+	ST_BONE* pBone = new ST_BONE;
+	ZeroMemory(pBone, sizeof(ST_BONE));
 
 
 	//새로만든 Bond Node에 이름 복사.
 	if (Name)
 	{
-		pFrame->Name = new char[strlen(Name) + 1];
+		pBone->Name = new char[strlen(Name) + 1];
 
-		strcpy(pFrame->Name, Name);
+		strcpy(pBone->Name, Name);
 		//strcpy_s(pFrame->Name, strlen(Name) + 1, Name);
 
 
 	}
-	*ppNewFrame = pFrame;
+	D3DXMatrixIdentity(&pBone->TransformationMatrix);
+	D3DXMatrixIdentity(&pBone->matWorldTM);
+
+	(*ppNewFrame) = pBone;
 	return S_OK;
 }
 
 STDMETHODIMP cAllocateHierarchy::CreateMeshContainer(LPCSTR Name, CONST D3DXMESHDATA * pMeshData, CONST D3DXMATERIAL * pMaterials, CONST D3DXEFFECTINSTANCE * pEffectInstance, DWORD NumMaterials, CONST DWORD * pAdjacency, LPD3DXSKININFO pSkinInfo, LPD3DXMESHCONTAINER * ppNewMeshContainer)
 {
 	ST_BONE_MESH* pBoneMesh = new ST_BONE_MESH;
-
-	pBoneMesh->Name = nullptr;
-	pBoneMesh->pMaterials = nullptr;
-	pBoneMesh->pEffects = nullptr;
-	pBoneMesh->pAdjacency = nullptr;
-	pBoneMesh->pSkinInfo = nullptr;
+	ZeroMemory(pBoneMesh, sizeof(ST_BONE_MESH));
 
 	//THIS_ LPCSTR Name,
 	pBoneMesh->Name = new char[strlen(Name) + 1];
@@ -121,7 +113,7 @@ STDMETHODIMP cAllocateHierarchy::DestroyFrame(LPD3DXFRAME pFrameToFree)
 	ST_BONE* pBone = (ST_BONE*)pFrameToFree;
 	SAFE_DELETE_ARRAY(pBone->Name);
 
-	SAFE_DELETE(pFrameToFree);
+	SAFE_DELETE(pBone);
 	return S_OK;
 }
 
@@ -133,9 +125,11 @@ STDMETHODIMP cAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshC
 	SAFE_RELEASE(pBoneMesh->pSkinInfo);
 	SAFE_RELEASE(pBoneMesh->pOrigMesh);
 
+
 	SAFE_DELETE_ARRAY(pBoneMesh->pCurrentBoneMatrices);
 	SAFE_DELETE_ARRAY(pBoneMesh->pBoneOffsetMatrices);
 	SAFE_DELETE_ARRAY(pBoneMesh->ppBoneMatrixPtrs);
+	pBoneMesh->vecMtlTex.clear();
 	SAFE_DELETE(pBoneMesh);
 
 	return S_OK;

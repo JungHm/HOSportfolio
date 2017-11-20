@@ -19,7 +19,7 @@ private:
 	float m_fStartPosZ;		// 그리드 생성 시작 z좌표
 
 private:
-	SYNTHESIZE(vector<ST_PC_VERTEXT>, m_vecPicVertex, PicVertex); // 피킹용 버텍스
+	GETTER(vector<ST_PC_VERTEXT>, m_vecPicVertex, PicVertex); // 피킹용 버텍스
 
 public:
 	MATRIX16_FIX;

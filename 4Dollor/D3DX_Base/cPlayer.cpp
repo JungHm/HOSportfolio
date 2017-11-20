@@ -19,6 +19,7 @@ cPlayer::cPlayer()
 
 cPlayer::~cPlayer()
 {
+	SAFE_DELETE(m_pChar);
 }
 
 void cPlayer::Setup()
@@ -75,10 +76,7 @@ void cPlayer::Update()
 			m_pChar->BlendAni(m_pChar->Getskill());
 		}
 	}
-	if ((GetAsyncKeyState('R') & 0x8001) && level == 21)// 궁극기는 사용할지 안할지 모름
-	{
-		//m_pChar->Setskill(SPELL_R);
-	}
+
 	//==========================================================
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8001)
@@ -137,9 +135,4 @@ void cPlayer::Render()
 	D3DXMatrixTranslation(&matT, m_vPosition.x, m_vPosition.y, m_vPosition.z);
 	//matR *= matT;
 	m_pChar->Render(matR, matT);
-}
-
-void cPlayer::Destroy()
-{
-	SAFE_DELETE(m_pChar);
 }
