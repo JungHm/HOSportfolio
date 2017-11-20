@@ -39,17 +39,26 @@ private:
 private:
 	std::vector<ST_PT_VERTEXT> vecRange;
 	std::vector<ST_PT_VERTEXT> vecHit;
+	std::vector<ST_PT_VERTEXT> vecStorm;
 	std::vector<ST_PT_VERTEXT> vecBarrier;
 	LPDIRECT3DTEXTURE9	rangeTexture;
 	LPDIRECT3DTEXTURE9	hitTexture;
 	LPDIRECT3DTEXTURE9 BarrierTex;
+	LPDIRECT3DTEXTURE9 stormTex[3];
+	int StormTexNum;
 	//Skill coolDown
 	
 	//W, E 지속시간
-	float keepTime;
-	float fTime;
+	float keepTime;// 전체유지시간
+	float fTime;//W지속시간
+	float QTime;//Q지속시간
+	float ETime;//QE지속시간
+	D3DXVECTOR3 StormPos;// 스톰 유지시킬 좌표
+	bool SkillQ;
 	bool SkillW;
 	bool SkillE;
+
+
 public:
 	MATRIX16_FIX;
 	cTessadar();
@@ -65,5 +74,6 @@ public:
 	virtual void BlendAni(int State)override;
 
 	void SkillUiVertex();
+	void StormEffect();
 };
 

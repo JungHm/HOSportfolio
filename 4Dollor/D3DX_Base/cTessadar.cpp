@@ -14,11 +14,12 @@ cTessadar::cTessadar()
 	D3DXMatrixIdentity(&matT);
 	D3DXMatrixIdentity(&matR);
 	dwCurr = 0;
-	keepTime = 10.0f;
+	keepTime = 5.0f;
 	m_State = STAND;
 	xKey = 0;
-	fTime = 0.0f;
-	SkillW = false;
+	QTime = ETime = fTime = 0.0f;
+	SkillQ = SkillW = SkillE = false;
+	StormTexNum = 0;
 }
 
 
@@ -94,9 +95,15 @@ void cTessadar::Update()
 	XFile->GetAniCtrl(xKey)->AdvanceTime(g_pTimeManager->GetEllapsedTime(), NULL);
 
 
+
 	if (Skill == SPELL_W)
 	{
 		SkillW = true;
+		Skill = NULL;
+	}
+	if (Skill == SPELL_E)
+	{
+		SkillE = true;
 		Skill = NULL;
 	}
 
@@ -123,11 +130,11 @@ void cTessadar::Render(D3DXMATRIXA16& matR, D3DXMATRIXA16& matT)
 			D3DXMatrixScaling(&matWorld, 10.0f, 10.0f, 10.0f);
 			D3DXMATRIXA16 hitMat;
 			D3DXMatrixTranslation(&hitMat, mouse.x, mouse.y, mouse.z);
+			StormPos = D3DXVECTOR3(mouse.x, mouse.y, mouse.z);
 			matWorld *= hitMat;
 			g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
 			g_pD3DDevice->SetTexture(0, hitTexture);
 			g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vecHit.size() / 3, &vecHit[0], sizeof(ST_PT_VERTEXT));
-
 
 			D3DXMatrixScaling(&matWorld, 40.0f, 40.0f, 40.0f);
 			D3DXMATRIXA16 mat = matWorld*matRT;
@@ -136,17 +143,14 @@ void cTessadar::Render(D3DXMATRIXA16& matR, D3DXMATRIXA16& matT)
 			g_pD3DDevice->SetTexture(0, rangeTexture);
 			g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vecRange.size() / 3, &vecRange[0], sizeof(ST_PT_VERTEXT));
 
-
 		}
-
-
-
 		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	}
 	if (SkillW && keepTime > fTime)
 	{
+		g_pD3DDevice->SetFVF(ST_PT_VERTEXT::FVF);
 		fTime += g_pTimeManager->GetEllapsedTime();
-		D3DXMATRIXA16 matWorld;
+		D3DXMATRIXA16 matWorld; D3DXMatrixIdentity(&matWorld);
 		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 		g_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		g_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -164,14 +168,35 @@ void cTessadar::Render(D3DXMATRIXA16& matR, D3DXMATRIXA16& matT)
 		fTime = 0.0f;
 		SkillW = false;
 	}
-	if (SkillE && keepTime > fTime)
+	if (SkillQ && keepTime > QTime)
 	{
+		g_pD3DDevice->SetFVF(ST_PT_VERTEXT::FVF);
+		QTime += g_pTimeManager->GetEllapsedTime();
+		D3DXMATRIXA16 matWorld; D3DXMatrixIdentity(&matWorld);
+		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		g_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		g_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		D3DXMatrixScaling(&matWorld, 10.0f, 10.0f, 10.0f);
+		D3DXMATRIXA16 hitMat;
+		D3DXMatrixTranslation(&hitMat, StormPos.x, StormPos.y, StormPos.z);
+		matWorld *= hitMat;
+		g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
 
+		g_pD3DDevice->SetTexture(0, rangeTexture);
+		g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vecRange.size() / 3, &vecRange[0], sizeof(ST_PT_VERTEXT));
+		g_pD3DDevice->SetTexture(0, stormTex[StormTexNum / 3]);
+		g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vecStorm.size() / 3, &vecStorm[0], sizeof(ST_PT_VERTEXT));
+		StormTexNum += 1;
+		if (StormTexNum / 3 >= 3)
+		{
+			StormTexNum = 0;
+		}
+		//g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	}
 	else
 	{
-		fTime = 0.0f;
-		SkillE = false;
+		QTime = 0.0f;
+		SkillQ = false;
 	}
 	//else g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
@@ -347,6 +372,8 @@ void cTessadar::BlendAni(int State)
 
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(0, 0.0f);
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(1, 1.0f);
+		coolQ = 0.0f;
+		SkillQ = true;
 		break;
 	case SPELL_W:
 		XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &stTrackDesc);
@@ -361,10 +388,10 @@ void cTessadar::BlendAni(int State)
 
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(0, 0.0f);
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(1, 1.0f);
-
+		coolW = 0.0f;
 		break;
 	case SPELL_E:
-		/*XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &stTrackDesc);
+		XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &stTrackDesc);
 
 		XFile->GetAniCtrl(xKey)->GetTrackAnimationSet(0, &pCurrAnimSet);
 		XFile->GetAniCtrl(xKey)->SetTrackAnimationSet(1, pCurrAnimSet);
@@ -375,7 +402,8 @@ void cTessadar::BlendAni(int State)
 		XFile->GetAniCtrl(xKey)->SetTrackPosition(0, 0.0f);
 
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(0, 0.0f);
-		XFile->GetAniCtrl(xKey)->SetTrackWeight(1, 1.0f);*/
+		XFile->GetAniCtrl(xKey)->SetTrackWeight(1, 1.0f);
+		coolE = 0.0f;
 		break;
 	case SPELL_R:
 		/*XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &stTrackDesc);
@@ -428,6 +456,10 @@ void cTessadar::SkillUiVertex()
 	g_pTextureManager->AddTexture(L"Tassadar/nontargetRange2_.png", rangeTexture, &t);
 	g_pTextureManager->AddTexture(L"Tassadar/nontargetRange2.png", hitTexture, &t);
 	g_pTextureManager->AddTexture(L"Tassadar/Barrier.png", BarrierTex, &t);
+
+	g_pTextureManager->AddTexture(L"Tassadar/SkillQ1.png", stormTex[0], &t);
+	g_pTextureManager->AddTexture(L"Tassadar/SkillQ2.png", stormTex[1], &t);
+	g_pTextureManager->AddTexture(L"Tassadar/SkillQ3.png", stormTex[2], &t);
 	/*
 	rangeTexture = g_pTextureManager->GetTexture(L"Tassadar/nontargetRange2_.png");
 	hitTexture = g_pTextureManager->GetTexture(L"Tassadar/nontargetRange2.png");*/
@@ -473,5 +505,30 @@ void cTessadar::SkillUiVertex()
 	p.p = D3DXVECTOR3(1, -1, -1);
 	p.t = D3DXVECTOR2(1, 1);
 	vecBarrier.push_back(p);
+
+	p.p = D3DXVECTOR3(-1, 0.02f, -1);
+	p.t = D3DXVECTOR2(0, 1);
+	vecStorm.push_back(p);
+	p.p = D3DXVECTOR3(-1, 0.02f, 1);
+	p.t = D3DXVECTOR2(0, 0);
+	vecStorm.push_back(p);
+	p.p = D3DXVECTOR3(1, 0.02f, 1);
+	p.t = D3DXVECTOR2(1, 0);
+	vecStorm.push_back(p);
+
+	p.p = D3DXVECTOR3(-1, 0.02f, -1);
+	p.t = D3DXVECTOR2(0, 1);
+	vecStorm.push_back(p);
+	p.p = D3DXVECTOR3(1, 0.02f, 1);
+	p.t = D3DXVECTOR2(1, 0);
+	vecStorm.push_back(p);
+	p.p = D3DXVECTOR3(1, 0.02f, -1);
+	p.t = D3DXVECTOR2(1, 1);
+	vecStorm.push_back(p);
+}
+
+void cTessadar::StormEffect()
+{
+
 }
 
