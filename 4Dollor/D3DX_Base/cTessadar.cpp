@@ -14,9 +14,11 @@ cTessadar::cTessadar()
 	D3DXMatrixIdentity(&matT);
 	D3DXMatrixIdentity(&matR);
 	dwCurr = 0;
-
+	keepTime = 10.0f;
 	m_State = STAND;
 	xKey = 0;
+	fTime = 0.0f;
+	SkillW = false;
 }
 
 
@@ -92,7 +94,11 @@ void cTessadar::Update()
 	XFile->GetAniCtrl(xKey)->AdvanceTime(g_pTimeManager->GetEllapsedTime(), NULL);
 
 
-
+	if (Skill == SPELL_W)
+	{
+		SkillW = true;
+		Skill = NULL;
+	}
 
 
 
@@ -132,20 +138,40 @@ void cTessadar::Render(D3DXMATRIXA16& matR, D3DXMATRIXA16& matT)
 
 
 		}
-		if (Skill == SPELL_W)
-		{
 
-			D3DXMatrixScaling(&matWorld, 10.0f, 10.0f, 10.0f);
-			D3DXMATRIXA16 tempT; D3DXMatrixTranslation(&tempT, 0, 8, 5);
-			D3DXMATRIXA16 mat = matWorld*matT*tempT;
-
-			g_pD3DDevice->SetTransform(D3DTS_WORLD, &mat);
-			g_pD3DDevice->SetTexture(0, BarrierTex);
-			g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vecBarrier.size() / 3, &vecBarrier[0], sizeof(ST_PT_VERTEXT));
-		}
 
 
 		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	}
+	if (SkillW && keepTime > fTime)
+	{
+		fTime += g_pTimeManager->GetEllapsedTime();
+		D3DXMATRIXA16 matWorld;
+		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		g_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		g_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		D3DXMatrixScaling(&matWorld, 10.0f, 10.0f, 10.0f);
+		D3DXMATRIXA16 tempT; D3DXMatrixTranslation(&tempT, 0, 8, 5);
+		D3DXMATRIXA16 mat = matWorld*matT*tempT;
+
+		g_pD3DDevice->SetTransform(D3DTS_WORLD, &mat);
+		g_pD3DDevice->SetTexture(0, BarrierTex);
+		g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vecBarrier.size() / 3, &vecBarrier[0], sizeof(ST_PT_VERTEXT));
+		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	}
+	else
+	{
+		fTime = 0.0f;
+		SkillW = false;
+	}
+	if (SkillE && keepTime > fTime)
+	{
+
+	}
+	else
+	{
+		fTime = 0.0f;
+		SkillE = false;
 	}
 	//else g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
@@ -335,6 +361,7 @@ void cTessadar::BlendAni(int State)
 
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(0, 0.0f);
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(1, 1.0f);
+
 		break;
 	case SPELL_E:
 		/*XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &stTrackDesc);

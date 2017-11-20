@@ -43,6 +43,13 @@ private:
 	LPDIRECT3DTEXTURE9	rangeTexture;
 	LPDIRECT3DTEXTURE9	hitTexture;
 	LPDIRECT3DTEXTURE9 BarrierTex;
+	//Skill coolDown
+	
+	//W, E 지속시간
+	float keepTime;
+	float fTime;
+	bool SkillW;
+	bool SkillE;
 public:
 	MATRIX16_FIX;
 	cTessadar();

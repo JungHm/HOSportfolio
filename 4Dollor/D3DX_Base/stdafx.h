@@ -44,6 +44,15 @@ public:\
 #define SAFE_DELETE(p) { if(p) delete p; p = NULL; }
 #define SAFE_RELEASE(p) { if(p) p->Release(); p = NULL; }
 
+#define GETTER(varType, varName, funcName)\
+	protected: varType varName;\
+	public: varType Get##funcName(void) const { return varName; }
+
+#define SETTER(varType, varName, funcName)\
+	protected: varType varName;\
+	public: void Set##funcName(varType var) { varName = var; }
+
+
 #define SYNTHESIZE(varType, varName, funcName)\
 	protected: varType varName;\
 	public: varType Get##funcName(void) const { return varName; }\

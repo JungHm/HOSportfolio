@@ -26,7 +26,7 @@ void cPlayer::Setup()
 
 void cPlayer::Update()
 {
-	if ((GetAsyncKeyState(VK_F2) & 0x8001))//치트키 레벨업
+	if ((GetAsyncKeyState(VK_F2) & 0x8001) && level <= 20)//치트키 레벨업
 	{
 		experience += 2;
 		if (experience / 100 >= 1)
