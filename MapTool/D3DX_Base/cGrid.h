@@ -1,5 +1,8 @@
 #pragma once
 
+#define MAX_ROW 66
+#define MAX_COL 116
+
 class cGrid
 {
 private:
@@ -18,6 +21,9 @@ private:
 	float m_fTileSize;		// 그리드 간격(크기)
 	float m_fStartPosX;		// 그리드 생성 시작 x좌표
 	float m_fStartPosZ;		// 그리드 생성 시작 z좌표
+
+	//LPD3DXMESH				m_pSphereMesh;
+	//ST_SPHERE				m_eSphere[MAX_ROW][MAX_COL];
 
 private:
 	SYNTHESIZE(vector<ST_PC_VERTEXT>, m_vecPicVertex, PicVertex); // 피킹용 버텍스

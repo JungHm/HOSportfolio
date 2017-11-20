@@ -62,4 +62,25 @@ bool cPicking::IntersectTri(IN D3DXVECTOR3 v0, IN D3DXVECTOR3 v1, IN D3DXVECTOR3
 	return b;
 }
 
+bool cPicking::IntersectSphere(ST_SPHERE * pSphere)
+{
+	cPicking r = (*this);
+
+	D3DXMATRIXA16	matInvWorld;
+	D3DXMatrixIdentity(&matInvWorld);
+	matInvWorld._41 = -pSphere->vCenter.x;
+	matInvWorld._42 = -pSphere->vCenter.y;
+	matInvWorld._43 = -pSphere->vCenter.z;
+
+	D3DXVec3TransformCoord(&r.m_vPosition, &r.m_vPosition, &matInvWorld);
+	D3DXVec3TransformNormal(&r.m_vDirection, &r.m_vDirection, &matInvWorld);
+
+	float vv = D3DXVec3Dot(&r.m_vDirection, &r.m_vDirection);
+	float qv = D3DXVec3Dot(&r.m_vPosition, &r.m_vDirection);
+	float qq = D3DXVec3Dot(&r.m_vPosition, &r.m_vPosition);
+	float rr = 2.5f * 2.5f;
+
+	return qv * qv - vv * (qq - rr) >= 0;
+}
+
 

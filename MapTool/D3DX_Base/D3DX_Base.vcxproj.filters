@@ -55,6 +55,12 @@
     <Filter Include="SkyBox">
       <UniqueIdentifier>{af992819-1e12-4859-a244-5ec255b61dab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="XFileLoader">
+      <UniqueIdentifier>{016c508e-0320-4f76-9561-9567e9dd060c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{6e536393-4181-43c8-8dc7-031c396d5b17}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -198,6 +204,18 @@
     <ClInclude Include="cSkyBox.h">
       <Filter>SkyBox</Filter>
     </ClInclude>
+    <ClInclude Include="cAllocateHierarchy.h">
+      <Filter>XFileLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="cXFileManager.h">
+      <Filter>XFileLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="cXLoader.h">
+      <Filter>XFileLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="nUtil.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cCube.cpp">
@@ -328,6 +346,18 @@
     </ClCompile>
     <ClCompile Include="cSkyBox.cpp">
       <Filter>SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="cAllocateHierarchy.cpp">
+      <Filter>XFileLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="cXFileManager.cpp">
+      <Filter>XFileLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="cXLoader.cpp">
+      <Filter>XFileLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="nUtil.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
