@@ -32,10 +32,6 @@ void cInGame::SetUp()
 	m_UI = new cUIInGame;
 	m_UI->setup("cInGame");
 
-
-	D3DXVECTOR2 temp;
-	g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
-
 	m_pLoadMap = new cSaveLoad;
 	m_pLoadMap->LoadFieldObj();
 
@@ -72,7 +68,6 @@ void cInGame::Destroy()
 	SAFE_DELETE(m_pSkyBox);
 
 	SAFE_DELETE(m_pGrid);
-	SAFE_RELEASE(m_pD3DTexture);
 
 	SAFE_DELETE(m_pPlayer);
 	//m_pRootNode->Destroy();
@@ -80,25 +75,6 @@ void cInGame::Destroy()
 
 void cInGame::Update()
 {
-	if (m_UI && !m_UILoading)
-	{
-		m_UI->update();	// ��ư�� ����Ƿ� update
-		if (m_UI->GetGameEnd())
-		{
-			g_Scene->ChangeScene("menu");
-			return;
-		}
-	}
-	else if (m_UILoading)
-	{
-		m_UILoading->update();
-		if (m_UILoading->GetLoadingEnd())
-		{
-			m_UILoading->destroy();
-			SAFE_DELETE(m_UILoading);
-		}
-	}
-
 	D3DXVECTOR3 pickPosition;
 	for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
 	{
@@ -134,9 +110,23 @@ void cInGame::Update()
 	}
 
 	m_pPlayer->Update();
-	if (GetAsyncKeyState(VK_LBUTTON) & 0001)
+
+	if (m_UI && !m_UILoading)
 	{
-		g_Scene->ChangeScene("menu");
+		m_UI->update();	// ��ư�� ����Ƿ� update
+		if (m_UI->GetGameEnd())
+		{
+			g_Scene->ChangeScene("menu");
+		}
+	}
+	else if (m_UILoading)
+	{
+		m_UILoading->update();
+		if (m_UILoading->GetLoadingEnd())
+		{
+			m_UILoading->destroy();
+			SAFE_DELETE(m_UILoading);
+		}
 	}
 }
 
@@ -144,10 +134,6 @@ void cInGame::Render()
 {
 	if (m_UI && !m_UILoading) m_UI->renderBG();	// ��� ���� ���� ��
 	else if (m_UILoading) m_UILoading->renderBG();
-
-
-
-
 
 	if (m_UI && !m_UILoading) m_UI->render();	// ��� �� UI ��õ� ����
 	else if (m_UILoading) m_UILoading->render();
