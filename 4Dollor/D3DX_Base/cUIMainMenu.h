@@ -10,7 +10,7 @@ public:
 	cUIMainMenu();
 	~cUIMainMenu();
 
-	void updateButtonCallback(int num);
-	void updateButtonOverCallback(int num);
+	int updateButtonCallback(int num);
+	int updateButtonOverCallback(int num);
 };
 

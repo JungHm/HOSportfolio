@@ -12,7 +12,7 @@ cUIMainMenu::~cUIMainMenu()
 {
 }
 
-void cUIMainMenu::updateButtonCallback(int num)
+int cUIMainMenu::updateButtonCallback(int num)
 {
 	if (num == UIBUTTONCALLBACK_MAIN_READY)
 	{
@@ -42,9 +42,10 @@ void cUIMainMenu::updateButtonCallback(int num)
 	{
 
 	}
+	return 0;
 }
 
-void cUIMainMenu::updateButtonOverCallback(int num)
+int cUIMainMenu::updateButtonOverCallback(int num)
 {
-	
+	return 0;
 }

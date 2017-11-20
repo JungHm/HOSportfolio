@@ -47,9 +47,9 @@ public:
 	// 버튼 기능 실행 여부 체크 (버튼의 상태 체크). 수업 코드와 거의 동일함
 	virtual void updateButtonState(D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt, int &buttonState, int buttonFunc);
 	// 순수 가상함수로 콜백. 마우스 오버 시 기능을 실행하기 위함. 각 씬별로 다른 기능을 실행해야하므로 재정의 필요(순수가상함수)
-	virtual void updateButtonOverCallback(int num) = 0;
+	virtual int updateButtonOverCallback(int num) = 0;
 	// 순수 가상함수로 콜백. 마우스 클릭 시 기능 실행
-	virtual void updateButtonCallback(int num) = 0;
+	virtual int updateButtonCallback(int num) = 0;
 	// 랜더 그룹
 	virtual void render();
 	// BG 랜더. 제일 먼저 해줘야 하므로 따로 빼놓음

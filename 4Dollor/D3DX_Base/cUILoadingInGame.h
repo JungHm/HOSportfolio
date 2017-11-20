@@ -10,7 +10,7 @@ public:
 	cUILoadingInGame();
 	~cUILoadingInGame();
 
-	void updateButtonOverCallback(int num);
-	void updateButtonCallback(int num);
+	int updateButtonOverCallback(int num);
+	int updateButtonCallback(int num);
 };
 

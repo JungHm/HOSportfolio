@@ -11,12 +11,13 @@ cUILoadingClientBegin::~cUILoadingClientBegin()
 {
 }
 
-void cUILoadingClientBegin::updateButtonOverCallback(int num)
+int cUILoadingClientBegin::updateButtonOverCallback(int num)
 {
-
+	return 0;
 }
 
-void cUILoadingClientBegin::updateButtonCallback(int num)
+int cUILoadingClientBegin::updateButtonCallback(int num)
 {
 	m_LoadingEnd = true;
+	return 0;
 }

@@ -11,7 +11,12 @@ public:
 	cUIInGame();
 	~cUIInGame();
 
-	void updateButtonOverCallback(int num);
-	void updateButtonCallback(int num);
+	int updateButtonOverCallback(int num);
+	int updateButtonCallback(int num);
+
+	// 스킬 언락. q = 1, w = 2 순서
+	void UISetSkillUnlock(int SkillIndex, bool unlock);
+	// 스킬 사용 시. q = 1, w = 2 순서
+	void UISetSkillUse(int SkillIndex, bool used);
 };
 

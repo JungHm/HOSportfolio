@@ -12,11 +12,13 @@ cUILoadingInGame::~cUILoadingInGame()
 {
 }
 
-void cUILoadingInGame::updateButtonOverCallback(int num)
+int cUILoadingInGame::updateButtonOverCallback(int num)
 {
+	return 0;
 }
 
-void cUILoadingInGame::updateButtonCallback(int num)
+int cUILoadingInGame::updateButtonCallback(int num)
 {
 	m_LoadingEnd = true;
+	return 0;
 }

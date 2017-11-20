@@ -5,8 +5,6 @@
 #include "cObjLoader.h"
 #include "cGroup.h"
 #include "cObjMap.h"
-#include "cAseNode.h"
-#include "cAseLoader.h"
 #include "cUIMainMenu.h"
 #include "cUILoadingClientBegin.h"
 
@@ -16,7 +14,6 @@ cMainMenu::cMainMenu()
 	: m_pGrid(NULL)
 	, m_pCamera(NULL)
 	, m_pD3DTexture(NULL)
-	, m_pFont(NULL)
 	, m_pObjLoader(NULL)
 	, m_pObjMap(NULL)
 	//, m_pRootNode(NULL)
@@ -31,8 +28,6 @@ cMainMenu::~cMainMenu()
 	SAFE_DELETE(m_pObjLoader);
 	SAFE_DELETE(m_pObjMap);
 	SAFE_RELEASE(m_pD3DTexture);
-	SAFE_RELEASE(m_pD3DTexture1);
-	SAFE_RELEASE(m_pFont);
 
 
 	if (m_UI)
@@ -47,11 +42,6 @@ cMainMenu::~cMainMenu()
 		SAFE_DELETE(m_UILoading);
 	}
 
-	for each (auto p in m_vecGroup)
-	{
-		SAFE_RELEASE(p);
-	}
-	m_vecGroup.clear();
 
 	//m_pRootNode->Destroy();
 }
@@ -88,15 +78,6 @@ void cMainMenu::SetUp()
 	//g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
 	//D3DXCreateTextureFromFile(g_pD3DDevice, L"Black Dragon NEW/textures/Dragon_Bump_Col2.jpg", &m_pD3DTexture1);
 
-
-	m_pLoadMap = new cSaveLoad;
-	m_pLoadMap->LoadFieldObj();
-
-	m_pHeightMap = new cHeightMap;
-	m_pHeightMap->Setup("HeightMap/", "backGround.raw", "HeightMap.jpg");
-
-	m_pSkyBox = new cSkyBox;
-	m_pSkyBox->Setup();
 
 	m_UI = new cUIMainMenu;
 	m_UI->setup("cMainMenu");	// ���̺� �� �з�� �̸�� ����ϹǷ� Ŭ���� �̸�� ����
