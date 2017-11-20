@@ -63,33 +63,7 @@ void cTessadar::AnimSetUp()
 
 void cTessadar::SetUp()
 {
-	D3DXVECTOR2 t;
-	g_pTextureManager->AddTexture(L"Tassadar/nontargetRange2_.png", rangeTexture, &t);
-	g_pTextureManager->AddTexture(L"Tassadar/nontargetRange2.png", hitTexture, &t);
-	/*
-		rangeTexture = g_pTextureManager->GetTexture(L"Tassadar/nontargetRange2_.png");
-		hitTexture = g_pTextureManager->GetTexture(L"Tassadar/nontargetRange2.png");*/
-
-	ST_PT_VERTEXT p;
-	p.p = D3DXVECTOR3(-1, 0.01f, -1);
-	p.t = D3DXVECTOR2(0, 1);
-	vecRange.push_back(p); vecHit.push_back(p);
-	p.p = D3DXVECTOR3(-1, 0.01f, 1);
-	p.t = D3DXVECTOR2(0, 0);
-	vecRange.push_back(p); vecHit.push_back(p);
-	p.p = D3DXVECTOR3(1, 0.01f, 1);
-	p.t = D3DXVECTOR2(1, 0);
-	vecRange.push_back(p); vecHit.push_back(p);
-
-	p.p = D3DXVECTOR3(-1, 0.01f, -1);
-	p.t = D3DXVECTOR2(0, 1);
-	vecRange.push_back(p); vecHit.push_back(p);
-	p.p = D3DXVECTOR3(1, 0.01f, 1);
-	p.t = D3DXVECTOR2(1, 0);
-	vecRange.push_back(p); vecHit.push_back(p);
-	p.p = D3DXVECTOR3(1, 0.01f, -1);
-	p.t = D3DXVECTOR2(1, 1);
-	vecRange.push_back(p); vecHit.push_back(p);
+	SkillUiVertex();
 	XFile->SetXFile(xKey, m_sPath);
 	this->AnimSetUp();
 
@@ -127,37 +101,53 @@ void cTessadar::Update()
 	XFile->GetXFile(xKey)->Update();
 }
 
-void cTessadar::Render(D3DXMATRIXA16& matRT)
+void cTessadar::Render(D3DXMATRIXA16& matR, D3DXMATRIXA16& matT)
 {
+	D3DXMATRIXA16 matRT;
+	matRT = matR*matT;
 	if (Skill != NULL)
 	{
 		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 		g_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		g_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		g_pD3DDevice->SetFVF(ST_PT_VERTEXT::FVF);
-
 		D3DXMATRIXA16 matWorld; D3DXMatrixIdentity(&matWorld);
+		if (Skill == SPELL_Q)
+		{
+			D3DXMatrixScaling(&matWorld, 10.0f, 10.0f, 10.0f);
+			D3DXMATRIXA16 hitMat;
+			D3DXMatrixTranslation(&hitMat, mouse.x, mouse.y, mouse.z);
+			matWorld *= hitMat;
+			g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
+			g_pD3DDevice->SetTexture(0, hitTexture);
+			g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vecHit.size() / 3, &vecHit[0], sizeof(ST_PT_VERTEXT));
 
-		D3DXMatrixScaling(&matWorld, 10.0f, 10.0f, 10.0f);
-		D3DXMATRIXA16 hitMat;
-		D3DXMatrixTranslation(&hitMat, mouse.x, mouse.y, mouse.z);
-		matWorld *= hitMat;
-		g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
-		g_pD3DDevice->SetTexture(0, hitTexture);
-		g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vecHit.size() / 3, &vecHit[0], sizeof(ST_PT_VERTEXT));
+
+			D3DXMatrixScaling(&matWorld, 40.0f, 40.0f, 40.0f);
+			D3DXMATRIXA16 mat = matWorld*matRT;
+
+			g_pD3DDevice->SetTransform(D3DTS_WORLD, &mat);
+			g_pD3DDevice->SetTexture(0, rangeTexture);
+			g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vecRange.size() / 3, &vecRange[0], sizeof(ST_PT_VERTEXT));
 
 
-		D3DXMatrixScaling(&matWorld, 40.0f, 40.0f, 40.0f);
-		D3DXMATRIXA16 mat = matWorld*matRT;
+		}
+		if (Skill == SPELL_W)
+		{
 
-		g_pD3DDevice->SetTransform(D3DTS_WORLD, &mat);
-		g_pD3DDevice->SetTexture(0, rangeTexture);
-		g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vecRange.size() / 3, &vecRange[0], sizeof(ST_PT_VERTEXT));
+			D3DXMatrixScaling(&matWorld, 10.0f, 10.0f, 10.0f);
+			D3DXMATRIXA16 tempT; D3DXMatrixTranslation(&tempT, 0, 8, 5);
+			D3DXMATRIXA16 mat = matWorld*matT*tempT;
+
+			g_pD3DDevice->SetTransform(D3DTS_WORLD, &mat);
+			g_pD3DDevice->SetTexture(0, BarrierTex);
+			g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vecBarrier.size() / 3, &vecBarrier[0], sizeof(ST_PT_VERTEXT));
+		}
 
 
 		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	}
-	else g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	//else g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
 	XFile->GetXFile(xKey)->Render(matRT);
 
@@ -403,5 +393,58 @@ void cTessadar::BlendAni(int State)
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(1, 1.0f);
 		break;
 	}
+}
+
+void cTessadar::SkillUiVertex()
+{
+	D3DXVECTOR2 t;
+	g_pTextureManager->AddTexture(L"Tassadar/nontargetRange2_.png", rangeTexture, &t);
+	g_pTextureManager->AddTexture(L"Tassadar/nontargetRange2.png", hitTexture, &t);
+	g_pTextureManager->AddTexture(L"Tassadar/Barrier.png", BarrierTex, &t);
+	/*
+	rangeTexture = g_pTextureManager->GetTexture(L"Tassadar/nontargetRange2_.png");
+	hitTexture = g_pTextureManager->GetTexture(L"Tassadar/nontargetRange2.png");*/
+
+	ST_PT_VERTEXT p;
+	p.p = D3DXVECTOR3(-1, 0.01f, -1);
+	p.t = D3DXVECTOR2(0, 1);
+	vecRange.push_back(p); vecHit.push_back(p);
+	p.p = D3DXVECTOR3(-1, 0.01f, 1);
+	p.t = D3DXVECTOR2(0, 0);
+	vecRange.push_back(p); vecHit.push_back(p);
+	p.p = D3DXVECTOR3(1, 0.01f, 1);
+	p.t = D3DXVECTOR2(1, 0);
+	vecRange.push_back(p); vecHit.push_back(p);
+
+	p.p = D3DXVECTOR3(-1, 0.01f, -1);
+	p.t = D3DXVECTOR2(0, 1);
+	vecRange.push_back(p); vecHit.push_back(p);
+	p.p = D3DXVECTOR3(1, 0.01f, 1);
+	p.t = D3DXVECTOR2(1, 0);
+	vecRange.push_back(p); vecHit.push_back(p);
+	p.p = D3DXVECTOR3(1, 0.01f, -1);
+	p.t = D3DXVECTOR2(1, 1);
+	vecRange.push_back(p); vecHit.push_back(p);
+
+	p.p = D3DXVECTOR3(-1, -1, -1);
+	p.t = D3DXVECTOR2(0, 1);
+	vecBarrier.push_back(p);
+	p.p = D3DXVECTOR3(-1, 1, -1);
+	p.t = D3DXVECTOR2(0, 0);
+	vecBarrier.push_back(p);
+	p.p = D3DXVECTOR3(1, 1, -1);
+	p.t = D3DXVECTOR2(1, 0);
+	vecBarrier.push_back(p);
+
+
+	p.p = D3DXVECTOR3(-1, -1, -1);
+	p.t = D3DXVECTOR2(0, 1);
+	vecBarrier.push_back(p);
+	p.p = D3DXVECTOR3(1, 1, -1);
+	p.t = D3DXVECTOR2(1, 0);
+	vecBarrier.push_back(p);
+	p.p = D3DXVECTOR3(1, -1, -1);
+	p.t = D3DXVECTOR2(1, 1);
+	vecBarrier.push_back(p);
 }
 
