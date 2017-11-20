@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="cMtlTex.cpp" />
     <ClCompile Include="D3DX_Base.cpp" />
-    <ClCompile Include="iScene.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="cAllocateHierarchy.cpp">
       <Filter>XFile</Filter>
@@ -104,16 +103,12 @@
     <ClCompile Include="cSaveLoad.cpp">
       <Filter>Map</Filter>
     </ClCompile>
+    <ClCompile Include="iScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cMtlTex.h" />
-    <ClInclude Include="cUtil.h" />
-    <ClInclude Include="D3DX_Base.h" />
-    <ClInclude Include="iScene.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="structUI.h" />
-    <ClInclude Include="targetver.h" />
     <ClInclude Include="cAllocateHierarchy.h">
       <Filter>XFile</Filter>
     </ClInclude>
@@ -213,10 +208,33 @@
     <ClInclude Include="cSaveLoad.h">
       <Filter>Map</Filter>
     </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>resource</Filter>
+    </ClInclude>
+    <ClInclude Include="iScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="structUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="cUtil.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DX_Base.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="small.ico" />
     <Image Include="D3DX_Base.ico">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="small.ico">
       <Filter>resource</Filter>
     </Image>
   </ItemGroup>

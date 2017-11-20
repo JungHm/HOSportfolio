@@ -10,6 +10,8 @@ cPlayer::cPlayer()
 	D3DXMatrixIdentity(&matWorld);
 	D3DXMatrixIdentity(&matT); D3DXMatrixIdentity(&matR);
 	Attack = false;
+	level = experience = 0;
+	Att = 100;
 }
 
 
@@ -24,22 +26,34 @@ void cPlayer::Setup()
 
 void cPlayer::Update()
 {
+	if ((GetAsyncKeyState(VK_F2) & 0x8001))//치트키 레벨업
+	{
+		experience += 2;
+		if (experience / 100 >= 1)
+		{
+			level += experience / 100;
+			experience = 0;
+		}
+	}
 
 	m_pChar->Update();
 	m_pChar->SetmousePos(m_ptMouse);
 	if (GetAsyncKeyState('Q') & 0x8001)
 	{
+		//if(coolQ==0)//쿨다운이 0일때 스킬 사용할수 있게
 		m_pChar->Setskill(SPELL_Q);
 	}
-	if (GetAsyncKeyState('W') & 0x8001)
+	if ((GetAsyncKeyState('W') & 0x8001) && level == 2)
 	{
+		//if(coolW==0)//쿨다운이 0일때 스킬 사용할수 있게
 		m_pChar->Setskill(SPELL_W);
 	}
-	if (GetAsyncKeyState('E') & 0x8001)
+	if ((GetAsyncKeyState('E') & 0x8001) && level == 3)
 	{
+		//if(coolE==0)//쿨다운이 0일때 스킬 사용할수 있게
 		m_pChar->Setskill(SPELL_E);
 	}
-	if (GetAsyncKeyState('R') & 0x8001)
+	if ((GetAsyncKeyState('R') & 0x8001) && level == 4)// 궁극기는 사용할지 안할지 모름
 	{
 		m_pChar->Setskill(SPELL_R);
 	}

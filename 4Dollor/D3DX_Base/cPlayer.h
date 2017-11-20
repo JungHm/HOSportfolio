@@ -4,15 +4,17 @@ class cCharacter;
 
 struct P_INFO
 {
-	int m_Hp, m_Mp;
+	
 	//float CtQ, CtW, CtE;
 };
 
 class cPlayer
 {
 private://player 기본 정보
-
-
+	int experience;
+	int level;
+	int m_Hp, m_Mp, m_Shield;
+	int Att;
 
 private:
 	D3DXMATRIXA16 matWorld, matR, matT;
@@ -40,5 +42,7 @@ public:
 	void moveTo();
 	void Render();
 	void Destroy();
+
+	void ExpUp(int value) { experience += value; }
 };
 
