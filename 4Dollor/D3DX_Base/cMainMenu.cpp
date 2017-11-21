@@ -41,48 +41,11 @@ cMainMenu::~cMainMenu()
 		SAFE_DELETE(m_UILoading);
 	}
 
-<<<<<<< HEAD
 
-	//m_pRootNode->Destroy();
-=======
->>>>>>> master
 }
 
 void cMainMenu::SetUp()
 {
-<<<<<<< HEAD
-	//// ASE Loader
-	////cAseLoader	loader;
-	////m_pRootNode = loader.Load("woman/woman_01_all.ASE");
-	//// font
-	//D3DXFONT_DESC fd;
-	//ZeroMemory(&fd, sizeof(D3DXFONT_DESC));
-	//fd.Height = 25;
-	//fd.Width = 12;
-	//fd.Weight = FW_BOLD;
-	//fd.Italic = false;
-	//fd.CharSet = DEFAULT_CHARSET;
-	//fd.OutputPrecision = OUT_DEFAULT_PRECIS;
-	//fd.PitchAndFamily = FF_DONTCARE;
-
-	////WCHAR str[36] = L"����ü";
-	////wsprintf(str, fd.FaceName);
-
-	////char szFaceName[32] = "����ü";
-	////char* p = szFaceName;
-	////strcpy_s(fd.FaceName, 32, L"����ü");
-
-	//D3DXCreateFontIndirect(g_pD3DDevice, &fd, &m_pFont);
-
-	//SetLight();
-
-	
-	//D3DXVECTOR2 temp;
-	//g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
-	//D3DXCreateTextureFromFile(g_pD3DDevice, L"Black Dragon NEW/textures/Dragon_Bump_Col2.jpg", &m_pD3DTexture1);
-
-=======
->>>>>>> master
 
 	m_UI = new cUIMainMenu;
 	m_UI->setup("cMainMenu");	// ���̺� �� �з�� �̸�� ����ϹǷ� Ŭ���� �̸�� ����
