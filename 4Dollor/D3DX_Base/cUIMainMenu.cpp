@@ -10,10 +10,7 @@ cUIMainMenu::cUIMainMenu()
 
 cUIMainMenu::~cUIMainMenu()
 {
-	for each(auto p in m_VText)
-	{
-		p.font->Release();
-	}
+	
 }
 
 int cUIMainMenu::updateButtonCallback(int num)
@@ -97,13 +94,13 @@ void cUIMainMenu::setupOther()
 	setupTextInput("기술", cFontManager::FT_SMALL, ptAbility, rcSizeAbility);
 	setupTextInput("특성", cFontManager::FT_SMALL, ptTalent, rcSizeTalent);
 	setupTextInput("준비", cFontManager::FT_SMALL, ptReady, rcSizeReady);
+	m_Font = g_pFontManager->GetFont(cFontManager::FT_SMALL);
 }
 
 void cUIMainMenu::setupTextInput(string strName, cFontManager::eFontType fontType, POINT pt, POINT rcPt)
 {
 	tagTextView tv;
 	tv.alpha = 255;
-	tv.font = g_pFontManager->GetFont(fontType);
 	tv.pt = pt;
 	tv.str = strName;
 	SetRect(&tv.rcText, tv.pt.x, tv.pt.y, tv.pt.x + rcPt.x, tv.pt.y + rcPt.y);
@@ -118,6 +115,11 @@ void cUIMainMenu::renderOther()
 {
 	for each(auto p in m_VText)
 	{
-		p.font->DrawTextA(NULL, p.str.c_str(), p.str.length(), &p.rcText, DT_CENTER | DT_VCENTER, D3DCOLOR_ARGB(p.alpha, 255, 255, 255));
+		m_Font->DrawTextA(NULL, p.str.c_str(), p.str.length(), &p.rcText, DT_CENTER | DT_VCENTER, D3DCOLOR_ARGB(p.alpha, 255, 255, 255));
 	}
+}
+
+void cUIMainMenu::destroyOther()
+{
+	m_Font->Release();
 }

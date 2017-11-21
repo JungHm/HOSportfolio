@@ -66,4 +66,6 @@ public:
 	virtual void renderOther() = 0;
 	// ÇØ-Á¦
 	virtual void destroy();
+
+	virtual void destroyOther() = 0;
 };

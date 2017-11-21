@@ -16,4 +16,5 @@ public:
 	void setupOther();
 	void updateOther();
 	void renderOther();
+	void destroyOther();
 };

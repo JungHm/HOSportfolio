@@ -34,3 +34,7 @@ void cUILoadingInGame::updateOther()
 void cUILoadingInGame::renderOther()
 {
 }
+
+void cUILoadingInGame::destroyOther()
+{
+}
