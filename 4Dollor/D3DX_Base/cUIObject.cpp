@@ -20,7 +20,7 @@ cUIObject::~cUIObject()
 void cUIObject::AddSprite(tagUISpriteLoadData &spriteData)
 {
 	// 텍스쳐 등록은 텍스쳐 매니저로 해야됨. 현재 텍스쳐 매니저를 확장하지 않았으므로 여기에서 등록
-	spriteData.indexName = "UI_" + spriteData.indexName;
+	spriteData.indexName = spriteData.indexName;
 
 	// D3DXCreateTextureFromFileEx 얘가 로딩시간 꽤 오래 걸림. 이미지가 클수록 오래 걸림.
 	// 현재 배경 이미지 띄우는데 1.500ms 정도
@@ -228,7 +228,7 @@ void cUIObject::updateButton()
 		if (!m_MUIButtonIt->second.enable) continue;
 		updateMatWorld(m_MUIButtonIt->second.matWorld, m_MUIButtonIt->second.pt);
 		// 이 아래부터 pt 값은 matWorld의 _41, _42 값을 줘야 한다. Scale, Trans가 적용된 World를 기준으로 해야됨
-		if (!m_MUIButtonIt->second.used) continue;	// 사용 중이면 버튼 업데이트를 안함 (버튼 기능 비활성)
+		if (m_MUIButtonIt->second.used) continue;	// 사용 중이면 버튼 업데이트를 안함 (버튼 기능 비활성)
 		updateButtonState(m_MUIButtonIt->second.imgInfo, D3DXVECTOR3(m_MUIButtonIt->second.matWorld._41, m_MUIButtonIt->second.matWorld._42, 0), m_MUIButtonIt->second.buttonState, m_MUIButtonIt->second.buttonFunc);
 	}
 }

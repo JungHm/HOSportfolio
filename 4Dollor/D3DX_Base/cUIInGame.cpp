@@ -52,150 +52,62 @@ int cUIInGame::updateButtonCallback(int num)
 	return 0;
 }
 
-void cUIInGame::UISetSkillUnlock(int SkillIndex, bool unlock)
+void cUIInGame::SetSkillUnlock(int SkillIndex, bool unlock)
 {
-	if (SkillIndex == 1)
+	string skillName = "abil" + to_string(SkillIndex);
+	string skillNameImg = "abil" + to_string(SkillIndex) + "img";
+	string skillNameLock = "skill" + to_string(SkillIndex) + "lock";
+
+	if (unlock)	// 스킬 언락 시 락 이미지 enable = false & 스킬 enable = true
 	{
-		if (unlock)	// 스킬 언락 시 락 이미지 enable = false & 스킬 enable = true
-		{
-			m_MUIButton.find("abil1")->second.enable = true;
-			m_MUISprite.find("abil1img")->second.enable = true;
-			m_MUISprite.find("skill1lock")->second.enable = false;
-		}
-		else	// 스킬 재사용 가능 시 위에 기능 반대로 작동
-		{
-			m_MUIButton.find("abil1")->second.enable = false;
-			m_MUISprite.find("abil1img")->second.enable = false;
-			m_MUISprite.find("skill1lock")->second.enable = true;
-		}
+		m_MUIButton.find(skillName)->second.enable = true;
+		m_MUISprite.find(skillNameImg)->second.enable = true;
+		m_MUISprite.find(skillNameLock)->second.enable = false;
 	}
-	else if (SkillIndex == 2)
+	else	// 스킬 재사용 가능 시 위에 기능 반대로 작동
 	{
-		if (unlock)
-		{
-			m_MUIButton.find("abil2")->second.enable = true;
-			m_MUISprite.find("abil2img")->second.enable = true;
-			m_MUISprite.find("skil21lock")->second.enable = false;
-		}
-		else
-		{
-			m_MUIButton.find("abil2")->second.enable = false;
-			m_MUISprite.find("abil2img")->second.enable = false;
-			m_MUISprite.find("skil21lock")->second.enable = true;
-		}
-	}
-	else if (SkillIndex == 3)
-	{
-		if (unlock)
-		{
-			m_MUIButton.find("abil3")->second.enable = true;
-			m_MUISprite.find("abil3img")->second.enable = true;
-			m_MUISprite.find("skil31lock")->second.enable = false;
-		}
-		else
-		{
-			m_MUIButton.find("abil3")->second.enable = false;
-			m_MUISprite.find("abil3img")->second.enable = false;
-			m_MUISprite.find("skil31lock")->second.enable = true;
-		}
-	}
-	else if (SkillIndex == 4)
-	{
-		if (unlock)
-		{
-			m_MUIButton.find("abil4")->second.enable = true;
-			m_MUISprite.find("abil4img")->second.enable = true;
-			m_MUISprite.find("skil41lock")->second.enable = false;
-		}
-		else
-		{
-			m_MUIButton.find("abil4")->second.enable = false;
-			m_MUISprite.find("abil4img")->second.enable = false;
-			m_MUISprite.find("skil41lock")->second.enable = true;
-		}
-	}
-	else if (SkillIndex == 5)
-	{
-		if (unlock)
-		{
-			m_MUIButton.find("abil5")->second.enable = true;
-			m_MUISprite.find("abil5img")->second.enable = true;
-			m_MUISprite.find("skil51lock")->second.enable = false;
-		}
-		else
-		{
-			m_MUIButton.find("abil5")->second.enable = false;
-			m_MUISprite.find("abil5img")->second.enable = false;
-			m_MUISprite.find("skil51lock")->second.enable = true;
-		}
+		m_MUIButton.find(skillName)->second.enable = false;
+		m_MUISprite.find(skillNameImg)->second.enable = false;
+		m_MUISprite.find(skillNameLock)->second.enable = true;
 	}
 }
 
-void cUIInGame::UISetSkillUse(int SkillIndex, bool used)
+void cUIInGame::SetSkillUse(int SkillIndex, bool used)
 {
-	if (SkillIndex == 1)
+	string skillName = "abil" + to_string(SkillIndex);
+	string skillNameImg = "abil" + to_string(SkillIndex) + "img";
+
+	if (used)
 	{
-		if (used)	// 스킬 사용 시 현재 스킬 아이콘을 숨기고 쿨탐 아이콘, Text 표시
-		{
-			m_MUIButton.find("abil1")->second.used = true;
-			m_MUISprite.find("abil1img")->second.enable = false;
-		}
-		else	// 스킬 재사용 가능 시 위에 기능 반대로 작동
-		{
-			m_MUIButton.find("abil1")->second.used = false;
-			m_MUISprite.find("abil1img")->second.enable = true;
-		}
+		m_MUIButton.find(skillName)->second.used = true;
+		m_MUIButton.find(skillName)->second.buttonState = UIBUTTONSTATE_DISENABLE;
+		//m_MUISprite.find(skillNameImg)->second.enable = false;
 	}
-	else if (SkillIndex == 2)
+	else
 	{
-		if (used)
-		{
-			m_MUIButton.find("abil2")->second.used = true;
-			m_MUISprite.find("abil2img")->second.enable = false;
-		}
-		else
-		{
-			m_MUIButton.find("abil2")->second.used = false;
-			m_MUISprite.find("abil2img")->second.enable = true;
-		}
+		m_MUIButton.find(skillName)->second.used = false;
+		m_MUIButton.find(skillName)->second.buttonState = UIBUTTONSTATE_NORMAL;
+		//m_MUISprite.find(skillNameImg)->second.enable = true;
+		string countName = "skill" + to_string(SkillIndex) + "cool0";
+		m_MUIButton.find(countName)->second.enable = false;
 	}
-	else if (SkillIndex == 3)
+}
+
+void cUIInGame::SetSkillUseCooldown(int SkillIndex, float count)
+{
+	// 이미지 저장하는 구조부터 바꿔야 할듯. 아래 구조는 불안정하고 확장성이 부족함
+	int countInt = (int)count;
+	countInt++;	// 0.9가 0으로 치환되므로 표현을 +1로 해준다.
+	if (countInt > 9)
+		countInt = 9;	// 10초 이상은 구조 자체를 바꿔야 할듯. 지금은 한자리 수만 됨...
+	string skillName = "abil" + to_string(SkillIndex);
+	string countName = "skill" + to_string(SkillIndex) + "cool" + to_string(countInt);
+	string countName2 = "skill" + to_string(SkillIndex) + "cool" + to_string(countInt + 1);
+
+	if (m_MUIButton.find(skillName)->second.used)	// 스킬이 사용 중이라면 카운트 표시. 아니면 안함
 	{
-		if (used)
-		{
-			m_MUIButton.find("abil3")->second.used = true;
-			m_MUISprite.find("abil3img")->second.enable = false;
-		}
-		else
-		{
-			m_MUIButton.find("abil3")->second.used = false;
-			m_MUISprite.find("abil3img")->second.enable = true;
-		}
-	}
-	else if (SkillIndex == 4)
-	{
-		if (used)
-		{
-			m_MUIButton.find("abil4")->second.used = true;
-			m_MUISprite.find("abil4img")->second.enable = false;
-		}
-		else
-		{
-			m_MUIButton.find("abil4")->second.used = false;
-			m_MUISprite.find("abil4img")->second.enable = true;
-		}
-	}
-	else if (SkillIndex == 5)
-	{
-		if (used)
-		{
-			m_MUIButton.find("abil5")->second.used = true;
-			m_MUISprite.find("abil5img")->second.enable = false;
-		}
-		else
-		{
-			m_MUIButton.find("abil5")->second.used = false;
-			m_MUISprite.find("abil5img")->second.enable = true;
-		}
+		m_MUIButton.find(countName)->second.enable = true;
+		if (countInt > 8) return;	// 이게 없으면 countInt + 1 = 10이 될 경우 터짐.
+		m_MUIButton.find(countName2)->second.enable = false;
 	}
 }
