@@ -109,6 +109,8 @@
     <ClCompile Include="cFxLoad.cpp">
       <Filter>FxLoader</Filter>
     </ClCompile>
+    <ClCompile Include="cFrustum.cpp" />
+    <ClCompile Include="cParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cMtlTex.h" />
@@ -235,6 +237,8 @@
     <ClInclude Include="cFxLoad.h">
       <Filter>FxLoader</Filter>
     </ClInclude>
+    <ClInclude Include="cFrustum.h" />
+    <ClInclude Include="cParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="D3DX_Base.ico">
