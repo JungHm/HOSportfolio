@@ -11,11 +11,14 @@ cPlayer::cPlayer()
 	D3DXMatrixIdentity(&matWorld);
 	D3DXMatrixIdentity(&matT); D3DXMatrixIdentity(&matR);
 	Attack = false;
-	level = experience = 2;
+	level = 1; experience = 2;
 	m_Hp = m_Mp = Att = 100;
 	m_Shield = 10;
 	distance = 0.0f;
 	isQcool = isWcool = isEcool = isAttack = false;
+	coolQ = 0.0f;
+	coolW = 0.0f;
+	coolE = 0.0f;
 }
 
 
@@ -44,38 +47,58 @@ void cPlayer::Update()
 	}
 
 	//====================쿨타임 업데이트=============================
-	if (m_pChar->GetCoolQ() <= m_pChar->GetMaxCool())// 쿨타임 max 보다 작다면 쿨을 돌려준다
-		m_pChar->SetCoolQ(m_pChar->GetCoolQ() + g_pTimeManager->GetEllapsedTime());
+	//쿨넘겨주기위해
+	coolQ = m_pChar->GetCoolQ();
+	coolW = m_pChar->GetCoolW();
+	coolE = m_pChar->GetCoolE();
+	if (coolQ > 0.0f)// 쿨타임 max 보다 작다면 쿨을 돌려준다
+	{
 
-	if (m_pChar->GetCoolW() <= m_pChar->GetMaxCool())
-		m_pChar->SetCoolW(m_pChar->GetCoolW() + g_pTimeManager->GetEllapsedTime());
+		m_pChar->SetCoolQ(coolQ - g_pTimeManager->GetEllapsedTime());
+		isQcool = true;
+	}
+	else isQcool = false;
 
-	if (m_pChar->GetCoolE() <= m_pChar->GetMaxCool())
-		m_pChar->SetCoolE(m_pChar->GetCoolE() + g_pTimeManager->GetEllapsedTime());
+	if (coolW > 0.0f)// 쿨타임 max 보다 작다면 쿨을 돌려준다
+	{
+		m_pChar->SetCoolW(coolW - g_pTimeManager->GetEllapsedTime());
+		isWcool = true;
+	}
+	else isWcool = false;
 
+	if (coolE > 0.0f)// 쿨타임 max 보다 작다면 쿨을 돌려준다
+	{
+		m_pChar->SetCoolE(coolE - g_pTimeManager->GetEllapsedTime());
+		isEcool = true;
+	}
+	else isEcool = false;
+	
 	//===============================================================
 	//====================스킬 시전=============================
 	if (GetAsyncKeyState('Q') & 0x8001)
 	{
-		if (m_pChar->GetCoolQ() >= m_pChar->GetMaxCool())
+		if (m_pChar->GetCoolQ() <= 0.0f)
 		{
 			m_pChar->Setskill(SPELL_Q);
+			
 		}
 	}
 	if ((GetAsyncKeyState('W') & 0x8001) && level >= 2)
 	{
-		if (m_pChar->GetCoolW() >= m_pChar->GetMaxCool())
+		if (m_pChar->GetCoolW() <= 0.0f)
 		{
 			m_pChar->Setskill(SPELL_W);
 			m_pChar->BlendAni(m_pChar->Getskill());
+			m_pChar->SetCoolW(10.0f);
 		}
 	}
 	if ((GetAsyncKeyState('E') & 0x8001) && level >= 3)
 	{
-		if (m_pChar->GetCoolE() >= m_pChar->GetMaxCool())
+		if (m_pChar->GetCoolE() <= 0.0f)
 		{
 			m_pChar->Setskill(SPELL_E);
 			m_pChar->BlendAni(m_pChar->Getskill());
+			m_pChar->SetCoolE(10.0f);
 		}
 	}
 
@@ -87,6 +110,7 @@ void cPlayer::Update()
 		{
 			m_pChar->BlendAni(m_pChar->Getskill());
 			m_pChar->Setskill(NULL);//스킬 사용후 NULL로
+			m_pChar->SetCoolQ(10.0f);
 		}
 	}
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8001)

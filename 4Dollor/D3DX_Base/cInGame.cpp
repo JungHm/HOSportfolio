@@ -75,6 +75,29 @@ void cInGame::Destroy()
 
 void cInGame::Update()
 {
+	m_pPlayer->Update();
+	if (m_pPlayer->GetLevel() < 4)//레벨에 따라 스킬 언락
+		m_UI->SetSkillUnlock(m_pPlayer->GetLevel(), true);
+
+	if (m_pPlayer->isQcool)
+	{
+		m_UI->SetSkillUse(1, true);
+		m_UI->SetSkillUseCooldown(1, m_pPlayer->coolQ);
+	}
+	else m_UI->SetSkillUse(1, false);
+	if (m_pPlayer->isWcool)
+	{
+		m_UI->SetSkillUse(2, true);
+		m_UI->SetSkillUseCooldown(2, m_pPlayer->coolW);
+	}
+	else m_UI->SetSkillUse(2, false);
+	if (m_pPlayer->isEcool)
+	{
+		m_UI->SetSkillUse(3, true);
+		m_UI->SetSkillUseCooldown(3, m_pPlayer->coolE);
+	}
+	else m_UI->SetSkillUse(3, false);
+
 	D3DXVECTOR3 pickPosition;
 	for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
 	{
@@ -109,7 +132,7 @@ void cInGame::Update()
 		}
 	}
 
-	m_pPlayer->Update();
+
 
 	if (m_UI && !m_UILoading)
 	{
