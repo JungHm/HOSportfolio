@@ -5,13 +5,15 @@
 cPlayer::cPlayer()
 	: m_vPosition(0, 0, 0)
 	, m_vDirection(0, 0, -1)
+	, m_Radius(5.0f)
 {
 	m_vFrom = m_vPosition;
 	D3DXMatrixIdentity(&matWorld);
 	D3DXMatrixIdentity(&matT); D3DXMatrixIdentity(&matR);
 	Attack = false;
 	level = experience = 2;
-	Att = 100;
+	m_Hp = m_Mp = Att = 100;
+	m_Shield = 10;
 	distance = 0.0f;
 	isQcool = isWcool = isEcool = isAttack = false;
 }
@@ -50,7 +52,7 @@ void cPlayer::Update()
 
 	if (m_pChar->GetCoolE() <= m_pChar->GetMaxCool())
 		m_pChar->SetCoolE(m_pChar->GetCoolE() + g_pTimeManager->GetEllapsedTime());
-	
+
 	//===============================================================
 	//====================스킬 시전=============================
 	if (GetAsyncKeyState('Q') & 0x8001)

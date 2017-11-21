@@ -4,7 +4,7 @@ class cCharacter;
 
 struct P_INFO
 {
-	
+
 	//float CtQ, CtW, CtE;
 };
 
@@ -15,8 +15,9 @@ private://player 기본 정보
 	int level;
 	int m_Hp, m_Mp, m_Shield;
 	int Att;
+	SYNTHESIZE(float, m_Radius, Radius);
 	//공격용
-	SYNTHESIZE(float ,distance,Distance);
+	SYNTHESIZE(float, distance, Distance);
 	bool isAttack;
 private:
 	D3DXMATRIXA16 matWorld, matR, matT;
