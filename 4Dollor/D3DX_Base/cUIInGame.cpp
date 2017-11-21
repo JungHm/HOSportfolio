@@ -111,3 +111,15 @@ void cUIInGame::SetSkillUseCooldown(int SkillIndex, float count)
 		m_MUIButton.find(countName2)->second.enable = false;
 	}
 }
+
+void cUIInGame::setupOther()
+{
+}
+
+void cUIInGame::updateOther()
+{
+}
+
+void cUIInGame::renderOther()
+{
+}

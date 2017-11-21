@@ -22,3 +22,15 @@ int cUILoadingInGame::updateButtonCallback(int num)
 	m_LoadingEnd = true;
 	return 0;
 }
+
+void cUILoadingInGame::setupOther()
+{
+}
+
+void cUILoadingInGame::updateOther()
+{
+}
+
+void cUILoadingInGame::renderOther()
+{
+}

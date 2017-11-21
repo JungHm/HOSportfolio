@@ -214,11 +214,14 @@ void cUIObject::setup(string className)
 	{
 		AddSprite(vUIData[i]);
 	}
+
+	setupOther();
 }
 
 void cUIObject::update()
 {
 	updateButton();
+	updateOther();
 }
 
 void cUIObject::updateButton()
@@ -277,6 +280,11 @@ void cUIObject::updateButtonState(D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt, int &b
 			if (buttonState == UIBUTTONSTATE_OVER)	// 오버 상태일 때 클릭 시
 			{
 				buttonState = UIBUTTONSTATE_SELECT;
+				updateButtonCallback(buttonFunc);
+			}
+			else if (buttonState == UIBUTTONSTATE_SELECT)
+			{
+				buttonState = UIBUTTONSTATE_OVER;
 			}
 		}
 		else
@@ -284,7 +292,7 @@ void cUIObject::updateButtonState(D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt, int &b
 			if (buttonState == UIBUTTONSTATE_SELECT)
 			{
 				// 마우스 클릭 시 기능 실행
-				updateButtonCallback(buttonFunc);
+				//updateButtonCallback(buttonFunc);
 			}
 			else if (buttonState == UIBUTTONSTATE_OVER)
 			{
@@ -304,6 +312,7 @@ void cUIObject::render()
 {
 	renderNormal();
 	renderButton();
+	renderOther();
 }
 
 void cUIObject::renderBG()

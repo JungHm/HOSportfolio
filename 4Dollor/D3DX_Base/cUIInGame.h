@@ -23,5 +23,9 @@ public:
 	void SetSkillUse(int SkillIndex, bool used);
 	// 스킬 사용 쿨타임 표시
 	void SetSkillUseCooldown(int SkillIndex, float count);
+
+	void setupOther();
+	void updateOther();
+	void renderOther();
 };
 

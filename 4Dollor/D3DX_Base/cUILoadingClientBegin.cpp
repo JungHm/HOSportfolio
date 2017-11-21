@@ -21,3 +21,16 @@ int cUILoadingClientBegin::updateButtonCallback(int num)
 	m_LoadingEnd = true;
 	return 0;
 }
+
+void cUILoadingClientBegin::setupOther()
+{
+}
+
+void cUILoadingClientBegin::updateOther()
+{
+}
+
+void cUILoadingClientBegin::renderOther()
+{
+
+}

@@ -36,6 +36,8 @@ public:
 
 	// 데이터 파싱
 	virtual void setup(string className);
+	// 각자 셋업할 것
+	virtual void setupOther() = 0;
 	// 업데이트 그룹
 	virtual void update();
 	// 버튼 기능 업데이트 그룹
@@ -46,6 +48,8 @@ public:
 	virtual void updateCollisionRect(RECT &rc, D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt);
 	// 버튼 기능 실행 여부 체크 (버튼의 상태 체크). 수업 코드와 거의 동일함
 	virtual void updateButtonState(D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt, int &buttonState, int buttonFunc);
+	// 각자 띄우고 싶은게 있다면
+	virtual void updateOther() = 0;
 	// 순수 가상함수로 콜백. 마우스 오버 시 기능을 실행하기 위함. 각 씬별로 다른 기능을 실행해야하므로 재정의 필요(순수가상함수)
 	virtual int updateButtonOverCallback(int num) = 0;
 	// 순수 가상함수로 콜백. 마우스 클릭 시 기능 실행
@@ -58,6 +62,8 @@ public:
 	virtual void renderButton();
 	// 그 외 일반 이미지들 랜더
 	virtual void renderNormal();
+	// 각자 띄우게 싶은게 있다면
+	virtual void renderOther() = 0;
 	// 해-제
 	virtual void destroy();
 };

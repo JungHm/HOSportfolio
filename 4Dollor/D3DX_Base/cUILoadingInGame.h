@@ -12,5 +12,9 @@ public:
 
 	int updateButtonOverCallback(int num);
 	int updateButtonCallback(int num);
+
+	void setupOther();
+	void updateOther();
+	void renderOther();
 };
 
