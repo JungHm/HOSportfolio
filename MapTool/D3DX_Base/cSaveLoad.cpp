@@ -126,6 +126,17 @@ void cSaveLoad::CreateNodeSphere(IN LPD3DXMESH pMesh, IN D3DXVECTOR3 vPos, IN ve
 	m_vecFieldNodeSphere.push_back(sphere);
 }
 
+void cSaveLoad::CostSetup(IN int nSize)
+{
+	m_vecCost.resize(nSize);
+
+	for (int i = 0; i < m_vecCost.size(); i++)
+	{
+		m_vecCost[i].fCost = INF;
+		m_vecCost[i].nViaIndex = 0;
+	}
+}
+
 void cSaveLoad::CreateObjRender()
 {
 	g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
@@ -199,6 +210,18 @@ void cSaveLoad::RemoveObj()
 {
 	if (m_vecFieldObj.size() == NULL) return;
 	m_vecFieldObj.pop_back();
+}
+
+void cSaveLoad::RemoveBox()
+{
+	if (m_vecFieldBox.size() == NULL) return;
+	m_vecFieldBox.pop_back();
+}
+
+void cSaveLoad::RemoveNode()
+{
+	if (m_vecFieldNodeSphere.size() == NULL) return;
+	m_vecFieldNodeSphere.pop_back();
 }
 
 void cSaveLoad::SaveFieldObj()
@@ -318,6 +341,9 @@ void cSaveLoad::LoadFieldObj()
 		CreateNodeSphere(NULL, vPos, vecNode);
 	}
 	fclose(fp);
+
+	// 노드의 크기만큼 다익스트라 갱신값 사이즈 초기화
+	CostSetup(m_vecFieldNodeSphere.size());
 
 	// 노드 라인 로드
 	fopen_s(&fp, "SaveFieldPath/PathLine.txt", "r");

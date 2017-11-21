@@ -13,9 +13,9 @@ private:
 	D3DMATERIAL9				m_mtlSelected;		 // 선택 되었을 때 노드 메터리얼
 	vector<OBJECT>				m_vecFieldObj;		 // 필드에 배치되는 오브젝트
 	vector<ST_BOX>				m_vecFieldBox;		 // 필드에 배치되는 충돌 박스
+	vector<ST_COST>				m_vecCost;			 // 다익스트라 길찾기 갱신 값
 	SYNTHESIZE_PASS_BY_REF(vector<ST_SPHERE>, m_vecFieldNodeSphere, FieldNodeSphere); // 필드에 배치되는 다익스트라 노드 스페어
-	SYNTHESIZE_PASS_BY_REF(vector<ST_COST>, m_vecCost, Cost);	// 갱신 값
-	SYNTHESIZE_PASS_BY_REF(vector<ST_PC_VERTEXT>, m_vecNodeLine, NodeLinde); // 각 노드들의 연결 라인
+	SYNTHESIZE_PASS_BY_REF(vector<ST_PC_VERTEXT>, m_vecNodeLine, NodeLinde);		  // 각 노드들의 연결 라인
 	
 public:
 	cSaveLoad();
@@ -35,12 +35,18 @@ public:
 	void CreateObj(IN int nKind, IN LPD3DXMESH pMesh, IN vector<cMtlTex*> vecValue, IN string sFileName, IN D3DXVECTOR3 vScal, IN D3DXVECTOR3 vPos, IN float fAngleY);
 	// 필드에 배치되는 다익스트라 노드 생성 함수
 	void CreateNodeSphere(IN LPD3DXMESH pMesh, IN D3DXVECTOR3 vPos, IN vector<NODE> vecNode);
+	// 다익스트라 노드 갱신값 초기화
+	void CostSetup(IN int nSize);
 	// 배치 된 오브젝트 랜더
 	void CreateObjRender();
 	// 오브젝트 뒤에서 하나씩 삭제
 	void RemoveObj();
-	// 오브젝트 세이브
+	// 충돌 박스 뒤에서 하나씩 삭제
+	void RemoveBox();
+	// 노드 뒤에서 하나씩 삭제, 연결라인 은 2개씩 삭제
+	void RemoveNode();
+	// 오브젝트, 충돌박스, 노드, 노드 연결라인 세이브
 	void SaveFieldObj();
-	// 오브젝트 로더
+	// 오브젝트, 충돌박스, 노드, 노드 연력라인 로더
 	void LoadFieldObj();
 };

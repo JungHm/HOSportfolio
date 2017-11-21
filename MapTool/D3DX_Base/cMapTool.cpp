@@ -96,6 +96,11 @@ void cMapTool::Update()
 		m_eAllocateState--;
 	}
 
+	if (KEY->isOnceKeyDown(VK_F5))
+	{
+		m_pSaveLoad->RemoveNode();
+	}
+
 	if (KEY->isOnceKeyDown(VK_LBUTTON))
 	{
 		switch (m_eAllocateState)
@@ -244,6 +249,19 @@ void cMapTool::ObjPicking(IN UINT message, IN WPARAM wParam, IN LPARAM lParam)
 					node.nIndex = m_nFirstIndex;
 
 					m_pSaveLoad->GetFieldNodeSphere()[i].vecLink.push_back(node);
+
+					// 이미 연결 되있는 노드라면 다시 삭제
+					for (int j = 0; j < m_pSaveLoad->GetFieldNodeSphere()[m_nFirstIndex].vecLink.size() - 1; j++)
+					{
+						if (m_pSaveLoad->GetFieldNodeSphere()[m_nFirstIndex].vecLink[j].fCost == node.fCost)
+						{
+							m_pSaveLoad->GetFieldNodeSphere()[m_nFirstIndex].vecLink.pop_back();
+							m_pSaveLoad->GetFieldNodeSphere()[i].vecLink.pop_back();
+							m_pSaveLoad->GetNodeLinde().pop_back();
+							m_pSaveLoad->GetNodeLinde().pop_back();
+							break;
+						}
+					}
 
 					m_pSaveLoad->GetFieldNodeSphere()[m_nFirstIndex].isSelected = false;
 					m_pSaveLoad->GetFieldNodeSphere()[i].isSelected = false;

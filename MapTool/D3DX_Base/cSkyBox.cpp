@@ -27,7 +27,7 @@ void cSkyBox::Render()
 	g_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 	D3DXMATRIXA16 matS, matT;
-	D3DXMatrixScaling(&matS, 0.2f, 0.2f, 0.2f);
+	D3DXMatrixScaling(&matS, 0.3f, 0.3f, 0.3f);
 	D3DXMatrixTranslation(&matT, 0.0f, 100.0f, 100.0f);
 
 	m_matWorld = matS * matT;
