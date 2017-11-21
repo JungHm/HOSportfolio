@@ -41,6 +41,7 @@ cMainMenu::~cMainMenu()
 		SAFE_DELETE(m_UILoading);
 	}
 
+
 }
 
 void cMainMenu::SetUp()

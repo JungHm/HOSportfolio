@@ -9,6 +9,7 @@ public:
 	{
 		FT_DEFAULT,
 		FT_QUEST,
+		FT_SMALL
 	};
 	SINGLETONE(cFontManager);
 
