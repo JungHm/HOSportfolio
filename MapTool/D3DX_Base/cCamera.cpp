@@ -72,11 +72,11 @@ void cCamera::CameraModeChange()
 		if (KEY->isStayKeyDown('A')) m_vMove.x -= 2;
 		if (KEY->isStayKeyDown('D')) m_vMove.x += 2;
 
-		//D3DXMatrixRotationX(&matRX, m_vCamRotAngle.x);
-		//D3DXMatrixRotationY(&matRY, m_vCamRotAngle.y);
+		D3DXMatrixRotationX(&matRX, m_vCamRotAngle.x);
+		D3DXMatrixRotationY(&matRY, m_vCamRotAngle.y);
 		D3DXMatrixTranslation(&m_matTrans, m_vMove.x, m_vMove.y, m_vMove.z);
 
-		matR = m_matTrans;
+		matR = matRX * matRY * m_matTrans;
 
 		m_vLookAt = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		m_vEye = D3DXVECTOR3(0.0f, m_fCameraDistance, -m_fCameraDistance);

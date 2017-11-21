@@ -23,6 +23,6 @@ public:
 	static cPicking CalcWorldSpace(IN int nMouseX, IN int nMouseY);    
 
 	bool IntersectTri(IN D3DXVECTOR3 v0, IN D3DXVECTOR3 v1, IN D3DXVECTOR3 v2, OUT D3DXVECTOR3& vPickingPos);
-	
+	bool IntersectSphere(ST_SPHERE* pSphere);
 };
 

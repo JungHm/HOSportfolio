@@ -13,6 +13,8 @@ cMainGame::~cMainGame()
 {
 	g_pSprite->Destroy();
 	g_pTextureManager->Destroy();
+	XFile->Destroy();
+
 	//g_pObjectManager->Destroy();
 	g_Scene->Destroy();
 	g_pDeviceManager->Destroy();
@@ -20,13 +22,13 @@ cMainGame::~cMainGame()
 
 void cMainGame::Setup()
 {
-	//cInGame* m_pGame = new cInGame;
+	cInGame* m_pGame = new cInGame;
 	cMainMenu* m_pMenu = new cMainMenu;
 	g_Scene->AddScene("menu", m_pMenu);
-	//g_Scene->AddScene("game", m_pGame);
+	g_Scene->AddScene("game", m_pGame);
 
-	cInGame* m_pInGame = new cInGame;
-	g_Scene->AddScene("ingame", m_pInGame);
+	/*cInGame* m_pInGame = new cInGame;
+	g_Scene->AddScene("ingame", m_pInGame);*/
 
 	g_Scene->SetUp();
 

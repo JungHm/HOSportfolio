@@ -5,16 +5,23 @@
 cPlayer::cPlayer()
 	: m_vPosition(0, 0, 0)
 	, m_vDirection(0, 0, -1)
+	, m_Radius(5.0f)
 {
 	m_vFrom = m_vPosition;
 	D3DXMatrixIdentity(&matWorld);
 	D3DXMatrixIdentity(&matT); D3DXMatrixIdentity(&matR);
 	Attack = false;
+	level = experience = 2;
+	m_Hp = m_Mp = Att = 100;
+	m_Shield = 10;
+	distance = 0.0f;
+	isQcool = isWcool = isEcool = isAttack = false;
 }
 
 
 cPlayer::~cPlayer()
 {
+	SAFE_DELETE(m_pChar);
 }
 
 void cPlayer::Setup()
@@ -24,25 +31,55 @@ void cPlayer::Setup()
 
 void cPlayer::Update()
 {
-
 	m_pChar->Update();
 	m_pChar->SetmousePos(m_ptMouse);
+	if ((GetAsyncKeyState(VK_F2) & 0x8001) && level <= 20)//치트키 레벨업
+	{
+		experience += 2;
+		if (experience / 100 >= 1)
+		{
+			level += experience / 100;
+			experience = 0;
+		}
+	}
+
+	//====================쿨타임 업데이트=============================
+	if (m_pChar->GetCoolQ() <= m_pChar->GetMaxCool())// 쿨타임 max 보다 작다면 쿨을 돌려준다
+		m_pChar->SetCoolQ(m_pChar->GetCoolQ() + g_pTimeManager->GetEllapsedTime());
+
+	if (m_pChar->GetCoolW() <= m_pChar->GetMaxCool())
+		m_pChar->SetCoolW(m_pChar->GetCoolW() + g_pTimeManager->GetEllapsedTime());
+
+	if (m_pChar->GetCoolE() <= m_pChar->GetMaxCool())
+		m_pChar->SetCoolE(m_pChar->GetCoolE() + g_pTimeManager->GetEllapsedTime());
+
+	//===============================================================
+	//====================스킬 시전=============================
 	if (GetAsyncKeyState('Q') & 0x8001)
 	{
-		m_pChar->Setskill(SPELL_Q);
+		if (m_pChar->GetCoolQ() >= m_pChar->GetMaxCool())
+		{
+			m_pChar->Setskill(SPELL_Q);
+		}
 	}
-	if (GetAsyncKeyState('W') & 0x8001)
+	if ((GetAsyncKeyState('W') & 0x8001) && level >= 2)
 	{
-		m_pChar->Setskill(SPELL_W);
+		if (m_pChar->GetCoolW() >= m_pChar->GetMaxCool())
+		{
+			m_pChar->Setskill(SPELL_W);
+			m_pChar->BlendAni(m_pChar->Getskill());
+		}
 	}
-	if (GetAsyncKeyState('E') & 0x8001)
+	if ((GetAsyncKeyState('E') & 0x8001) && level >= 3)
 	{
-		m_pChar->Setskill(SPELL_E);
+		if (m_pChar->GetCoolE() >= m_pChar->GetMaxCool())
+		{
+			m_pChar->Setskill(SPELL_E);
+			m_pChar->BlendAni(m_pChar->Getskill());
+		}
 	}
-	if (GetAsyncKeyState('R') & 0x8001)
-	{
-		m_pChar->Setskill(SPELL_R);
-	}
+
+	//==========================================================
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8001)
 	{
@@ -54,11 +91,14 @@ void cPlayer::Update()
 	}
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8001)
 	{
+		isAttack = true;//적을 피킹했을때만 true 나머지는 false
 		m_pChar->Setskill(NULL);
 	}
-	if (Attack == true)
+
+	if (distance >= 5.0f && isAttack)
 	{
 		m_pChar->BlendAni(ATTACK);
+		isAttack = false;
 	}
 
 	D3DXVec3Normalize(&m_vDirection, &m_vDirection);
@@ -97,9 +137,4 @@ void cPlayer::Render()
 	D3DXMatrixTranslation(&matT, m_vPosition.x, m_vPosition.y, m_vPosition.z);
 	//matR *= matT;
 	m_pChar->Render(matR, matT);
-}
-
-void cPlayer::Destroy()
-{
-	SAFE_DELETE(m_pChar);
 }

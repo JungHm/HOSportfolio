@@ -24,7 +24,7 @@ cDeviceManager::cDeviceManager()
 	d3dPP.Windowed = TRUE;
 	d3dPP.BackBufferFormat = D3DFMT_UNKNOWN;
 	d3dPP.EnableAutoDepthStencil = TRUE;
-	d3dPP.AutoDepthStencilFormat = D3DFMT_D16;
+	d3dPP.AutoDepthStencilFormat = D3DFMT_D24S8;
 
 	m_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
 		D3DDEVTYPE_HAL,

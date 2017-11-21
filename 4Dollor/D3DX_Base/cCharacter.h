@@ -5,9 +5,15 @@ protected:
 	SYNTHESIZE(int, Skill, skill);
 	SYNTHESIZE(int, m_State, State);
 	SYNTHESIZE(D3DXVECTOR3, mouse, mousePos);
+
+	//coolDown
+	SYNTHESIZE(float, coolQ, CoolQ);
+	SYNTHESIZE(float, coolW, CoolW);
+	SYNTHESIZE(float, coolE, CoolE);
+	SYNTHESIZE(float, coolMax, MaxCool);
 public:
 	cCharacter();
-	~cCharacter();
+	virtual ~cCharacter();
 
 	virtual void AnimSetUp() = 0;
 	virtual void SetUp() = 0;

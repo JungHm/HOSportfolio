@@ -27,10 +27,9 @@ private:
 	cHeightMap* m_pHeightMap;
 	cSkyBox*    m_pSkyBox;
 
-	LPDIRECT3DTEXTURE9		m_pD3DTexture;
-
 private:
 	POINT m_ptMouse;
+
 public:
 	cInGame();
 	~cInGame();
@@ -40,6 +39,5 @@ public:
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
-	void SetLight();
 };
 

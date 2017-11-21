@@ -16,7 +16,6 @@ cMainMenu::cMainMenu()
 	, m_pD3DTexture(NULL)
 	, m_pObjLoader(NULL)
 	, m_pObjMap(NULL)
-	//, m_pRootNode(NULL)
 	, m_UI(NULL)
 
 {
@@ -42,12 +41,16 @@ cMainMenu::~cMainMenu()
 		SAFE_DELETE(m_UILoading);
 	}
 
+<<<<<<< HEAD
 
 	//m_pRootNode->Destroy();
+=======
+>>>>>>> master
 }
 
 void cMainMenu::SetUp()
 {
+<<<<<<< HEAD
 	//// ASE Loader
 	////cAseLoader	loader;
 	////m_pRootNode = loader.Load("woman/woman_01_all.ASE");
@@ -78,6 +81,8 @@ void cMainMenu::SetUp()
 	//g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
 	//D3DXCreateTextureFromFile(g_pD3DDevice, L"Black Dragon NEW/textures/Dragon_Bump_Col2.jpg", &m_pD3DTexture1);
 
+=======
+>>>>>>> master
 
 	m_UI = new cUIMainMenu;
 	m_UI->setup("cMainMenu");	// ���̺� �� �з�� �̸�� ����ϹǷ� Ŭ���� �̸�� ����
@@ -104,17 +109,12 @@ void cMainMenu::Destroy()
 
 void cMainMenu::Update()
 {
-	//m_pRootNode->Update(m_pRootNode->GetKeyFrame(), NULL);
-	//if (GetAsyncKeyState(VK_LBUTTON) & 0001)
-	//{
-	//	g_Scene->ChangeScene("game");
-	//}
 	if (m_UI && !m_UILoading)
 	{
 		m_UI->update();	// ��ư�� ����Ƿ� update
 		if (m_UI->GetGameStart())
 		{
-			g_Scene->ChangeScene("ingame");
+			g_Scene->ChangeScene("game");
 		}
 	}
 	else if (m_UILoading)
@@ -133,34 +133,11 @@ void cMainMenu::Update()
 
 void cMainMenu::Render()
 {
-	/*RECT rc;
-	SetRect(&rc, 100, 100, 200, 200);
-	std::string s = "�̰��� ����ü��";
-	m_pFont->DrawTextA(NULL, s.c_str(), strlen(s.c_str()), &rc,
-	DT_LEFT | DT_TOP | DT_NOCLIP,
-	D3DCOLOR_XRGB(255, 255, 255));
-
-	D3DXMATRIXA16	matWorld;
-	D3DXMatrixIdentity(&matWorld);
-	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
-	g_pD3DDevice->SetTexture(0, m_pD3DTexture);
-	g_pD3DDevice->SetFVF(ST_PT_VERTEXT::FVF);
-	g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST,
-	m_vecTriVertex.size() / 3,
-	&m_vecTriVertex[0],
-	sizeof(ST_PT_VERTEXT));*/
+	
 
 	if (m_UI && !m_UILoading) m_UI->renderBG();	// ��� ���� ���� ��
 	else if (m_UILoading) m_UILoading->renderBG();
 
-	//g_pSprite->BeginScene();
-	//g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
-	//g_pSprite->End();
-
-	//if (m_pRootNode)
-	//	m_pRootNode->Render();
-
-	//RenderObjFile();
 
 	if (m_UI && !m_UILoading) m_UI->render();	// ��� �� UI ��õ� ����
 	else if (m_UILoading) m_UILoading->render();
@@ -189,36 +166,5 @@ void cMainMenu::SetLight()
 
 	g_pD3DDevice->LightEnable(0, true);
 
-	//D3DLIGHT9 lightPoint;
-	//ZeroMemory(&lightPoint, sizeof(D3DLIGHT9));
-	//lightPoint.Type = D3DLIGHT_POINT;
-	//lightPoint.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightPoint.Diffuse = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
-	//lightPoint.Specular = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightPoint.Position = D3DXVECTOR3(2.0f, 2.0f, 2.0f);
-	//lightPoint.Range = 100.0f;
-	//g_pD3DDevice->SetLight(1, &lightPoint);
-
-	//g_pD3DDevice->LightEnable(1, true);
-
-	//D3DLIGHT9 lightSpot;
-	//ZeroMemory(&lightSpot, sizeof(D3DLIGHT9));
-	//lightSpot.Type = D3DLIGHT_SPOT;
-	//lightSpot.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightSpot.Diffuse = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);
-	//lightSpot.Specular = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightSpot.Position = D3DXVECTOR3(0.0f, -50.0f, 0.0f);
-	//lightSpot.Range = 1000.0f;
-	//lightSpot.Phi = 60.0f;
-	//lightSpot.Theta = 25.0f;
-	//lightSpot.Falloff = 1.0f;
-	////lightSpot.Attenuation0
-	////lightSpot.Attenuation1
-
-	//vDir = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	//D3DXVec3Normalize(&vDir, &vDir);
-	//lightSpot.Direction = vDir;
-	//g_pD3DDevice->SetLight(2, &lightSpot);
-
-	//g_pD3DDevice->LightEnable(2, true);
+	
 }

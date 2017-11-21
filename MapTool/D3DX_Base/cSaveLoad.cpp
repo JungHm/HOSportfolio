@@ -29,21 +29,52 @@ cSaveLoad::cSaveLoad()
 	m_pObjMesh[ROCK_00] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[ROCK_00], "obj", m_sFileName[ROCK_00]);
 	m_pObjMesh[ROCK_04] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[ROCK_04], "obj", m_sFileName[ROCK_04]);
 	m_pObjMesh[ROCK_05] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[ROCK_05], "obj", m_sFileName[ROCK_05]);
+
+	// 노드 선택 메터리얼 초기화
+	ZeroMemory(&m_mtlNone, sizeof(D3DMATERIAL9));
+	m_mtlNone.Ambient = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	m_mtlNone.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	m_mtlNone.Specular = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+
+	ZeroMemory(&m_mtlSelected, sizeof(D3DMATERIAL9));
+	m_mtlSelected.Ambient = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);
+	m_mtlSelected.Diffuse = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);
+	m_mtlSelected.Specular = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
 cSaveLoad::~cSaveLoad()
 {
+	for (unsigned int i = 0; i < m_vecFieldObj.size(); i++)
+	{
+		SAFE_RELEASE(m_vecFieldObj[i].pMesh);
+	}
+
 	for (int i = 0; i < OBJNUM; i++)
 	{
 		SAFE_RELEASE(m_pObjMesh[i]);
 	}
 
-	for (unsigned int i = 0; i < m_vecFieldObj.size(); i++)
-	{
-		SAFE_RELEASE(m_vecFieldObj[i].pMesh);
-	}
-	
 	SAFE_DELETE(m_pObjLoader);
+}
+
+void cSaveLoad::CreateBox(IN LPD3DXMESH pMesh, IN D3DXVECTOR3 vScal, IN D3DXVECTOR3 vPos, IN float fAngleY)
+{
+	ST_BOX box;
+	ZeroMemory(&box, sizeof(ST_BOX));
+
+	D3DXMatrixIdentity(&box.matWorld);
+	D3DXMatrixIdentity(&box.matScal);
+	D3DXMatrixIdentity(&box.matRotY);
+	D3DXMatrixIdentity(&box.matTrans);
+
+	box.pMesh = pMesh;
+	box.vScaling = vScal;
+	box.vPosition = vPos;
+	box.fAngleY = fAngleY;
+
+	D3DXCreateBox(g_pD3DDevice, 30.0f, 20.0f, 13.0f, &box.pMesh, NULL);
+
+	m_vecFieldBox.push_back(box);
 }
 
 void cSaveLoad::CreateObj(IN int nKind, IN LPD3DXMESH pMesh, IN vector<cMtlTex*> vecValue, IN string sFileName, IN D3DXVECTOR3 vScal, IN D3DXVECTOR3 vPos, IN float fAngleY)
@@ -67,12 +98,39 @@ void cSaveLoad::CreateObj(IN int nKind, IN LPD3DXMESH pMesh, IN vector<cMtlTex*>
 	m_vecFieldObj.push_back(obj);
 }
 
+void cSaveLoad::CreateNodeSphere(IN LPD3DXMESH pMesh, IN D3DXVECTOR3 vPos, IN vector<NODE> vecNode)
+{
+	ST_SPHERE sphere;
+	ZeroMemory(&sphere, sizeof(ST_SPHERE));
+
+	D3DXMatrixIdentity(&sphere.matWrold);
+	D3DXMatrixIdentity(&sphere.matTrans);
+
+	sphere.pMesh = pMesh;
+	sphere.vCenter = vPos;
+	sphere.isVisit = false;
+	
+	if (vecNode.size() != NULL)
+	{
+		sphere.vecLink.resize(vecNode.size());
+
+		for (int i = 0; i < sphere.vecLink.size(); i++)
+		{
+			sphere.vecLink[i].nIndex = vecNode[i].nIndex;
+			sphere.vecLink[i].fCost = vecNode[i].fCost;
+		}
+	}
+
+	D3DXCreateSphere(g_pD3DDevice, 2.5f, 15, 15, &sphere.pMesh, NULL);
+
+	m_vecFieldNodeSphere.push_back(sphere);
+}
+
 void cSaveLoad::CreateObjRender()
 {
-	if (m_vecFieldObj.size() == NULL) return;
-	
 	g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
 
+	// 배치된 오브젝트 렌더
 	for (unsigned int i = 0; i < m_vecFieldObj.size(); i++)
 	{
 		D3DXMatrixScaling(&m_vecFieldObj[i].matScal, m_vecFieldObj[i].vScaling.x, m_vecFieldObj[i].vScaling.y, m_vecFieldObj[i].vScaling.z);
@@ -82,6 +140,7 @@ void cSaveLoad::CreateObjRender()
 		m_vecFieldObj[i].matWorld = m_vecFieldObj[i].matScal * m_vecFieldObj[i].matRotY * m_vecFieldObj[i].matTrans;
 
 		g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_vecFieldObj[i].matWorld);
+		g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
 		for (size_t j = 0; j < m_vecFieldObj[i].vecMtlTex.size(); j++)
 		{
@@ -89,6 +148,50 @@ void cSaveLoad::CreateObjRender()
 			g_pD3DDevice->SetTexture(0, m_vecFieldObj[i].vecMtlTex[j]->GetTexture());
 			m_vecFieldObj[i].pMesh->DrawSubset(j);
 		}
+	}
+
+	// 배치된 충돌 박스 렌더
+	for (unsigned int i = 0; i < m_vecFieldBox.size(); i++)
+	{
+		D3DXMatrixScaling(&m_vecFieldBox[i].matScal, m_vecFieldBox[i].vScaling.x, m_vecFieldBox[i].vScaling.y, m_vecFieldBox[i].vScaling.z);
+		D3DXMatrixRotationY(&m_vecFieldBox[i].matRotY, m_vecFieldBox[i].fAngleY);
+		D3DXMatrixTranslation(&m_vecFieldBox[i].matTrans, m_vecFieldBox[i].vPosition.x, m_vecFieldBox[i].vPosition.y, m_vecFieldBox[i].vPosition.z);
+
+		m_vecFieldBox[i].matWorld = m_vecFieldBox[i].matScal * m_vecFieldBox[i].matRotY * m_vecFieldBox[i].matTrans;
+		
+		g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_vecFieldBox[i].matWorld);
+		g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+		g_pD3DDevice->SetTexture(0, NULL);
+		
+		m_vecFieldBox[i].pMesh->DrawSubset(0);
+	}
+	
+	// 노드 간의 라인 렌더
+	if (m_vecNodeLine.size() % 2 == 0 && m_vecNodeLine.size() != NULL)
+	{
+		D3DXMATRIXA16 matWorld;
+		D3DXMatrixIdentity(&matWorld);
+
+		g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
+		g_pD3DDevice->SetFVF(ST_PC_VERTEXT::FVF);
+		g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+		g_pD3DDevice->SetTexture(0, NULL);
+		g_pD3DDevice->DrawPrimitiveUP(D3DPT_LINELIST, m_vecNodeLine.size() / 2, &m_vecNodeLine[0], sizeof(ST_PC_VERTEXT));
+	}
+
+	// 배치된 노드 렌더
+	for (unsigned int i = 0; i < m_vecFieldNodeSphere.size(); i++)
+	{
+		D3DXMatrixTranslation(&m_vecFieldNodeSphere[i].matTrans, m_vecFieldNodeSphere[i].vCenter.x, m_vecFieldNodeSphere[i].vCenter.y, m_vecFieldNodeSphere[i].vCenter.z);
+
+		m_vecFieldNodeSphere[i].matWrold = m_vecFieldNodeSphere[i].matTrans;
+		
+		g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_vecFieldNodeSphere[i].matWrold);
+		g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+		g_pD3DDevice->SetMaterial(m_vecFieldNodeSphere[i].isSelected ? &m_mtlSelected : &m_mtlNone);
+		g_pD3DDevice->SetTexture(0, NULL);
+
+		m_vecFieldNodeSphere[i].pMesh->DrawSubset(0);
 	}
 }
 
@@ -100,34 +203,74 @@ void cSaveLoad::RemoveObj()
 
 void cSaveLoad::SaveFieldObj()
 {
-	if (m_vecFieldObj.size() == NULL) return;
-
 	FILE* fp = NULL;
-	fopen_s(&fp, "SaveFieldObj/FieldObj.txt", "w");
 
+	if (m_vecFieldObj.size() == NULL) return;
+	// 오브젝트 파일 세이브
+	fopen_s(&fp, "SaveFieldObj/FieldObj.txt", "w");
 	for (unsigned int i = 0; i < m_vecFieldObj.size(); i++)
 	{
-		fprintf(fp, "%d ", m_vecFieldObj[i].nKind);																			// 파일 종류
-		fprintf(fp, "%f %f %f ", m_vecFieldObj[i].vPosition.x, m_vecFieldObj[i].vPosition.y, m_vecFieldObj[i].vPosition.z); // 위치 좌표
-		fprintf(fp, "%f %f %f ", m_vecFieldObj[i].vScaling.x, m_vecFieldObj[i].vScaling.y, m_vecFieldObj[i].vScaling.z);	// 크기
-		fprintf(fp, "%f\n", m_vecFieldObj[i].fAngleY);																		// y축 회전 값
+		fprintf(fp, "%d ", m_vecFieldObj[i].nKind);																			
+		fprintf(fp, "%f %f %f ", m_vecFieldObj[i].vPosition.x, m_vecFieldObj[i].vPosition.y, m_vecFieldObj[i].vPosition.z); 
+		fprintf(fp, "%f %f %f ", m_vecFieldObj[i].vScaling.x, m_vecFieldObj[i].vScaling.y, m_vecFieldObj[i].vScaling.z);	
+		fprintf(fp, "%f\n", m_vecFieldObj[i].fAngleY);																		
 	}
+	fclose(fp);
 
+	if (m_vecFieldBox.size() == NULL) return;
+	// 충돌 박스 세이브
+	fopen_s(&fp, "SaveFieldCollisionBox/FieldBox.txt", "w");
+	for (unsigned int i = 0; i < m_vecFieldBox.size(); i++)
+	{
+		fprintf(fp, "%f %f %f ", m_vecFieldBox[i].vPosition.x, m_vecFieldBox[i].vPosition.y, m_vecFieldBox[i].vPosition.z);
+		fprintf(fp, "%f %f %f ", m_vecFieldBox[i].vScaling.x, m_vecFieldBox[i].vScaling.y, m_vecFieldBox[i].vScaling.z);
+		fprintf(fp, "%f\n", m_vecFieldBox[i].fAngleY);
+	}
+	fclose(fp);
+
+	if (m_vecFieldNodeSphere.size() == NULL) return;
+	// 노드 세이브
+	fopen_s(&fp, "SaveFieldPath/FieldPath.txt", "w");
+	for (unsigned int i = 0; i < m_vecFieldNodeSphere.size(); i++)
+	{
+		fprintf(fp, "%f %f %f ", m_vecFieldNodeSphere[i].vCenter.x, m_vecFieldNodeSphere[i].vCenter.y, m_vecFieldNodeSphere[i].vCenter.z);
+		fprintf(fp, "%d", m_vecFieldNodeSphere[i].vecLink.size());
+		fprintf(fp, "\n");
+		for (unsigned int j = 0; j < m_vecFieldNodeSphere[i].vecLink.size(); j++)
+		{
+			fprintf(fp, "%d %f\n", m_vecFieldNodeSphere[i].vecLink[j].nIndex, m_vecFieldNodeSphere[i].vecLink[j].fCost);
+		}
+	}
+	fclose(fp);
+
+	if (m_vecNodeLine.size() == NULL) return;
+	// 노드 라인 세이브
+	fopen_s(&fp, "SaveFieldPath/PathLine.txt", "w");
+	for (unsigned int i = 0; i < m_vecNodeLine.size(); i++)
+	{
+		fprintf(fp, "%f %f %f\n", m_vecNodeLine[i].p.x, m_vecNodeLine[i].p.y, m_vecNodeLine[i].p.z);
+	}
 	fclose(fp);
 }
 
 void cSaveLoad::LoadFieldObj()
 {
 	m_vecFieldObj.clear();
+	m_vecFieldBox.clear();
+	m_vecFieldNodeSphere.clear();
+	m_vecNodeLine.clear();
 
 	D3DXVECTOR3 vPos;
 	D3DXVECTOR3 vScal;
-	int			nKind;
 	float		fAngleY;
+	int			nKind;
+	int			nSize;
+	vector<NODE> vecNode;
 
 	FILE* fp = NULL;
-	fopen_s(&fp, "SaveFieldObj/FieldObj.txt", "r");
 
+	// 오브젝트 로드
+	fopen_s(&fp, "SaveFieldObj/FieldObj.txt", "r");
 	while (true)
 	{
 		if (feof(fp)) break;
@@ -140,6 +283,55 @@ void cSaveLoad::LoadFieldObj()
 
 		CreateObj(nKind, m_pObjMesh[nKind], m_mapObjMtlTex[nKind], m_sFileName[nKind], vScal, vPos, fAngleY);
 	}
+	fclose(fp);
+	
+	// 충돌 박스 로드
+	fopen_s(&fp, "SaveFieldCollisionBox/FieldBox.txt", "r");
+	while (true)
+	{
+		if (feof(fp)) break;
+	
+		fscanf_s(fp, "%f %f %f %f %f %f %f",
+			&vPos.x, &vPos.y, &vPos.z,
+			&vScal.x, &vScal.y, &vScal.z,
+			&fAngleY);
+	
+		CreateBox(NULL, vScal, vPos, fAngleY);
+	}
+	fclose(fp);
 
+	// 노드 로드
+	fopen_s(&fp, "SaveFieldPath/FieldPath.txt", "r");
+	while (true)
+	{
+		if (feof(fp)) break;
+
+		fscanf_s(fp, "%f %f %f %d\n", &vPos.x, &vPos.y, &vPos.z, &nSize);
+
+		vecNode.resize(nSize);
+
+		for (int i = 0; i < vecNode.size(); i++)
+		{
+			fscanf_s(fp, "%d %f\n", &vecNode[i].nIndex, &vecNode[i].fCost);
+		}
+
+		CreateNodeSphere(NULL, vPos, vecNode);
+	}
+	fclose(fp);
+
+	// 노드 라인 로드
+	fopen_s(&fp, "SaveFieldPath/PathLine.txt", "r");
+	while (true)
+	{
+		if (feof(fp)) break;
+
+		fscanf_s(fp, "%f %f %f\n", &vPos.x, &vPos.y, &vPos.z);
+
+		ST_PC_VERTEXT v;
+		v.p = vPos;
+		v.c = D3DCOLOR_XRGB(255, 255, 255);
+
+		m_vecNodeLine.push_back(v);
+	}
 	fclose(fp);
 }
