@@ -11,11 +11,13 @@ struct Partice_info
 class cParticleManager
 {
 private:
-	Partice_info pInfo;
+	vector<Partice_info> pInfo;
 public:
 	cParticleManager();
 	~cParticleManager();
 
-	void AddParticle()
+	void AddHitParticle();
+	
+
 };
 
