@@ -44,7 +44,7 @@ void cInGame::SetUp()
 	m_pSkyBox->Setup();
 
 	m_pGrid = new cGrid;
-	m_pGrid->Setup("Grid", "field2.png", 160, 280, 2.0f);
+	m_pGrid->Setup("Grid", "field2.png", 65, 115, 5.0f);
 
 	cTessadar*	m_pTessadar;
 	m_pTessadar = new cTessadar;

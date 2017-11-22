@@ -81,10 +81,13 @@ public:\
 // 텍스쳐 비율
 #define MAX_XPIXEL   1041
 #define MAX_YPIXEL   652
-#define ONE_XPIXEL   MAX_XPIXEL / 280
-#define ONE_YPIXEL   MAX_YPIXEL / 160
+#define ONE_XPIXEL   MAX_XPIXEL / 115
+#define ONE_YPIXEL   MAX_YPIXEL / 65
 #define ONE_XPER   (float)ONE_XPIXEL / (float)MAX_XPIXEL
 #define ONE_YPER   (float)ONE_YPIXEL / (float)MAX_YPIXEL
+
+// 무한대
+#define INF 2345102
 
 struct ST_PC_VERTEXT
 {
@@ -145,6 +148,42 @@ struct ST_SPHERE
 	}
 };
 
+struct NODE
+{
+	int   nIndex;
+	float fCost;
+};
+
+struct ST_SPHERE_NODE
+{
+	LPD3DXMESH		pMesh;
+	D3DXMATRIXA16	matWrold;
+	D3DXMATRIXA16	matTrans;
+	D3DXVECTOR3		vCenter;
+	bool			isSelected;
+
+	bool			isVisit;
+	std::vector<NODE>	vecLink;		// 연결된 노드들
+};
+
+struct ST_COST
+{
+	float		fCost;
+	int			nViaIndex;
+};
+
+struct ST_BOX
+{
+	LPD3DXMESH		pMesh;
+	D3DXMATRIXA16	matWorld;		// 월드
+	D3DXMATRIXA16	matScal;		// 스케일링
+	D3DXMATRIXA16	matRotY;		// 로테이션 Y
+	D3DXMATRIXA16	matTrans;		// 트랜스 레이션
+	D3DXVECTOR3		vScaling;		// 스케일링 값
+	float			fAngleY;		// 로테이션 Y값
+	D3DXVECTOR3		vPosition;		// 위치 값
+};
+
 enum OBJECTKIND
 {
 	GATE_01,
@@ -181,6 +220,7 @@ typedef struct tagObject
 	float			fAngleY;		// 로테이션 Y값
 	D3DXVECTOR3		vPosition;		// 로테이션 값
 	vector<cMtlTex*>	vecMtlTex;
+	ST_SPHERE		sSphere;		// 스페어
 } OBJECT;
 
 //UTIL

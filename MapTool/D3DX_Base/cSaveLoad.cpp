@@ -46,7 +46,7 @@ cSaveLoad::~cSaveLoad()
 {
 	for (unsigned int i = 0; i < m_vecFieldObj.size(); i++)
 	{
-		SAFE_RELEASE(m_vecFieldObj[i].pMesh);
+		//SAFE_RELEASE(m_vecFieldObj[i].pMesh);
 	}
 
 	for (int i = 0; i < OBJNUM; i++)
@@ -94,14 +94,16 @@ void cSaveLoad::CreateObj(IN int nKind, IN LPD3DXMESH pMesh, IN vector<cMtlTex*>
 	obj.vScaling = vScal;
 	obj.vPosition = vPos;
 	obj.fAngleY = fAngleY;
+	obj.sSphere.vCenter = vPos;
+	obj.sSphere.fRadius = vScal.x * 100.0f;
 
 	m_vecFieldObj.push_back(obj);
 }
 
 void cSaveLoad::CreateNodeSphere(IN LPD3DXMESH pMesh, IN D3DXVECTOR3 vPos, IN vector<NODE> vecNode)
 {
-	ST_SPHERE sphere;
-	ZeroMemory(&sphere, sizeof(ST_SPHERE));
+	ST_SPHERE_NODE sphere;
+	ZeroMemory(&sphere, sizeof(ST_SPHERE_NODE));
 
 	D3DXMatrixIdentity(&sphere.matWrold);
 	D3DXMatrixIdentity(&sphere.matTrans);

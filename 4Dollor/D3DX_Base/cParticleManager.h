@@ -16,6 +16,6 @@ public:
 	cParticleManager();
 	~cParticleManager();
 
-	void AddParticle()
+	void AddParticle();
 };
 

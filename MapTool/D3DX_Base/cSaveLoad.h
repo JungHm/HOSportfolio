@@ -5,17 +5,17 @@ class cObjLoader;
 class cSaveLoad
 {
 private:
-	cObjLoader*					m_pObjLoader;		 // 오브젝트 로더 클래스
-	LPD3DXMESH					m_pObjMesh[OBJNUM];	 // 로드한 매쉬를 종류별로 선택지정 
-	string						m_sFileName[OBJNUM]; // 파일 이름
-	map<int, vector<cMtlTex*>>	m_mapObjMtlTex;		 // 매쉬의 매테리얼, 텍스쳐를 담은 벡터 를 담은 맵
-	D3DMATERIAL9				m_mtlNone;			 // 선택 되지않았을 때 노드 메터리얼
-	D3DMATERIAL9				m_mtlSelected;		 // 선택 되었을 때 노드 메터리얼
-	vector<OBJECT>				m_vecFieldObj;		 // 필드에 배치되는 오브젝트
-	vector<ST_BOX>				m_vecFieldBox;		 // 필드에 배치되는 충돌 박스
-	vector<ST_COST>				m_vecCost;			 // 다익스트라 길찾기 갱신 값
-	SYNTHESIZE_PASS_BY_REF(vector<ST_SPHERE>, m_vecFieldNodeSphere, FieldNodeSphere); // 필드에 배치되는 다익스트라 노드 스페어
-	SYNTHESIZE_PASS_BY_REF(vector<ST_PC_VERTEXT>, m_vecNodeLine, NodeLinde);		  // 각 노드들의 연결 라인
+	cObjLoader*					m_pObjLoader;				// 오브젝트 로더 클래스
+	LPD3DXMESH					m_pObjMesh[OBJNUM];			// 로드한 매쉬를 종류별로 선택지정 
+	string						m_sFileName[OBJNUM];		// 파일 이름
+	map<int, vector<cMtlTex*>>	m_mapObjMtlTex;				// 매쉬의 매테리얼, 텍스쳐를 담은 벡터 를 담은 맵
+	D3DMATERIAL9				m_mtlNone;					// 선택 되지않았을 때 노드 메터리얼
+	D3DMATERIAL9				m_mtlSelected;				// 선택 되었을 때 노드 메터리얼
+	SYNTHESIZE(vector<OBJECT>, m_vecFieldObj, FieldObj);	// 필드에 배치되는 오브젝트
+	SYNTHESIZE(vector<ST_BOX>, m_vecFieldBox, FielBox);		// 필드에 배치되는 충돌 박스
+	SYNTHESIZE(vector<ST_COST>, m_vecCost, Cost);			// 다익스트라 길찾기 갱신 값
+	SYNTHESIZE_PASS_BY_REF(vector<ST_SPHERE_NODE>, m_vecFieldNodeSphere, FieldNodeSphere); // 필드에 배치되는 다익스트라 노드 스페어
+	SYNTHESIZE_PASS_BY_REF(vector<ST_PC_VERTEXT>, m_vecNodeLine, NodeLinde);			   // 각 노드들의 연결 라인
 	
 public:
 	cSaveLoad();

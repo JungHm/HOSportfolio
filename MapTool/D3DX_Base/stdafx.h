@@ -143,6 +143,18 @@ struct NODE
 
 struct ST_SPHERE
 {
+	float		fRadius;
+	D3DXVECTOR3	vCenter;
+	bool		isPicked;
+
+	ST_SPHERE()
+		: fRadius(0.0f), vCenter(0, 0, 0), isPicked(false)
+	{
+	}
+};
+
+struct ST_SPHERE_NODE
+{
 	LPD3DXMESH		pMesh;
 	D3DXMATRIXA16	matWrold;
 	D3DXMATRIXA16	matTrans;
@@ -188,7 +200,6 @@ enum OBJECTKIND
 	WALL_01, WALL_02, WALL_03, WALL_04, WALL_05,
 	FOUNTAIN, 
 	ROCK_00, ROCK_04, ROCK_05,
-	TOWER_RED, TOWER_BLUE,
 	OBJNUM
 };
 
@@ -226,4 +237,5 @@ typedef struct tagObject
 	float			fAngleY;		// 로테이션 Y값
 	D3DXVECTOR3		vPosition;		// 위치 값
 	vector<cMtlTex*>	vecMtlTex;
+	ST_SPHERE		sSphere;		// 스페어
 } OBJECT;
