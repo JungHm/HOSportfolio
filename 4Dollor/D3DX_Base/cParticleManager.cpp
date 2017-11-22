@@ -10,3 +10,8 @@ cParticleManager::cParticleManager()
 cParticleManager::~cParticleManager()
 {
 }
+
+void cParticleManager::AddHitParticle()
+{
+	
+}
