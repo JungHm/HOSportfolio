@@ -12,8 +12,6 @@
 #include "cSkyBox.h"
 
 
-
-
 cInGame::cInGame()
 {
 }
@@ -33,6 +31,10 @@ void cInGame::SetUp()
 
 	m_UI = new cUIInGame;
 	m_UI->setup("cInGame");
+
+
+	D3DXVECTOR2 temp;
+	g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
 
 	m_pLoadMap = new cSaveLoad;
 	m_pLoadMap->LoadFieldObj();
@@ -70,6 +72,7 @@ void cInGame::Destroy()
 	SAFE_DELETE(m_pSkyBox);
 
 	SAFE_DELETE(m_pGrid);
+	SAFE_RELEASE(m_pD3DTexture);
 
 	SAFE_DELETE(m_pPlayer);
 	//m_pRootNode->Destroy();
@@ -77,28 +80,24 @@ void cInGame::Destroy()
 
 void cInGame::Update()
 {
-	m_pPlayer->Update();
-	if (m_pPlayer->GetLevel() < 4)//레벨에 따라 스킬 언락
-		m_UI->SetSkillUnlock(m_pPlayer->GetLevel(), true);
-
-	if (m_pPlayer->isQcool)
+	if (m_UI && !m_UILoading)
 	{
-		m_UI->SetSkillUse(1, true);
-		m_UI->SetSkillUseCooldown(1, m_pPlayer->coolQ);
+		m_UI->update();	// ��ư�� ����Ƿ� update
+		if (m_UI->GetGameEnd())
+		{
+			g_Scene->ChangeScene("menu");
+			return;
+		}
 	}
-	else m_UI->SetSkillUse(1, false);
-	if (m_pPlayer->isWcool)
+	else if (m_UILoading)
 	{
-		m_UI->SetSkillUse(2, true);
-		m_UI->SetSkillUseCooldown(2, m_pPlayer->coolW);
+		m_UILoading->update();
+		if (m_UILoading->GetLoadingEnd())
+		{
+			m_UILoading->destroy();
+			SAFE_DELETE(m_UILoading);
+		}
 	}
-	else m_UI->SetSkillUse(2, false);
-	if (m_pPlayer->isEcool)
-	{
-		m_UI->SetSkillUse(3, true);
-		m_UI->SetSkillUseCooldown(3, m_pPlayer->coolE);
-	}
-	else m_UI->SetSkillUse(3, false);
 
 	D3DXVECTOR3 pickPosition;
 	for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
@@ -134,24 +133,10 @@ void cInGame::Update()
 		}
 	}
 
-
-
-	if (m_UI && !m_UILoading)
+	m_pPlayer->Update();
+	if (GetAsyncKeyState(VK_LBUTTON) & 0001)
 	{
-		m_UI->update();	// ��ư�� ����Ƿ� update
-		if (m_UI->GetGameEnd())
-		{
-			g_Scene->ChangeScene("menu");
-		}
-	}
-	else if (m_UILoading)
-	{
-		m_UILoading->update();
-		if (m_UILoading->GetLoadingEnd())
-		{
-			m_UILoading->destroy();
-			SAFE_DELETE(m_UILoading);
-		}
+		g_Scene->ChangeScene("menu");
 	}
 }
 
@@ -159,6 +144,10 @@ void cInGame::Render()
 {
 	if (m_UI && !m_UILoading) m_UI->renderBG();	// ��� ���� ���� ��
 	else if (m_UILoading) m_UILoading->renderBG();
+
+
+
+
 
 	if (m_UI && !m_UILoading) m_UI->render();	// ��� �� UI ��õ� ����
 	else if (m_UILoading) m_UILoading->render();

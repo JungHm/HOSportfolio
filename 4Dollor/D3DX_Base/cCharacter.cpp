@@ -5,7 +5,7 @@
 cCharacter::cCharacter()
 {
 	coolMax = 10.0f;
-	coolQ = coolW = coolE = 0.0f;
+	coolQ = coolW = coolE = 10.0f;
 }
 
 

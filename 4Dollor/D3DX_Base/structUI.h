@@ -22,7 +22,6 @@ struct tagUISprite
 {
 	bool BG;
 	D3DXVECTOR3 pt;				// 좌표
-	bool enable;
 	RECT drawRc;				// 그릴 영역 rect
 	LPD3DXSPRITE sprite;
 	D3DXIMAGE_INFO imgInfo;
@@ -36,8 +35,6 @@ struct tagUISprite
 struct tagUISpriteButton	// 버튼을 걍 따로 나눠 놓음
 {
 	D3DXVECTOR3 pt;				// 좌표
-	bool enable;				// 활성화 여부
-	bool used;					// 버튼 사용 중일 때
 	RECT drawRc;				// 그릴 영역 rect
 	bool selected;				// 버튼이 선택된 상태일 경우 true. 버튼 클릭 이미지를 항상 표현할 때 사용
 	int buttonState;			// 버튼 상태. normal, over, click
@@ -54,7 +51,6 @@ struct tagUISpriteButton	// 버튼을 걍 따로 나눠 놓음
 struct tagUISpriteLoadData
 {
 	bool BG;
-	bool enable;
 	D3DXVECTOR3 pt;
 	string indexName;
 	float rotate;

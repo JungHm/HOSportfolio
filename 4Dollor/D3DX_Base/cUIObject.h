@@ -24,48 +24,22 @@ public:
 	cUIObject();
 	~cUIObject();
 
-	// sprite 추가
 	void AddSprite(tagUISpriteLoadData &spriteData);
 	
-	/*
-	UI에서 공통으로 사용하는 기능들을 묶어서 가상함수로 선언.
-	그 중에서 따로 처리해야 될 것은 순수 가상함수로 선언.
-	제대로 하려면 함수를 좀 더 세분화 할 필요가 있으며,
-	일부는 순수 가상함수로 처리하는 것이 좋음.
-	*/
 
-	// 데이터 파싱
+	// 아래 전부다 virtual 붙여야 됨.
 	virtual void setup(string className);
-	// 각자 셋업할 것
-	virtual void setupOther() = 0;
-	// 업데이트 그룹
 	virtual void update();
-	// 버튼 기능 업데이트 그룹
 	virtual void updateButton();
-	// Draw에 필요한 World Matrix 계산. D3DXMatrixAffineTransformation2D 이거 쓰면 함수 안써도 됨.
 	virtual void updateMatWorld(D3DXMATRIXA16 &matWorld, D3DXVECTOR3 pt);
-	// 버튼 충돌에 필요한 Rect 계산. 크기 비율(m_UIScale) 기준으로 Rect 크기 계산해줌
 	virtual void updateCollisionRect(RECT &rc, D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt);
-	// 버튼 기능 실행 여부 체크 (버튼의 상태 체크). 수업 코드와 거의 동일함
 	virtual void updateButtonState(D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt, int &buttonState, int buttonFunc);
-	// 각자 띄우고 싶은게 있다면
-	virtual void updateOther() = 0;
-	// 순수 가상함수로 콜백. 마우스 오버 시 기능을 실행하기 위함. 각 씬별로 다른 기능을 실행해야하므로 재정의 필요(순수가상함수)
-	virtual int updateButtonOverCallback(int num) = 0;
-	// 순수 가상함수로 콜백. 마우스 클릭 시 기능 실행
-	virtual int updateButtonCallback(int num) = 0;
-	// 랜더 그룹
+	virtual void updateButtonOverCallback(int num) = 0;
+	virtual void updateButtonCallback(int num) = 0;
 	virtual void render();
-	// BG 랜더. 제일 먼저 해줘야 하므로 따로 빼놓음
 	virtual void renderBG();
-	// 버튼 랜더
 	virtual void renderButton();
-	// 그 외 일반 이미지들 랜더
 	virtual void renderNormal();
-	// 각자 띄우게 싶은게 있다면
-	virtual void renderOther() = 0;
-	// 해-제
 	virtual void destroy();
-
-	virtual void destroyOther() = 0;
+	// setupHide는 안해도 될거 같음. 어짜피 scene이 전환되면 update, render를 실행하지 않으므로..
 };

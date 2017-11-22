@@ -109,42 +109,6 @@ struct ST_PNT_VERTEXT
 	enum { FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1 };
 };
 
-struct ST_POS_SAMPLE
-{
-	int			nFrame;
-	D3DXVECTOR3	v;
-
-	ST_POS_SAMPLE()
-		: nFrame(0)
-		, v(0, 0, 0)
-	{
-	}
-};
-
-struct ST_ROT_SAMPLE
-{
-	int				nFrame;
-	D3DXQUATERNION	q;
-
-	ST_ROT_SAMPLE()
-		: nFrame(0)
-	{
-		D3DXQuaternionIdentity(&q);
-	}
-};
-
-struct ST_SPHERE
-{
-	float		fRadius;
-	D3DXVECTOR3	vCenter;
-	bool		isPicked;
-
-	ST_SPHERE()
-		: fRadius(0.0f), vCenter(0, 0, 0)
-	{
-	}
-};
-
 enum OBJECTKIND
 {
 	GATE_01,
