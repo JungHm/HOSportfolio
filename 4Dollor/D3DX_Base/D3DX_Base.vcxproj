@@ -88,6 +88,7 @@
     <ClInclude Include="cCharacter.h" />
     <ClInclude Include="cDeviceManager.h" />
     <ClInclude Include="cFontManager.h" />
+    <ClInclude Include="cFrustum.h" />
     <ClInclude Include="cFxLoad.h" />
     <ClInclude Include="cGrid.h" />
     <ClInclude Include="cGroup.h" />
@@ -101,6 +102,8 @@
     <ClInclude Include="cObjectManager.h" />
     <ClInclude Include="cObjLoader.h" />
     <ClInclude Include="cObjMap.h" />
+    <ClInclude Include="cParticle.h" />
+    <ClInclude Include="cParticleManager.h" />
     <ClInclude Include="cPlayer.h" />
     <ClInclude Include="cSaveLoad.h" />
     <ClInclude Include="cSceneManager.h" />
@@ -132,6 +135,7 @@
     <ClCompile Include="cCharacter.cpp" />
     <ClCompile Include="cDeviceManager.cpp" />
     <ClCompile Include="cFontManager.cpp" />
+    <ClCompile Include="cFrustum.cpp" />
     <ClCompile Include="cFxLoad.cpp" />
     <ClCompile Include="cGrid.cpp" />
     <ClCompile Include="cGroup.cpp" />
@@ -145,6 +149,8 @@
     <ClCompile Include="cObjectManager.cpp" />
     <ClCompile Include="cObjLoader.cpp" />
     <ClCompile Include="cObjMap.cpp" />
+    <ClCompile Include="cParticle.cpp" />
+    <ClCompile Include="cParticleManager.cpp" />
     <ClCompile Include="cPlayer.cpp" />
     <ClCompile Include="cSaveLoad.cpp" />
     <ClCompile Include="cSceneManager.cpp" />

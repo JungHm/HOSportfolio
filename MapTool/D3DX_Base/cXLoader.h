@@ -41,7 +41,7 @@ private:
 
 	double m_dTimeCurrent;
 
-	DWORD dwAttack, dwSpell, dwWalk, dwStand;//, dwSelect;
+	DWORD dwAttack, dwSpell, m_dAttack, dwStand;//, dwSelect;
 
 	int m_State;
 

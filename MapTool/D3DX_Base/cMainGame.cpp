@@ -11,6 +11,10 @@ cMainGame::cMainGame()
 	, m_pRootUI(NULL)
 	, m_pSkyBox(NULL)
 	, m_nIndex(0)
+	//, m_nKey(0)
+	//, m_fBlendTime(0.3f)
+	//, m_fPassedBlendTime(0.0f)
+	//, m_nState(0)
 {
 	m_sUIObj[GATE_01] = "MapToolUI/Ui_Gate.png";
 	m_sUIObj[WALL_01] = "MapToolUI/Ui_Wall1.png";
@@ -22,15 +26,17 @@ cMainGame::cMainGame()
 	m_sUIObj[ROCK_00] = "MapToolUI/Ui_Rock1.png";
 	m_sUIObj[ROCK_04] = "MapToolUI/Ui_Rock2.png";
 	m_sUIObj[ROCK_05] = "MapToolUI/Ui_Rock3.png";
+
+	//m_sPath = L"obj/tower_0.x";
 }
 
 cMainGame::~cMainGame()
 {
+	//XFile->KeyDestroy(m_nKey);
+
 	SAFE_DELETE(m_pMapTool);
-	
 	m_pRootUI->Destroy();
 	SAFE_DELETE(m_pSprite);
-
 	SAFE_DELETE(m_pSkyBox);
 	
 	g_pFontManager->Destroy();
@@ -39,8 +45,57 @@ cMainGame::~cMainGame()
 	g_pDeviceManager->Destroy();
 }
 
+void cMainGame::ChangeAni()
+{
+	//LPD3DXANIMATIONSET pAS = nullptr;
+	//LPD3DXANIMATIONSET pASCompare = nullptr;
+	//D3DXTRACK_DESC desc;
+
+	//if (m_nState == 0)
+	//{
+	//	XFile->GetAniCtrl(m_nKey)->GetAnimationSet(m_dAttack, &pAS);
+	//	XFile->GetAniCtrl(m_nKey)->GetTrackAnimationSet(0, &pASCompare);
+	//	if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
+	//	{
+	//		XFile->GetAniCtrl(m_nKey)->GetTrackDesc(0, &desc);
+	//		if (desc.Position + 0.2 >= pAS->GetPeriod())
+	//		{
+	//			m_nState = 1;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		XFile->GetAniCtrl(m_nKey)->SetTrackAnimationSet(0, pAS);
+	//		XFile->GetAniCtrl(m_nKey)->SetTrackPosition(0, 0);
+	//	}
+	//}
+
+	//SAFE_RELEASE(pAS);
+	//SAFE_RELEASE(pASCompare);
+}
+
 void cMainGame::Setup()
 {
+	//XFile->SetXFile(m_nKey, m_sPath);
+	//
+	//LPD3DXANIMATIONSET pAS;
+
+	//for (DWORD i = 0; i < XFile->GetAniCtrl(m_nKey)->GetNumAnimationSets(); ++i)
+	//{
+	//	XFile->GetAniCtrl(m_nKey)->GetAnimationSet(i, &pAS);
+
+	//	if (!strncmp(pAS->GetName(), "Anim-2 ", strlen(pAS->GetName())))
+	//	{
+	//		m_dAttack = i;
+	//	}
+	//}
+
+	//XFile->GetAniCtrl(m_nKey)->GetAnimationSet(m_dAttack, &pAS);
+	//XFile->GetAniCtrl(m_nKey)->SetTrackAnimationSet(0, pAS);
+	//XFile->GetAniCtrl(m_nKey)->ResetTime();
+
+	//SAFE_RELEASE(pAS);
+
 	g_cCamera->Setup();
 	
 	D3DLIGHT9 light;
@@ -72,6 +127,12 @@ void cMainGame::Setup()
 
 void cMainGame::Update()
 {
+	//XFile->GetAniCtrl(m_nKey)->AdvanceTime(g_pTimeManager->GetEllapsedTime(), NULL);
+	//double a = XFile->GetAniCtrl(m_nKey)->GetTime();
+
+	//ChangeAni();
+	//XFile->GetXFile(m_nKey)->Update();
+
 	g_pTimeManager->Update();
 	g_cCamera->Update();
 	
@@ -79,7 +140,6 @@ void cMainGame::Update()
 	if (m_pRootUI) m_pRootUI->Update();
 
 	m_pImageCursor->SetPosition(m_nMousePos.x, m_nMousePos.y);
-	cout << m_nMousePos.x << "  " << m_nMousePos.y << endl;
 }
 
 void cMainGame::Render()
@@ -87,6 +147,12 @@ void cMainGame::Render()
 	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(127, 127, 127), 1.0f, 0);
 	g_pD3DDevice->BeginScene();
 	//===================================
+	//D3DXMATRIXA16 matWorld; D3DXMatrixIdentity(&matWorld);
+	//D3DXMATRIXA16 matS;
+	//D3DXMatrixScaling(&matS, 2.5f, 2.5f, 2.5f);
+	//matWorld = matS;
+	//XFile->GetXFile(m_nKey)->Render(matWorld);
+
 	if (m_pSkyBox) m_pSkyBox->Render();
 	if (m_pMapTool) m_pMapTool->Render();
 	if (m_pRootUI) m_pRootUI->Render(m_pSprite);
@@ -174,6 +240,7 @@ void cMainGame::UISetup()
 	pSaveButton->SetPosition(WINSIZEX - 300, WINSIZEY - 160);
 	pSaveButton->SetTexture("MapToolUI/save_normal.png", "MapToolUI/save_over.png", "MapToolUI/save_selected.png");
 	pSaveButton->SetDelegate(this);
+	pSaveButton->SetRectSizeMin(50.0f);
 	pSaveButton->SetTag(UI_SAVE_BUTTON);
 	m_pRootUI->AddChild(pSaveButton);
 
@@ -192,6 +259,7 @@ void cMainGame::UISetup()
 	pLoadButton->SetTexture("MapToolUI/save_normal.png", "MapToolUI/save_over.png", "MapToolUI/save_selected.png");
 	pLoadButton->SetDelegate(this);
 	pLoadButton->SetTag(UI_LOAD_BUTTON);
+	pLoadButton->SetRectSizeMin(50.0f);
 	m_pRootUI->AddChild(pLoadButton);
 
 	// 로드 이미지
@@ -209,6 +277,7 @@ void cMainGame::UISetup()
 	pRemoveButton->SetTexture("MapToolUI/save_normal.png", "MapToolUI/save_over.png", "MapToolUI/save_selected.png");
 	pRemoveButton->SetDelegate(this);
 	pRemoveButton->SetTag(UI_REMOVE_BUTTON);
+	pRemoveButton->SetRectSizeMin(50.0f);
 	m_pRootUI->AddChild(pRemoveButton);
 
 	// 삭제 이미지
@@ -218,6 +287,95 @@ void cMainGame::UISetup()
 	pRemoveView->SetPosition(10, 10);
 	pRemoveView->SetTag(UI_REMOVE_IMAGE);
 	pRemoveButton->AddChild(pRemoveView);
+
+	// 아무것도 아닌 상태 버튼
+	cUIImageView* pToolModeNoneImage = new cUIImageView;
+	pToolModeNoneImage->SetTexture("MapToolUI/toolmode_none.png");
+	pToolModeNoneImage->SetScaling(D3DXVECTOR3(0.5f, 0.5f, 0.5f));
+	pToolModeNoneImage->SetPosition(WINSIZEX - 90, WINSIZEY - 240);
+	m_pRootUI->AddChild(pToolModeNoneImage);
+
+	cUIButton* pToolModeNoneButton = new cUIButton;
+	pToolModeNoneButton->SetScaling(D3DXVECTOR3(0.7f, 0.7f, 0.7f));
+	pToolModeNoneButton->SetPosition(WINSIZEX - 100, WINSIZEY - 250);
+	pToolModeNoneButton->SetTexture("MapToolUI/toolmode_normal.png", "MapToolUI/toolmode_over.png", "MapToolUI/toolmode_selected.png");
+	pToolModeNoneButton->SetDelegate(this);
+	pToolModeNoneButton->SetTag(UI_TOOLMODE_NONE);
+	pToolModeNoneButton->SetRectSizeMin(50.0f);
+	m_pRootUI->AddChild(pToolModeNoneButton);
+
+	// 오브젝트 배치 버튼
+	cUIImageView* pToolModeObjImage = new cUIImageView;
+	pToolModeObjImage->SetTexture("MapToolUI/toolmode_obj.png");
+	pToolModeObjImage->SetScaling(D3DXVECTOR3(0.5f, 0.5f, 0.5f));
+	pToolModeObjImage->SetPosition(WINSIZEX - 90, WINSIZEY - 290);
+	m_pRootUI->AddChild(pToolModeObjImage);
+	
+	cUIButton* pToolModeObjButton = new cUIButton;
+	pToolModeObjButton->SetScaling(D3DXVECTOR3(0.7f, 0.7f, 0.7f));
+	pToolModeObjButton->SetPosition(WINSIZEX - 100, WINSIZEY - 300);
+	pToolModeObjButton->SetTexture("MapToolUI/toolmode_normal.png", "MapToolUI/toolmode_over.png", "MapToolUI/toolmode_selected.png");
+	pToolModeObjButton->SetDelegate(this);
+	pToolModeObjButton->SetTag(UI_TOOLMODE_OBJ);
+	pToolModeObjButton->SetRectSizeMin(50.0f);
+	m_pRootUI->AddChild(pToolModeObjButton);
+	
+	// 박스 배치 버튼
+	cUIImageView* pToolModeBoxImage = new cUIImageView;
+	pToolModeBoxImage->SetTexture("MapToolUI/toolmode_box.png");
+	pToolModeBoxImage->SetScaling(D3DXVECTOR3(0.5f, 0.5f, 0.5f));
+	pToolModeBoxImage->SetPosition(WINSIZEX - 90, WINSIZEY - 340);
+	m_pRootUI->AddChild(pToolModeBoxImage);
+
+	cUIButton* pToolModeBoxButton = new cUIButton;
+	pToolModeBoxButton->SetScaling(D3DXVECTOR3(0.7f, 0.7f, 0.7f));
+	pToolModeBoxButton->SetPosition(WINSIZEX - 100, WINSIZEY - 350);
+	pToolModeBoxButton->SetTexture("MapToolUI/toolmode_normal.png", "MapToolUI/toolmode_over.png", "MapToolUI/toolmode_selected.png");
+	pToolModeBoxButton->SetDelegate(this);
+	pToolModeBoxButton->SetTag(UI_TOOLMODE_BOX);
+	pToolModeBoxButton->SetRectSizeMin(50.0f);
+	m_pRootUI->AddChild(pToolModeBoxButton);
+
+	// 노드 배치 버튼
+	cUIImageView* pToolModeNodeImage = new cUIImageView;
+	pToolModeNodeImage->SetTexture("MapToolUI/toolmode_node.png");
+	pToolModeNodeImage->SetScaling(D3DXVECTOR3(0.5f, 0.5f, 0.5f));
+	pToolModeNodeImage->SetPosition(WINSIZEX - 90, WINSIZEY - 390);
+	m_pRootUI->AddChild(pToolModeNodeImage);
+
+	cUIButton* pToolModeNodeButton = new cUIButton;
+	pToolModeNodeButton->SetScaling(D3DXVECTOR3(0.7f, 0.7f, 0.7f));
+	pToolModeNodeButton->SetPosition(WINSIZEX - 100, WINSIZEY - 400);
+	pToolModeNodeButton->SetTexture("MapToolUI/toolmode_normal.png", "MapToolUI/toolmode_over.png", "MapToolUI/toolmode_selected.png");
+	pToolModeNodeButton->SetDelegate(this);
+	pToolModeNodeButton->SetTag(UI_TOOLMODE_NODE);
+	pToolModeNodeButton->SetRectSizeMin(50.0f);
+	m_pRootUI->AddChild(pToolModeNodeButton);
+
+	// 노드 라인 배치 버튼
+	cUIImageView* pToolModeLineImage = new cUIImageView;
+	pToolModeLineImage->SetTexture("MapToolUI/toolmode_line.png");
+	pToolModeLineImage->SetScaling(D3DXVECTOR3(0.5f, 0.5f, 0.5f));
+	pToolModeLineImage->SetPosition(WINSIZEX - 90, WINSIZEY - 440);
+	m_pRootUI->AddChild(pToolModeLineImage);
+
+	cUIButton* pToolModeLineButton = new cUIButton;
+	pToolModeLineButton->SetScaling(D3DXVECTOR3(0.7f, 0.7f, 0.7f));
+	pToolModeLineButton->SetPosition(WINSIZEX - 100, WINSIZEY - 450);
+	pToolModeLineButton->SetTexture("MapToolUI/toolmode_normal.png", "MapToolUI/toolmode_over.png", "MapToolUI/toolmode_selected.png");
+	pToolModeLineButton->SetDelegate(this);
+	pToolModeLineButton->SetTag(UI_TOOLMODE_ILNE);
+	pToolModeLineButton->SetRectSizeMin(50.0f);
+	m_pRootUI->AddChild(pToolModeLineButton);
+
+	// 선택 표지 이미지
+	m_pToolModeView = new cUIImageView;
+	m_pToolModeView->SetTexture("MapToolUI/toolmode_state.png");
+	m_pToolModeView->SetScaling(D3DXVECTOR3(0.3f, 0.3f, 0.3f));
+	m_pToolModeView->SetPosition(WINSIZEX - 110, WINSIZEY - 215);
+	m_pToolModeView->SetAngleZ(-0.1f);
+	m_pToolModeView->SetMovePos(50);
+	m_pRootUI->AddChild(m_pToolModeView);
 
 	// 마우스 커서 이미지
 	m_pImageCursor = new cUIImageView;
@@ -254,6 +412,31 @@ void cMainGame::OnClick(cUIButton * pSender)
 
 	case UI_REMOVE_BUTTON:
 		m_pMapTool->ObjRemove();
+		break;
+
+	case UI_TOOLMODE_NONE:
+		m_pMapTool->SetAllocateState(0);
+		m_pToolModeView->SetPosition(WINSIZEX - 110, WINSIZEY - 215);
+		break;
+
+	case UI_TOOLMODE_OBJ:
+		m_pMapTool->SetAllocateState(1);
+		m_pToolModeView->SetPosition(WINSIZEX - 110, WINSIZEY - 265);
+		break;
+
+	case UI_TOOLMODE_BOX:
+		m_pMapTool->SetAllocateState(2);
+		m_pToolModeView->SetPosition(WINSIZEX - 110, WINSIZEY - 315);
+		break;
+
+	case UI_TOOLMODE_NODE:
+		m_pMapTool->SetAllocateState(3);
+		m_pToolModeView->SetPosition(WINSIZEX - 110, WINSIZEY - 365);
+		break;
+
+	case UI_TOOLMODE_ILNE:
+		m_pMapTool->SetAllocateState(4);
+		m_pToolModeView->SetPosition(WINSIZEX - 110, WINSIZEY - 415);
 		break;
 	}
 

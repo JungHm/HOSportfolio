@@ -85,6 +85,7 @@ void cMainMenu::Update()
 		if (m_UI->GetGameStart())
 		{
 			g_Scene->ChangeScene("game");
+			return;
 		}
 	}
 	else if (m_UILoading)
@@ -103,7 +104,7 @@ void cMainMenu::Update()
 
 void cMainMenu::Render()
 {
-	
+
 
 	if (m_UI && !m_UILoading) m_UI->renderBG();	// ��� ���� ���� ��
 	else if (m_UILoading) m_UILoading->renderBG();
@@ -136,5 +137,5 @@ void cMainMenu::SetLight()
 
 	g_pD3DDevice->LightEnable(0, true);
 
-	
+
 }
