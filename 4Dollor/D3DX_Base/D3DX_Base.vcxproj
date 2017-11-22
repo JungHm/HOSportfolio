@@ -103,6 +103,7 @@
     <ClInclude Include="cObjLoader.h" />
     <ClInclude Include="cObjMap.h" />
     <ClInclude Include="cParticle.h" />
+    <ClInclude Include="cParticleManager.h" />
     <ClInclude Include="cPlayer.h" />
     <ClInclude Include="cSaveLoad.h" />
     <ClInclude Include="cSceneManager.h" />
@@ -149,6 +150,7 @@
     <ClCompile Include="cObjLoader.cpp" />
     <ClCompile Include="cObjMap.cpp" />
     <ClCompile Include="cParticle.cpp" />
+    <ClCompile Include="cParticleManager.cpp" />
     <ClCompile Include="cPlayer.cpp" />
     <ClCompile Include="cSaveLoad.cpp" />
     <ClCompile Include="cSceneManager.cpp" />

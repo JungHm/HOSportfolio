@@ -111,6 +111,7 @@
     </ClCompile>
     <ClCompile Include="cFrustum.cpp" />
     <ClCompile Include="cParticle.cpp" />
+    <ClCompile Include="cParticleManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cMtlTex.h" />
@@ -239,6 +240,7 @@
     </ClInclude>
     <ClInclude Include="cFrustum.h" />
     <ClInclude Include="cParticle.h" />
+    <ClInclude Include="cParticleManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="D3DX_Base.ico">
