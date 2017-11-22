@@ -4,7 +4,6 @@
 struct tagTextView
 {
 	string str;
-	LPD3DXFONT font;
 	POINT pt;
 	RECT rcText;
 	int alpha;	// 텍스트 알파 값. 

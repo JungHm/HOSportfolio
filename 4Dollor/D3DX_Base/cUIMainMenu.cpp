@@ -10,10 +10,6 @@ cUIMainMenu::cUIMainMenu()
 
 cUIMainMenu::~cUIMainMenu()
 {
-	for each(auto p in m_VText)
-	{
-		p.font->Release();
-	}
 }
 
 int cUIMainMenu::updateButtonCallback(int num)
@@ -103,7 +99,6 @@ void cUIMainMenu::setupTextInput(string strName, cFontManager::eFontType fontTyp
 {
 	tagTextView tv;
 	tv.alpha = 255;
-	tv.font = g_pFontManager->GetFont(fontType);
 	tv.pt = pt;
 	tv.str = strName;
 	SetRect(&tv.rcText, tv.pt.x, tv.pt.y, tv.pt.x + rcPt.x, tv.pt.y + rcPt.y);
@@ -118,6 +113,7 @@ void cUIMainMenu::renderOther()
 {
 	for each(auto p in m_VText)
 	{
-		p.font->DrawTextA(NULL, p.str.c_str(), p.str.length(), &p.rcText, DT_CENTER | DT_VCENTER, D3DCOLOR_ARGB(p.alpha, 255, 255, 255));
+		LPD3DXFONT font = g_pFontManager->GetFont(cFontManager::FT_SMALL);
+		font->DrawTextA(NULL, p.str.c_str(), p.str.length(), &p.rcText, DT_CENTER | DT_VCENTER, D3DCOLOR_ARGB(p.alpha, 255, 255, 255));
 	}
 }

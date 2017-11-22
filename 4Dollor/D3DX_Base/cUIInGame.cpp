@@ -88,8 +88,12 @@ void cUIInGame::SetSkillUse(int SkillIndex, bool used)
 		m_MUIButton.find(skillName)->second.used = false;
 		m_MUIButton.find(skillName)->second.buttonState = UIBUTTONSTATE_NORMAL;
 		//m_MUISprite.find(skillNameImg)->second.enable = true;
-		string countName = "skill" + to_string(SkillIndex) + "cool0";
-		m_MUIButton.find(countName)->second.enable = false;
+		
+		for (int i = 0; i < SKILLCOUNTNUM; i++)
+		{
+			string countName = "skill" + to_string(SkillIndex) + "cool" + to_string(i);
+			m_MUIButton.find(countName)->second.enable = false;
+		}
 	}
 }
 
