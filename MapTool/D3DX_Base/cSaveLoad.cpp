@@ -160,7 +160,7 @@ void cSaveLoad::CreateObjRender()
 			m_vecFieldObj[i].pMesh->DrawSubset(j);
 		}
 	}
-
+	
 	// 배치된 충돌 박스 렌더
 	for (unsigned int i = 0; i < m_vecFieldBox.size(); i++)
 	{
@@ -180,8 +180,11 @@ void cSaveLoad::CreateObjRender()
 	// 노드 간의 라인 렌더
 	if (m_vecNodeLine.size() % 2 == 0 && m_vecNodeLine.size() != NULL)
 	{
-		D3DXMATRIXA16 matWorld;
+		D3DXMATRIXA16 matWorld, matT;
 		D3DXMatrixIdentity(&matWorld);
+		D3DXMatrixTranslation(&matT, 0.0f, 0.1f, 0.0f);
+
+		matWorld = matT;
 
 		g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
 		g_pD3DDevice->SetFVF(ST_PC_VERTEXT::FVF);

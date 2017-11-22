@@ -42,8 +42,8 @@ void cUIButton::Update()
 	SetRect(&rc,
 		(int)m_matWorld._41,
 		(int)m_matWorld._42,
-		(int)m_matWorld._41 + (int)m_sSize.nWidth,
-		(int)m_matWorld._42 + (int)m_sSize.nHeight);
+		(int)m_matWorld._41 + (int)m_sSize.nWidth - m_fRectSizeMin,
+		(int)m_matWorld._42 + (int)m_sSize.nHeight - m_fRectSizeMin);
 
 	if (PtInRect(&rc, pt))
 	{

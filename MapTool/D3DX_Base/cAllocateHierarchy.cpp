@@ -118,11 +118,11 @@ STDMETHODIMP cAllocateHierarchy::CreateMeshContainer(LPCSTR Name, CONST D3DXMESH
 
 STDMETHODIMP cAllocateHierarchy::DestroyFrame(LPD3DXFRAME pFrameToFree)
 {
-	//ST_BONE_MESH* pBoneMesh = (ST_BONE_MESH*)pFrameToFree;
+	ST_BONE_MESH* pBoneMesh = (ST_BONE_MESH*)pFrameToFree;
 	//SAFE_DELETE_ARRAY(pBoneMesh->Name);
-	//
-	//SAFE_DELETE(pFrameToFree);
-	delete pFrameToFree;
+	
+	SAFE_DELETE(pBoneMesh);
+	//delete pFrameToFree;
 
 	return S_OK;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-using namespace std;
+//using namespace std;
 class cMtlTex;
 struct ST_BONE : public D3DXFRAME
 {

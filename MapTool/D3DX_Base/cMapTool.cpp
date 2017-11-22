@@ -85,22 +85,6 @@ void cMapTool::Setup()
 
 void cMapTool::Update()
 {
-	// ui·Î ¹Ù²ãÁØ´Ù
-	if (KEY->isOnceKeyDown(VK_F3))
-	{
-		m_eAllocateState++;
-	}
-
-	if (KEY->isOnceKeyDown(VK_F4))
-	{
-		m_eAllocateState--;
-	}
-
-	if (KEY->isOnceKeyDown(VK_F5))
-	{
-		m_pSaveLoad->RemoveNode();
-	}
-
 	if (KEY->isOnceKeyDown(VK_LBUTTON))
 	{
 		switch (m_eAllocateState)
@@ -145,7 +129,7 @@ void cMapTool::Update()
 
 void cMapTool::Render()
 {
-	if (m_pInfo) m_pInfo->Render();
+	//if (m_pInfo) m_pInfo->Render();
 	if (m_pGrid) m_pGrid->Render();
 	if (m_pHeightMap) m_pHeightMap->Render();
 
@@ -196,7 +180,7 @@ void cMapTool::Render()
 		m_sNodeSphere.pMesh->DrawSubset(0);
 		break;
 	}
-
+	
 	if (m_pSaveLoad) m_pSaveLoad->CreateObjRender();
 }
 
@@ -360,5 +344,21 @@ void cMapTool::ObjLoad()
 
 void cMapTool::ObjRemove()
 {
-	m_pSaveLoad->RemoveObj();
+	switch (m_eAllocateState)
+	{
+	case ALLOCATE_NONE:
+		break;
+
+	case ALLOCATE_OBJECT:
+		m_pSaveLoad->RemoveObj();
+		break;
+
+	case ALLOCATE_COLLISION_BOX:
+		m_pSaveLoad->RemoveBox();
+		break;
+
+	case ALLOCATE_DIJKSTRA_NODE_SPHERE:
+		m_pSaveLoad->RemoveNode();
+		break;
+	}
 }
