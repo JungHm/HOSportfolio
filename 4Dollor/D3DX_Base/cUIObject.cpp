@@ -20,7 +20,7 @@ cUIObject::~cUIObject()
 void cUIObject::AddSprite(tagUISpriteLoadData &spriteData)
 {
 	// 텍스쳐 등록은 텍스쳐 매니저로 해야됨. 현재 텍스쳐 매니저를 확장하지 않았으므로 여기에서 등록
-	spriteData.indexName = "UI_" + spriteData.indexName;
+	spriteData.indexName = spriteData.indexName;
 
 	// D3DXCreateTextureFromFileEx 얘가 로딩시간 꽤 오래 걸림. 이미지가 클수록 오래 걸림.
 	// 현재 배경 이미지 띄우는데 1.500ms 정도
@@ -59,6 +59,7 @@ void cUIObject::AddSprite(tagUISpriteLoadData &spriteData)
 
 			D3DXMatrixIdentity(&uisAdd->matWorld);
 			uisAdd->pt = spriteData.pt;
+			uisAdd->enable = spriteData.enable;
 			uisAdd->rotSpd = spriteData.rotSpd;
 			SetRect(&uisAdd->drawRc, 0, 0, uisAdd->imgInfo.Width, uisAdd->imgInfo.Height);	// 파일상에서 이미지를 가져올 범위(크기)
 			uisAdd->buttonFunc = spriteData.buttonFunc;
@@ -95,6 +96,7 @@ void cUIObject::AddSprite(tagUISpriteLoadData &spriteData)
 
 			D3DXMatrixIdentity(&uisAdd->matWorld);
 			uisAdd->pt = spriteData.pt;
+			uisAdd->enable = spriteData.enable;
 			uisAdd->rotSpd = spriteData.rotSpd;
 			SetRect(&uisAdd->drawRc, 0, 0, uisAdd->imgInfo.Width, uisAdd->imgInfo.Height);
 		}
@@ -130,6 +132,7 @@ void cUIObject::AddSprite(tagUISpriteLoadData &spriteData)
 
 			D3DXMatrixIdentity(&uisAdd->matWorld);
 			uisAdd->pt = spriteData.pt;
+			uisAdd->enable = spriteData.enable;
 			uisAdd->rotSpd = spriteData.rotSpd;
 			SetRect(&uisAdd->drawRc, 0, 0, uisAdd->imgInfo.Width, uisAdd->imgInfo.Height);
 		}
@@ -145,6 +148,9 @@ void cUIObject::setup(string className)
 	// csv에서 파일 데이터 읽은 후 AddSprite
 
 	// ---------------------------------- 데이터 읽기(파싱) 시작
+	// 데이터 파싱을 수업 코드로 할 필요 없다.
+	// 파싱해야될 데이터의 위치와 인자는 항상 동일하기 때문.
+	// 아래 같은 파싱이 오히려 빠름.
 	FILE *file;
 	string thereis = "UI\\UIDatas.csv";
 	fopen_s(&file, thereis.c_str(), "r");
@@ -174,6 +180,8 @@ void cUIObject::setup(string className)
 		fgets(str1, sizeof(str1), file);
 		ld.pt.x = atoi(strtok_s(str2, ",", &str2));
 		ld.pt.y = atoi(strtok_s(str2, ",", &str2));
+		ld.enable = atoi(strtok_s(str2, ",", &str2));
+		strtok_s(str2, ",", &str2);	// 버튼 사용 여부는 처음에 모두 false. 스킬 사용 시 true
 		ld.BG = atoi(strtok_s(str2, ",", &str2));
 		ld.indexName = strtok_s(str2, ",", &str2);
 		ld.rotate = atof(strtok_s(str2, ",", &str2));
@@ -202,23 +210,28 @@ void cUIObject::setup(string className)
 
 	// ---------------------------------- 데이터 읽기(파싱) 완료
 
-	for (int i = 0; i < vUIData.size(); i++)	// 파싱한 데이터 추가
+	for (int i = 0; i < vUIData.size(); i++)	// 파싱한 데이터를 sprite로 생성(추가)
 	{
 		AddSprite(vUIData[i]);
 	}
+
+	setupOther();
 }
 
 void cUIObject::update()
 {
 	updateButton();
+	updateOther();
 }
 
 void cUIObject::updateButton()
 {
 	for (m_MUIButtonIt = m_MUIButton.begin(); m_MUIButtonIt != m_MUIButton.end(); m_MUIButtonIt++)
 	{
+		if (!m_MUIButtonIt->second.enable) continue;
 		updateMatWorld(m_MUIButtonIt->second.matWorld, m_MUIButtonIt->second.pt);
 		// 이 아래부터 pt 값은 matWorld의 _41, _42 값을 줘야 한다. Scale, Trans가 적용된 World를 기준으로 해야됨
+		if (m_MUIButtonIt->second.used) continue;	// 사용 중이면 버튼 업데이트를 안함 (버튼 기능 비활성)
 		updateButtonState(m_MUIButtonIt->second.imgInfo, D3DXVECTOR3(m_MUIButtonIt->second.matWorld._41, m_MUIButtonIt->second.matWorld._42, 0), m_MUIButtonIt->second.buttonState, m_MUIButtonIt->second.buttonFunc);
 	}
 }
@@ -267,6 +280,11 @@ void cUIObject::updateButtonState(D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt, int &b
 			if (buttonState == UIBUTTONSTATE_OVER)	// 오버 상태일 때 클릭 시
 			{
 				buttonState = UIBUTTONSTATE_SELECT;
+				updateButtonCallback(buttonFunc);
+			}
+			else if (buttonState == UIBUTTONSTATE_SELECT)
+			{
+				buttonState = UIBUTTONSTATE_OVER;
 			}
 		}
 		else
@@ -274,7 +292,7 @@ void cUIObject::updateButtonState(D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt, int &b
 			if (buttonState == UIBUTTONSTATE_SELECT)
 			{
 				// 마우스 클릭 시 기능 실행
-				updateButtonCallback(buttonFunc);
+				//updateButtonCallback(buttonFunc);
 			}
 			else if (buttonState == UIBUTTONSTATE_OVER)
 			{
@@ -294,12 +312,14 @@ void cUIObject::render()
 {
 	renderNormal();
 	renderButton();
+	renderOther();
 }
 
 void cUIObject::renderBG()
 {
 	for (m_MUISpriteBGIt = m_MUISpriteBG.begin(); m_MUISpriteBGIt != m_MUISpriteBG.end(); m_MUISpriteBGIt++)
 	{
+		if (!m_MUISpriteBGIt->second.enable) continue;
 		m_MUISpriteBGIt->second.sprite->Begin(D3DXSPRITE_ALPHABLEND);
 
 		updateMatWorld(m_MUISpriteBGIt->second.matWorld, m_MUISpriteBGIt->second.pt);
@@ -320,6 +340,7 @@ void cUIObject::renderButton()
 {
 	for (m_MUIButtonIt = m_MUIButton.begin(); m_MUIButtonIt != m_MUIButton.end(); m_MUIButtonIt++)
 	{
+		if (!m_MUIButtonIt->second.enable) continue;
 		m_MUIButtonIt->second.sprite->Begin(D3DXSPRITE_ALPHABLEND);
 
 		updateMatWorld(m_MUIButtonIt->second.matWorld, m_MUIButtonIt->second.pt);
@@ -339,6 +360,7 @@ void cUIObject::renderNormal()
 {
 	for (m_MUISpriteIt = m_MUISprite.begin(); m_MUISpriteIt != m_MUISprite.end(); m_MUISpriteIt++)
 	{
+		if (!m_MUISpriteIt->second.enable) continue;
 		m_MUISpriteIt->second.sprite->Begin(D3DXSPRITE_ALPHABLEND);
 
 		D3DXMatrixAffineTransformation2D(&m_MUISpriteIt->second.matWorld,
@@ -393,4 +415,5 @@ void cUIObject::destroy()
 		m_MUISpriteBGIt->second.sprite->Release();
 		m_MUISpriteBGIt->second.texture->Release();
 	}
+	destroyOther();
 }

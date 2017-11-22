@@ -41,13 +41,11 @@ cMainMenu::~cMainMenu()
 		SAFE_DELETE(m_UILoading);
 	}
 
+
 }
 
 void cMainMenu::SetUp()
 {
-
-
-
 
 	m_UI = new cUIMainMenu;
 	m_UI->setup("cMainMenu");	// ���̺� �� �з�� �̸�� ����ϹǷ� Ŭ���� �̸�� ����
@@ -74,11 +72,6 @@ void cMainMenu::Destroy()
 
 void cMainMenu::Update()
 {
-	//m_pRootNode->Update(m_pRootNode->GetKeyFrame(), NULL);
-	//if (GetAsyncKeyState(VK_LBUTTON) & 0001)
-	//{
-	//	g_Scene->ChangeScene("game");
-	//}
 	if (m_UI && !m_UILoading)
 	{
 		m_UI->update();	// ��ư�� ����Ƿ� update

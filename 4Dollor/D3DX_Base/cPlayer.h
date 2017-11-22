@@ -4,7 +4,7 @@ class cCharacter;
 
 struct P_INFO
 {
-	
+
 	//float CtQ, CtW, CtE;
 };
 
@@ -12,11 +12,12 @@ class cPlayer
 {
 private://player 기본 정보
 	int experience;
-	int level;
+	SYNTHESIZE(int, level, Level);
 	int m_Hp, m_Mp, m_Shield;
 	int Att;
+	SYNTHESIZE(float, m_Radius, Radius);
 	//공격용
-	SYNTHESIZE(float ,distance,Distance);
+	SYNTHESIZE(float, distance, Distance);
 	bool isAttack;
 private:
 	D3DXMATRIXA16 matWorld, matR, matT;
@@ -29,9 +30,7 @@ private:
 	SYNTHESIZE(D3DXVECTOR3, m_vFrom, From);
 	SYNTHESIZE(D3DXVECTOR3, m_ptMouse, MousePos);
 private:
-	bool isQcool;
-	bool isWcool;
-	bool isEcool;
+	
 public:
 	MATRIX16_FIX;
 	cPlayer();
@@ -44,8 +43,19 @@ public:
 	void Update(POINT mouse);
 	void moveTo();
 	void Render();
-	void Destroy();
+	//void Destroy();
 
 	void ExpUp(int value) { experience += value; }
+
+public:
+	/*float GetQCool() { return m_pChar->GetCoolQ(); }
+	float GetWCool() { return m_pChar->GetCoolW(); }
+	float GetECool() { return m_pChar->GetCoolE(); }*/
+	float coolQ;
+	float coolW;
+	float coolE;
+	bool isQcool;
+	bool isWcool;
+	bool isEcool;
 };
 
