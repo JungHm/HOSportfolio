@@ -8,10 +8,15 @@ cUIObject::cUIObject()
 	, m_sSize(0, 0)
 	, m_vPosition(0.0f, 0.0f, 0.0f)
 	, m_vScaling(1.0f, 1.0f, 1.0f)
+	, m_fRotZ(0.0f)
+	, m_fAngleZ(0.0f)
 	, m_nTag(0)
+	, m_fMovePos(0.0f)
+	, m_fRectSizeMin(0.0f)
 {
 	D3DXMatrixIdentity(&m_matWorld);
 	D3DXMatrixIdentity(&m_matScal);
+	D3DXMatrixIdentity(&m_matRot);
 }
 
 cUIObject::~cUIObject()
@@ -22,8 +27,11 @@ void cUIObject::Update()
 {	
 	if (m_isHidden) return;
 
+	m_fRotZ += m_fAngleZ;
+
+	D3DXMatrixRotationZ(&m_matRot, m_fRotZ);
 	D3DXMatrixScaling(&m_matScal, m_vScaling.x, m_vScaling.y, m_vScaling.z);
-	m_matWorld = m_matScal;
+	m_matWorld = m_matScal * m_matRot;
 
 	m_matWorld._41 = m_vPosition.x;
 	m_matWorld._42 = m_vPosition.y;

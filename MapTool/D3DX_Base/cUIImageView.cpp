@@ -21,7 +21,7 @@ void cUIImageView::Render(LPD3DXSPRITE pSprite)
 	SetRect(&rc, 0, 0, m_sSize.nWidth, m_sSize.nWidth);
 	pSprite->Draw(m_pTexture,
 		&rc,
-		&D3DXVECTOR3(0, 0, 0),
+		&D3DXVECTOR3(m_fMovePos, m_fMovePos, 0),
 		&D3DXVECTOR3(0, 0, 0),
 		D3DCOLOR_ARGB(255, 255, 255, 255));
 
