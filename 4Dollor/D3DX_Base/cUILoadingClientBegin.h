@@ -3,13 +3,17 @@
 class cUILoadingClientBegin : public cUIObject
 {
 private:
+	// 로딩이 끝난 것을 체크하기 위한 변수
+	SYNTHESIZE(bool, m_LoadingEnd, LoadingEnd);
 
 public:
 	cUILoadingClientBegin();
 	~cUILoadingClientBegin();
 
-	SYNTHESIZE(bool, m_LoadingEnd, LoadingEnd);
+	int updateButtonOverCallback(int num);
+	int updateButtonCallback(int num);
 
-	void updateButtonOverCallback(int num);
-	void updateButtonCallback(int num);
+	void setupOther();
+	void updateOther();
+	void renderOther();
 };

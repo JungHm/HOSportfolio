@@ -123,7 +123,3 @@ void cUIInGame::updateOther()
 void cUIInGame::renderOther()
 {
 }
-
-void cUIInGame::destroyOther()
-{
-}
