@@ -17,7 +17,7 @@ cTessadar::cTessadar()
 	keepTime = 5.0f;
 	m_State = STAND;
 	xKey = 0;
-	QTime = ETime = fTime = 10.0f;
+	QTime = ETime = fTime = 0.0f;
 	SkillQ = SkillW = SkillE = false;
 	StormTexNum = 0;
 }
@@ -401,7 +401,7 @@ void cTessadar::BlendAni(int State)
 
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(0, 0.0f);
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(1, 1.0f);
-		coolQ = 10.0f;
+		coolQ = 0.0f;
 		SkillQ = true;
 		break;
 	case SPELL_W:
@@ -417,7 +417,7 @@ void cTessadar::BlendAni(int State)
 
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(0, 0.0f);
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(1, 1.0f);
-		coolW = 10.0f;
+		coolW = 0.0f;
 		break;
 	case SPELL_E:
 		XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &stTrackDesc);
@@ -432,7 +432,7 @@ void cTessadar::BlendAni(int State)
 
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(0, 0.0f);
 		XFile->GetAniCtrl(xKey)->SetTrackWeight(1, 1.0f);
-		coolE = 10.0f;
+		coolE = 0.0f;
 		break;
 	case SPELL_R:
 		/*XFile->GetAniCtrl(xKey)->GetTrackDesc(0, &stTrackDesc);

@@ -13,8 +13,6 @@ cMainGame::~cMainGame()
 {
 	g_pSprite->Destroy();
 	g_pTextureManager->Destroy();
-	XFile->Destroy();
-
 	//g_pObjectManager->Destroy();
 	g_Scene->Destroy();
 	g_pDeviceManager->Destroy();

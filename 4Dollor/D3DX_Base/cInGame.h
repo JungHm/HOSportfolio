@@ -27,6 +27,8 @@ private:
 	cHeightMap* m_pHeightMap;
 	cSkyBox*    m_pSkyBox;
 
+	LPDIRECT3DTEXTURE9		m_pD3DTexture;
+
 private:
 	POINT m_ptMouse;
 
