@@ -25,7 +25,7 @@ public:
 	int updateButtonOverCallback(int num);
 
 	void setupOther();
-	void setupTextInput(string strName, cFontManager::eFontType fontType, POINT pt, POINT rcPt);
+	void setupTextInput(string strName, POINT pt, POINT rcPt);
 	void updateOther();
 	void renderOther();
 	void destroyOther();

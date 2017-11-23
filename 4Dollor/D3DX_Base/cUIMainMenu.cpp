@@ -20,15 +20,42 @@ int cUIMainMenu::updateButtonCallback(int num)
 	}
 	else if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_ABILITY)
 	{
-
+		if (!m_MUIButton.find("heroabil")->second.selected)
+		{
+			m_MUIButton.find("heroabil")->second.selected = true;
+			m_MUIButton.find("heroinfo")->second.selected = false;
+			m_MUIButton.find("herotalent")->second.selected = false;
+		}
+		else
+		{
+			m_MUIButton.find("heroabil")->second.selected = false;
+		}
 	}
 	else if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_EQUIP)
 	{
-
+		if (!m_MUIButton.find("heroinfo")->second.selected)
+		{
+			m_MUIButton.find("heroabil")->second.selected = false;
+			m_MUIButton.find("heroinfo")->second.selected = true;
+			m_MUIButton.find("herotalent")->second.selected = false;
+		}
+		else
+		{
+			m_MUIButton.find("heroinfo")->second.selected = false;
+		}
 	}
 	else if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_TALENT)
 	{
-
+		if (!m_MUIButton.find("herotalent")->second.selected)
+		{
+			m_MUIButton.find("heroabil")->second.selected = false;
+			m_MUIButton.find("heroinfo")->second.selected = false;
+			m_MUIButton.find("herotalent")->second.selected = true;
+		}
+		else
+		{
+			m_MUIButton.find("herotalent")->second.selected = false;
+		}
 	}
 	else if (num == UIBUTTONCALLBACK_MAIN_HEROSELECT_ROLE)
 	{
@@ -53,7 +80,11 @@ int cUIMainMenu::updateButtonOverCallback(int num)
 	}
 	else if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_ABILITY)
 	{
-
+		if (!m_MUIButton.find("heroabil")->second.selected)
+		{
+			// 마우스 오버 시 띄울 스킬 설명들
+			
+		}
 	}
 	else if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_EQUIP)
 	{
@@ -89,13 +120,13 @@ void cUIMainMenu::setupOther()
 	POINT rcSizeTalent = { m_MUIButton.find("herotalent")->second.imgInfo.Width * m_UIScale, m_MUIButton.find("herotalent")->second.imgInfo.Height * m_UIScale * 2 };
 	POINT ptTalent = { m_MUIButton.find("herotalent")->second.pt.x, m_MUIButton.find("herotalent")->second.pt.y };
 
-	setupTextInput("장비", cFontManager::FT_SMALL, ptHeroinfo, rcSizeHeroinfo);
-	setupTextInput("기술", cFontManager::FT_SMALL, ptAbility, rcSizeAbility);
-	setupTextInput("특성", cFontManager::FT_SMALL, ptTalent, rcSizeTalent);
-	setupTextInput("준비", cFontManager::FT_SMALL, ptReady, rcSizeReady);
+	setupTextInput("장비", ptHeroinfo, rcSizeHeroinfo);
+	setupTextInput("기술", ptAbility, rcSizeAbility);
+	setupTextInput("특성", ptTalent, rcSizeTalent);
+	setupTextInput("준비", ptReady, rcSizeReady);
 }
 
-void cUIMainMenu::setupTextInput(string strName, cFontManager::eFontType fontType, POINT pt, POINT rcPt)
+void cUIMainMenu::setupTextInput(string strName, POINT pt, POINT rcPt)
 {
 	tagTextView tv;
 	tv.alpha = 255;
@@ -107,12 +138,14 @@ void cUIMainMenu::setupTextInput(string strName, cFontManager::eFontType fontTyp
 
 void cUIMainMenu::updateOther()
 {
+
 }
 
 void cUIMainMenu::renderOther()
 {
 	for each(auto p in m_VText)
 	{
+		// 동적할당 해제 안되었다는 오류남
 		LPD3DXFONT font = g_pFontManager->GetFont(cFontManager::FT_SMALL);
 		font->DrawTextA(NULL, p.str.c_str(), p.str.length(), &p.rcText, DT_CENTER | DT_VCENTER, D3DCOLOR_ARGB(p.alpha, 255, 255, 255));
 	}

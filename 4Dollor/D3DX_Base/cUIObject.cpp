@@ -233,6 +233,10 @@ void cUIObject::updateButton()
 		// 이 아래부터 pt 값은 matWorld의 _41, _42 값을 줘야 한다. Scale, Trans가 적용된 World를 기준으로 해야됨
 		if (m_MUIButtonIt->second.used) continue;	// 사용 중이면 버튼 업데이트를 안함 (버튼 기능 비활성)
 		updateButtonState(m_MUIButtonIt->second.imgInfo, D3DXVECTOR3(m_MUIButtonIt->second.matWorld._41, m_MUIButtonIt->second.matWorld._42, 0), m_MUIButtonIt->second.buttonState, m_MUIButtonIt->second.buttonFunc);
+		if (m_MUIButtonIt->second.selected)
+		{
+			m_MUIButtonIt->second.buttonState = UIBUTTONSTATE_SELECT;
+		}
 	}
 }
 
@@ -272,40 +276,61 @@ void cUIObject::updateButtonState(D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt, int &b
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	// 충돌 관련은 수업 코드와 동일함
 	if (PtInRect(&rc, ptMouse))
 	{
-		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+		if (KEY->isStayKeyDown(VK_LBUTTON))
 		{
-			if (buttonState == UIBUTTONSTATE_OVER)	// 오버 상태일 때 클릭 시
-			{
-				buttonState = UIBUTTONSTATE_SELECT;
-				updateButtonCallback(buttonFunc);
-			}
-			else if (buttonState == UIBUTTONSTATE_SELECT)
-			{
-				buttonState = UIBUTTONSTATE_OVER;
-			}
+			buttonState = UIBUTTONSTATE_SELECT;
 		}
 		else
 		{
-			if (buttonState == UIBUTTONSTATE_SELECT)
-			{
-				// 마우스 클릭 시 기능 실행
-				//updateButtonCallback(buttonFunc);
-			}
-			else if (buttonState == UIBUTTONSTATE_OVER)
-			{
-				// 마우스 오버 시 기능 실행
-				updateButtonOverCallback(buttonFunc);
-			}
-			buttonState = UIBUTTONSTATE_OVER;	// 오버 시 상태 변경
+			buttonState = UIBUTTONSTATE_OVER;
+			updateButtonOverCallback(buttonFunc);
+		}
+		if (KEY->isOnceKeyUp(VK_LBUTTON) && buttonState == UIBUTTONSTATE_OVER)
+		{
+			updateButtonCallback(buttonFunc);
 		}
 	}
 	else
 	{
 		buttonState = UIBUTTONSTATE_NORMAL;
 	}
+	
+	//if (PtInRect(&rc, ptMouse))
+	//{
+	//	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+	//	{
+	//		if (buttonState == UIBUTTONSTATE_OVER)	// 오버 상태일 때 클릭 시
+	//		{
+	//			buttonState = UIBUTTONSTATE_SELECT;
+	//			updateButtonCallback(buttonFunc);
+	//		}
+	//		else if (buttonState == UIBUTTONSTATE_SELECT)
+	//		{
+	//			buttonState = UIBUTTONSTATE_OVER;
+	//			updateButtonCallback(buttonFunc);
+	//		}
+	//	}
+	//	else
+	//	{
+	//		if (buttonState == UIBUTTONSTATE_SELECT)
+	//		{
+	//			// 마우스 클릭 시 기능 실행
+	//			//updateButtonCallback(buttonFunc);
+	//		}
+	//		else if (buttonState == UIBUTTONSTATE_OVER)
+	//		{
+	//			// 마우스 오버 시 기능 실행
+	//			updateButtonOverCallback(buttonFunc);
+	//		}
+	//		buttonState = UIBUTTONSTATE_OVER;	// 오버 시 상태 변경
+	//	}
+	//}
+	//else
+	//{
+	//	buttonState = UIBUTTONSTATE_NORMAL;
+	//}
 }
 
 void cUIObject::render()
