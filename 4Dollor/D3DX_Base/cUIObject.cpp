@@ -415,4 +415,5 @@ void cUIObject::destroy()
 		m_MUISpriteBGIt->second.sprite->Release();
 		m_MUISpriteBGIt->second.texture->Release();
 	}
+	destroyOther();
 }

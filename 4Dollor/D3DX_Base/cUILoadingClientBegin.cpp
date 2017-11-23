@@ -34,3 +34,7 @@ void cUILoadingClientBegin::renderOther()
 {
 
 }
+
+void cUILoadingClientBegin::destroyOther()
+{
+}

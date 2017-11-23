@@ -28,5 +28,6 @@ public:
 	void setupTextInput(string strName, cFontManager::eFontType fontType, POINT pt, POINT rcPt);
 	void updateOther();
 	void renderOther();
+	void destroyOther();
 };
 

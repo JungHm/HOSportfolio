@@ -13,7 +13,9 @@ class cPlayer
 private://player 기본 정보
 	int experience;
 	SYNTHESIZE(int, level, Level);
-	int m_Hp, m_Mp, m_Shield;
+	SYNTHESIZE(int, m_Hp, Hp);
+	SYNTHESIZE(int, m_Mp, Mp);
+	SYNTHESIZE(int, m_Shield, Shield);
 	int Att;
 	//공격용
 	SYNTHESIZE(float ,distance,Distance);

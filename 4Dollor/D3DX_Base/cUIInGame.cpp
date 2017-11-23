@@ -239,3 +239,11 @@ void cUIInGame::renderBar()
 		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	}
 }
+
+void cUIInGame::destroyOther()
+{
+	for (int i = 0; i < m_VHPBar.size(); i++)
+	{
+		m_VHPBar[i].texture->Release();
+	}
+}

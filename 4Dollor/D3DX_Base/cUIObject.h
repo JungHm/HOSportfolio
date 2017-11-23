@@ -64,6 +64,7 @@ public:
 	virtual void renderNormal();
 	// 각자 띄우게 싶은게 있다면
 	virtual void renderOther() = 0;
-	// 해-제
+	// 해제
 	virtual void destroy();
+	virtual void destroyOther() = 0;
 };

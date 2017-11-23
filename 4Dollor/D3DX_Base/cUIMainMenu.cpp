@@ -117,3 +117,7 @@ void cUIMainMenu::renderOther()
 		font->DrawTextA(NULL, p.str.c_str(), p.str.length(), &p.rcText, DT_CENTER | DT_VCENTER, D3DCOLOR_ARGB(p.alpha, 255, 255, 255));
 	}
 }
+
+void cUIMainMenu::destroyOther()
+{
+}

@@ -32,8 +32,6 @@ public:
 	cUIInGame();
 	~cUIInGame();
 
-	
-
 	// 스킬 언락. q = 1, w = 2 순서
 	void SetSkillUnlock(int SkillIndex, bool unlock);
 	// 스킬 사용 시. q = 1, w = 2 순서
@@ -54,5 +52,7 @@ public:
 	void updateBar(bool pc, D3DXVECTOR3 pt, int currHp);
 	// 체력바 랜더
 	void renderBar();
+
+	void destroyOther();
 };
 

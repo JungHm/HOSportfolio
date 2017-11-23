@@ -203,6 +203,7 @@ void cInGame::Render()
 		m_pGrid->Render();
 
 	m_pPlayer->Render();
+	m_UI->updateBar(true, m_pPlayer->GetPosition(), m_pPlayer->GetHp());	// 100에 테사 현재 HP 넣으면 됨
 }
 
 void cInGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
