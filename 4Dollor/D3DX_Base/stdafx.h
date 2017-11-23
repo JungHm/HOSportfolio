@@ -206,6 +206,7 @@ enum OBJECTKIND
 #include "cXFileManager.h"
 #include "cMtlTex.h"
 #include "cFxLoad.h"
+#include "cParticleManager.h"
 
 typedef struct tagObject
 {

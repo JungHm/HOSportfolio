@@ -5,25 +5,13 @@
 
 cParticleManager::cParticleManager()
 {
-	pInfo.resize(10);
-	Partice_info pi;
-	pi.particle = new cParticle;
-	pi.particle->SetupParticle(10, 1, D3DCOLOR_ARGB(255, 150, 60, 70));
-	for each (auto p in pInfo)
-	{
-		p = pi;
-	}
+
 }
 
 
 cParticleManager::~cParticleManager()
 {
-	for each(auto p in pInfo)
-	{
-		SAFE_DELETE(p.particle);
-		p.particle = NULL;
-	}
-	pInfo.clear();
+
 }
 
 void cParticleManager::AddHitParticle(D3DXVECTOR3 pos)
@@ -45,8 +33,26 @@ void cParticleManager::AddHitParticle(D3DXVECTOR3 pos)
 	pInfo.push_back(pi);
 }
 
+void cParticleManager::Setup()
+{
+	pInfo.resize(10);
+	Partice_info pi;
+	pi.particle = new cParticle;
+	pi.particle->SetupParticle(10, 1, D3DCOLOR_ARGB(255, 150, 60, 70));
+	for each (auto p in pInfo)
+	{
+		p = pi;
+	}
+}
+
 void cParticleManager::Destroy()
 {
+	for each(auto p in pInfo)
+	{
+		SAFE_DELETE(p.particle);
+		p.particle = NULL;
+	}
+	pInfo.clear();
 }
 
 void cParticleManager::Update()

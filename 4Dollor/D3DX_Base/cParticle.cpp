@@ -123,6 +123,7 @@ bool cParticle::Update()
 	}
 	if (nAlpha < 0)
 	{
+		nAlpha = 255;
 		return false;
 	}
 	for (int i = 0; i < m_vecParticle.size(); i++)

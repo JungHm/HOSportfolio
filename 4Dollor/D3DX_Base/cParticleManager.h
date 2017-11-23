@@ -1,6 +1,8 @@
 #pragma once
 class cParticle;
 
+#define g_Particle cParticleManager::GetInstance()
+
 struct Partice_info
 {
 	cParticle* particle;
@@ -21,10 +23,12 @@ class cParticleManager
 private:
 	vector<Partice_info> pInfo;
 public:
-	cParticleManager();
-	~cParticleManager();
+	SINGLETONE(cParticleManager);
+	//cParticleManager();
+	//~cParticleManager();
 
 	void AddHitParticle(D3DXVECTOR3 pos);
+	void Setup();
 	void Destroy();
 	void Update();
 	void Render(char* TextureName);
