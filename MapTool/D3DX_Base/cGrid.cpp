@@ -29,6 +29,9 @@ void cGrid::Setup(IN char* szFolder, IN char* szFile, IN int nRow, IN int nCol, 
 	m_fStartPosX = -1.0f * m_nCol * m_fTileSize * 0.5f; // x 좌표 시작 위치 = -1.0f x 열 x 크기(간격) x 0.5f(1/2)
 	m_fStartPosZ = m_nRow * m_fTileSize * 0.5f;			// z 좌표 시작 위치 = 행 x 크기(간격) x 0.5f(1/2)
 
+	// 스페어 매쉬
+	//D3DXCreateSphere(g_pD3DDevice, 0.5f, 10, 10, &m_pSphereMesh, NULL);
+
 	m_vecVertex.resize(m_nTotalVertex);		// 총 버텍스 개수 만큼 리사이즈
 	int nVIndex = 0;						// 버텍스 벡터 탐색 인덱스
 
@@ -49,6 +52,10 @@ void cGrid::Setup(IN char* szFolder, IN char* szFile, IN int nRow, IN int nCol, 
 			m_vecVertex[nVIndex] = v;
 			// 버텍스 벡터 인덱스 증가
 			nVIndex++;
+			//// 스페어 셋팅
+			//m_eSphere[z][x].fRadius = 0.5f;
+			//m_eSphere[z][x].vCenter = D3DXVECTOR3(v.p.x, 0, v.p.z);
+			//m_eSphere[z][x].isWall = false;
 		}
 	}
 
@@ -149,6 +156,27 @@ void cGrid::Setup(IN char* szFolder, IN char* szFile, IN int nRow, IN int nCol, 
 
 void cGrid::Render()
 {
+	g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
+
+	//D3DXMATRIXA16	matWorld;
+
+	//// 스페어 렌더
+	//for (int i = 0; i <= MAX_ROW; i++)
+	//{
+	//	for (int j = 0; j <= MAX_COL; j++)
+	//	{
+	//		D3DXMatrixIdentity(&matWorld);
+	//		matWorld._41 = m_eSphere[i][j].vCenter.x;
+	//		matWorld._42 = m_eSphere[i][j].vCenter.y;
+	//		matWorld._43 = m_eSphere[i][j].vCenter.z;
+	//
+	//		g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
+	//		g_pD3DDevice->SetTexture(0, NULL);
+	//
+	//		m_pSphereMesh->DrawSubset(0);
+	//	}
+	//}
+
 	// 그리드 렌더
 	g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
 	g_pD3DDevice->SetMaterial(&m_mtl);

@@ -13,10 +13,13 @@ private:
 	POINT			m_ptPrevMouse;
 	bool			m_isLButtonDown;
 	float			m_fCameraDistance;
-	D3DXVECTOR2		m_fCamMove;
+	SYNTHESIZE(D3DXVECTOR2, m_fCamMove, CamPos);
 	D3DXVECTOR3		m_vCamRotAngle;
 
 	SYNTHESIZE(bool, ingame, InGame);
+
+	GETTER(D3DXMATRIXA16, matView, View);
+	GETTER(D3DXMATRIXA16, matProj, Proj);
 public:
 
 

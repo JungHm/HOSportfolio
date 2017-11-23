@@ -5,10 +5,10 @@ cCamera::cCamera()
 	: m_vEye(0, 0, 0)
 	, m_vLookAt(0, 0, 0)
 	, m_vUp(0, 1, 0)
-	, m_fCameraDistance(100.0f)
+	, m_fCameraDistance(110.0f)
 	, m_isLButtonDown(false)
 	, m_vCamRotAngle(0, 0, 0)
-	, m_eCamMode(BASE)
+	, m_eCamMode(WORLD)
 	, m_vMove(0, 0, 0)
 {
 	m_ptPrevMouse.x = 0;
@@ -26,7 +26,7 @@ void cCamera::Setup()
 	GetClientRect(g_hWnd, &rc);
 
 	D3DXMATRIXA16 matProj;
-	D3DXMatrixPerspectiveFovLH(&matProj, D3DX_PI / 4.0f, rc.right / (float)rc.bottom, 1.0f, 1000.0f);
+	D3DXMatrixPerspectiveFovLH(&matProj, D3DX_PI / 4.0f, rc.right / (float)rc.bottom, 1.0f, 10000.0f);
 	g_pD3DDevice->SetTransform(D3DTS_PROJECTION, &matProj);
 }
 
@@ -35,14 +35,14 @@ void cCamera::Update()
 	if (KEY->isOnceKeyDown(VK_F1))
 	{
 		m_vLookAt = D3DXVECTOR3(0, 0, 0);
-		m_fCameraDistance = 100.0f;
+		m_fCameraDistance = 110.0f;
 		m_eCamMode = BASE;
 	}
 
 	if (KEY->isOnceKeyDown(VK_F2))
 	{
-		m_vMove = D3DXVECTOR3(0, 0, -15.0f);
-		m_fCameraDistance = 50.0f;
+		m_vCamRotAngle.x = 0;
+		m_vCamRotAngle.y = 0;
 		m_eCamMode = WORLD;
 	}
 
@@ -67,17 +67,21 @@ void cCamera::CameraModeChange()
 		break;
 
 	case WORLD: // 월드 카메라
-		if (KEY->isStayKeyDown('W')) m_vMove.z++;
-		if (KEY->isStayKeyDown('S')) m_vMove.z--;
-		if (KEY->isStayKeyDown('A')) m_vMove.x--;
-		if (KEY->isStayKeyDown('D')) m_vMove.x++;
+		if (KEY->isStayKeyDown('W')) m_vMove.z += 2;
+		if (KEY->isStayKeyDown('S')) m_vMove.z -= 2;
+		if (KEY->isStayKeyDown('A')) m_vMove.x -= 2;
+		if (KEY->isStayKeyDown('D')) m_vMove.x += 2;
 
+		//D3DXMatrixRotationX(&matRX, m_vCamRotAngle.x);
+		//D3DXMatrixRotationY(&matRY, m_vCamRotAngle.y);
 		D3DXMatrixTranslation(&m_matTrans, m_vMove.x, m_vMove.y, m_vMove.z);
+
+		matR = m_matTrans;
 
 		m_vLookAt = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		m_vEye = D3DXVECTOR3(0.0f, m_fCameraDistance, -m_fCameraDistance);
-		D3DXVec3TransformCoord(&m_vLookAt, &m_vLookAt, &m_matTrans);
-		D3DXVec3TransformCoord(&m_vEye, &m_vEye, &m_matTrans);
+		D3DXVec3TransformCoord(&m_vLookAt, &m_vLookAt, &matR);
+		D3DXVec3TransformCoord(&m_vEye, &m_vEye, &matR);
 		break;
 	}
 }
@@ -86,13 +90,13 @@ void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
-	case WM_LBUTTONDOWN:
+	case WM_RBUTTONDOWN:
 		m_ptPrevMouse.x = LOWORD(lParam);
 		m_ptPrevMouse.y = HIWORD(lParam);
 		m_isLButtonDown = true;
 		break;
 
-	case WM_LBUTTONUP:
+	case WM_RBUTTONUP:
 		m_isLButtonDown = false;
 		break;
 
@@ -117,9 +121,12 @@ void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_MOUSEWHEEL:
-		m_fCameraDistance -= (GET_WHEEL_DELTA_WPARAM(wParam) / 30.f);
-		if (m_fCameraDistance < 0.0001f)
-			m_fCameraDistance = 0.0001f;
+		if (!KEY->isStayKeyDown('R'))
+		{
+			m_fCameraDistance -= (GET_WHEEL_DELTA_WPARAM(wParam) / 30.f);
+			if (m_fCameraDistance < 0.0001f)
+				m_fCameraDistance = 0.0001f;
+		}
 		break;
 	}
 }

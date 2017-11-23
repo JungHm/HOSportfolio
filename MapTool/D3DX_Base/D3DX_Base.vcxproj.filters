@@ -43,6 +43,24 @@
     <Filter Include="Picking">
       <UniqueIdentifier>{2d5ff53c-9dfb-41c1-a8ac-f0fe60ca8901}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SaveLoad">
+      <UniqueIdentifier>{eabb5f91-6ba7-43d2-b8e2-8b7c8c43ffa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MapToolUI">
+      <UniqueIdentifier>{07b0f007-2917-4e11-b835-9d32c2433bfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HeightMap">
+      <UniqueIdentifier>{2ffbc344-10f6-4743-8239-14fa2e6ca702}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SkyBox">
+      <UniqueIdentifier>{af992819-1e12-4859-a244-5ec255b61dab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XFileLoader">
+      <UniqueIdentifier>{016c508e-0320-4f76-9561-9567e9dd060c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{6e536393-4181-43c8-8dc7-031c396d5b17}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -168,6 +186,36 @@
     <ClInclude Include="cMapTool.h">
       <Filter>MapTool</Filter>
     </ClInclude>
+    <ClInclude Include="cSaveLoad.h">
+      <Filter>SaveLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="cHeightMap.h">
+      <Filter>HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="cUIObject.h">
+      <Filter>MapToolUI</Filter>
+    </ClInclude>
+    <ClInclude Include="cUIButton.h">
+      <Filter>MapToolUI</Filter>
+    </ClInclude>
+    <ClInclude Include="cUIImageView.h">
+      <Filter>MapToolUI</Filter>
+    </ClInclude>
+    <ClInclude Include="cSkyBox.h">
+      <Filter>SkyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="cAllocateHierarchy.h">
+      <Filter>XFileLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="cXFileManager.h">
+      <Filter>XFileLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="cXLoader.h">
+      <Filter>XFileLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="nUtil.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cCube.cpp">
@@ -280,6 +328,36 @@
     </ClCompile>
     <ClCompile Include="cMapTool.cpp">
       <Filter>MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="cSaveLoad.cpp">
+      <Filter>SaveLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="cHeightMap.cpp">
+      <Filter>HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="cUIButton.cpp">
+      <Filter>MapToolUI</Filter>
+    </ClCompile>
+    <ClCompile Include="cUIObject.cpp">
+      <Filter>MapToolUI</Filter>
+    </ClCompile>
+    <ClCompile Include="cUIImageView.cpp">
+      <Filter>MapToolUI</Filter>
+    </ClCompile>
+    <ClCompile Include="cSkyBox.cpp">
+      <Filter>SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="cAllocateHierarchy.cpp">
+      <Filter>XFileLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="cXFileManager.cpp">
+      <Filter>XFileLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="cXLoader.cpp">
+      <Filter>XFileLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="nUtil.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

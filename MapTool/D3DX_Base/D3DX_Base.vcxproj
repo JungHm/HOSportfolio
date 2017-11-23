@@ -89,6 +89,7 @@
     <ClInclude Include="cActionLinear.h" />
     <ClInclude Include="cActionRepeat.h" />
     <ClInclude Include="cActionSeq.h" />
+    <ClInclude Include="cAllocateHierarchy.h" />
     <ClInclude Include="cAseLoader.h" />
     <ClInclude Include="cAseNode.h" />
     <ClInclude Include="cBody.h" />
@@ -101,6 +102,7 @@
     <ClInclude Include="cGrid.h" />
     <ClInclude Include="cGroup.h" />
     <ClInclude Include="cHead.h" />
+    <ClInclude Include="cHeightMap.h" />
     <ClInclude Include="cInfomation.h" />
     <ClInclude Include="cInterpolation.h" />
     <ClInclude Include="cKeyManager.h" />
@@ -116,10 +118,18 @@
     <ClInclude Include="cPicking.h" />
     <ClInclude Include="cRightArm.h" />
     <ClInclude Include="cRightLeg.h" />
+    <ClInclude Include="cSaveLoad.h" />
+    <ClInclude Include="cSkyBox.h" />
     <ClInclude Include="cTextureManager.h" />
     <ClInclude Include="cTimeManager.h" />
+    <ClInclude Include="cUIButton.h" />
+    <ClInclude Include="cUIImageView.h" />
+    <ClInclude Include="cUIObject.h" />
+    <ClInclude Include="cXFileManager.h" />
+    <ClInclude Include="cXLoader.h" />
     <ClInclude Include="D3DX_Base.h" />
     <ClInclude Include="iMap.h" />
+    <ClInclude Include="nUtil.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -130,6 +140,7 @@
     <ClCompile Include="cActionLinear.cpp" />
     <ClCompile Include="cActionRepeat.cpp" />
     <ClCompile Include="cActionSeq.cpp" />
+    <ClCompile Include="cAllocateHierarchy.cpp" />
     <ClCompile Include="cAseLoader.cpp" />
     <ClCompile Include="cAseNode.cpp" />
     <ClCompile Include="cBody.cpp" />
@@ -142,6 +153,7 @@
     <ClCompile Include="cGrid.cpp" />
     <ClCompile Include="cGroup.cpp" />
     <ClCompile Include="cHead.cpp" />
+    <ClCompile Include="cHeightMap.cpp" />
     <ClCompile Include="cInfomation.cpp" />
     <ClCompile Include="cInterpolation.cpp" />
     <ClCompile Include="cKeyManager.cpp" />
@@ -157,10 +169,18 @@
     <ClCompile Include="cPicking.cpp" />
     <ClCompile Include="cRightArm.cpp" />
     <ClCompile Include="cRightLeg.cpp" />
+    <ClCompile Include="cSaveLoad.cpp" />
+    <ClCompile Include="cSkyBox.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
     <ClCompile Include="cTimeManager.cpp" />
+    <ClCompile Include="cUIButton.cpp" />
+    <ClCompile Include="cUIImageView.cpp" />
+    <ClCompile Include="cUIObject.cpp" />
+    <ClCompile Include="cXFileManager.cpp" />
+    <ClCompile Include="cXLoader.cpp" />
     <ClCompile Include="D3DX_Base.cpp" />
     <ClCompile Include="iMap.cpp" />
+    <ClCompile Include="nUtil.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

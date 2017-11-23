@@ -11,7 +11,7 @@ private:
 	D3DXVECTOR3		m_vUp;
 
 	POINT			m_ptPrevMouse;
-	bool			m_isLButtonDown;
+	SYNTHESIZE(bool, m_isLButtonDown, ButtonDown);
 	float			m_fCameraDistance;
 	D3DXVECTOR3		m_vCamRotAngle;
 	D3DXMATRIXA16 matR, matRX, matRY;

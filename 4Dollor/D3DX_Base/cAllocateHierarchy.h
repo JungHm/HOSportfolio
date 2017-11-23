@@ -4,6 +4,7 @@ using namespace std;
 class cMtlTex;
 struct ST_BONE : public D3DXFRAME
 {
+	MATRIX16_FIX;
 	D3DXMATRIXA16 matWorldTM; //각 Bone의 월드 매트릭스. D3DXFRAME안에는 변환매트릭스(Local?)만 있음.
 };
 
@@ -20,24 +21,26 @@ struct ST_BONE_MESH : public D3DXMESHCONTAINER
 class cAllocateHierarchy : public ID3DXAllocateHierarchy
 {
 public:
+	
 	cAllocateHierarchy();
 	~cAllocateHierarchy();
 
-	STDMETHOD(CreateFrame)(THIS_ LPCSTR Name, LPD3DXFRAME *ppNewFrame) override;
+	STDMETHOD(CreateFrame)(THIS_ LPCSTR Name,
+		LPD3DXFRAME *ppNewFrame) override;
 
-	STDMETHOD(CreateMeshContainer(
-		THIS_ LPCSTR Name,
-		CONST D3DXMESHDATA* pMeshData,
-		CONST D3DXMATERIAL* pMaterials,
-		CONST D3DXEFFECTINSTANCE* pEffectInstance,
+	STDMETHOD(CreateMeshContainer)(THIS_
+		LPCSTR Name,
+		CONST D3DXMESHDATA *pMeshData,
+		CONST D3DXMATERIAL *pMaterials,
+		CONST D3DXEFFECTINSTANCE *pEffectInstances,
 		DWORD NumMaterials,
-		CONST DWORD* pAdjacency,
+		CONST DWORD *pAdjacency,
 		LPD3DXSKININFO pSkinInfo,
-		LPD3DXMESHCONTAINER* ppNewMeshContainer));
+		LPD3DXMESHCONTAINER *ppNewMeshContainer) override;
 
-	STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pFrameToFree);
+	STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pFrameToFree) override;
 
-	STDMETHOD(DestroyMeshContainer)(THIS_ LPD3DXMESHCONTAINER pMeshContainerToFree);
+	STDMETHOD(DestroyMeshContainer)(THIS_ LPD3DXMESHCONTAINER pMeshContainerToFree) override;
 
 };
 

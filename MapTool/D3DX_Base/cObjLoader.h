@@ -15,6 +15,6 @@ public:
 	void LoadMtlLib(char* szFolder, char* szMtlFile);
 	void LoadSurface(OUT std::vector<D3DXVECTOR3>& vecSurface, IN char* szFolder, IN char* szFile, IN D3DXMATRIXA16* pMat = NULL);
 
-	LPD3DXMESH LoadMesh(OUT vector<cMtlTex*>& vecMtlTex, IN char* szFolder, IN char* szFile);
+	LPD3DXMESH LoadMesh(OUT vector<cMtlTex*>& vecMtlTex, IN char* szFolder, IN string szFile);
 };
 

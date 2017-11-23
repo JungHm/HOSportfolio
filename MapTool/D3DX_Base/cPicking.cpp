@@ -18,7 +18,7 @@ cPicking cPicking::CalcVeiwSpace(IN int nMouseX, IN int nMouseY)
 
 	D3DXMATRIXA16 matProj;
 	g_pD3DDevice->GetTransform(D3DTS_PROJECTION, &matProj);
-
+	
 	cPicking ray;
 	ray.m_vDirection.x = ((2.0f * nMouseX) / vp.Width - 1.0f) / matProj._11;
 	ray.m_vDirection.y = ((-2.0f * nMouseY) / vp.Height + 1.0f) / matProj._22;
@@ -56,10 +56,31 @@ bool cPicking::IntersectTri(IN D3DXVECTOR3 v0, IN D3DXVECTOR3 v1, IN D3DXVECTOR3
 	vOut = m_vPosition + (m_vDirection * f);
 
 	vPickingPos.x = vOut.x;
-	vPickingPos.y = vOut.y;
+	vPickingPos.y = 0.1f;
 	vPickingPos.z = vOut.z;
 
 	return b;
+}
+
+bool cPicking::IntersectSphere(ST_SPHERE_NODE * pSphere)
+{
+	cPicking r = (*this);
+
+	D3DXMATRIXA16	matInvWorld;
+	D3DXMatrixIdentity(&matInvWorld);
+	matInvWorld._41 = -pSphere->vCenter.x;
+	matInvWorld._42 = -pSphere->vCenter.y;
+	matInvWorld._43 = -pSphere->vCenter.z;
+
+	D3DXVec3TransformCoord(&r.m_vPosition, &r.m_vPosition, &matInvWorld);
+	D3DXVec3TransformNormal(&r.m_vDirection, &r.m_vDirection, &matInvWorld);
+
+	float vv = D3DXVec3Dot(&r.m_vDirection, &r.m_vDirection);
+	float qv = D3DXVec3Dot(&r.m_vPosition, &r.m_vDirection);
+	float qq = D3DXVec3Dot(&r.m_vPosition, &r.m_vPosition);
+	float rr = 2.5f * 2.5f;
+
+	return qv * qv - vv * (qq - rr) >= 0;
 }
 
 

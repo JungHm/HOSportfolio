@@ -2,64 +2,116 @@
 #include "cMainMenu.h"
 #include "cGrid.h"
 #include "cCamera.h"
-#include "cTessadar.h"
+#include "cObjLoader.h"
+#include "cGroup.h"
+#include "cObjMap.h"
+#include "cUIMainMenu.h"
+#include "cUILoadingClientBegin.h"
+
 
 
 cMainMenu::cMainMenu()
 	: m_pGrid(NULL)
 	, m_pCamera(NULL)
 	, m_pD3DTexture(NULL)
+	, m_pObjLoader(NULL)
+	, m_pObjMap(NULL)
+	, m_UI(NULL)
+
 {
 }
-
 
 cMainMenu::~cMainMenu()
 {
 	SAFE_DELETE(m_pGrid);
+	SAFE_DELETE(m_pObjLoader);
+	SAFE_DELETE(m_pObjMap);
 	SAFE_RELEASE(m_pD3DTexture);
-	XFile->Destroy();
-	//m_pRootNode->Destroy();
+
+
+	if (m_UI)
+	{
+		m_UI->destroy();
+		SAFE_DELETE(m_UI);
+	}
+
+	if (m_UILoading)
+	{
+		m_UILoading->destroy();
+		SAFE_DELETE(m_UILoading);
+	}
+
+
 }
 
 void cMainMenu::SetUp()
 {
 
+	m_UI = new cUIMainMenu;
+	m_UI->setup("cMainMenu");	// ���̺� �� �з�� �̸�� ����ϹǷ� Ŭ���� �̸�� ����
 
-	D3DXVECTOR2 temp;
-	g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
-
-	m_pGrid = new cGrid;
-	m_pGrid->Setup();
-
-	m_pTessadar = new cTessadar;
-	m_pTessadar->SetUp();
+	m_UILoading = new cUILoadingClientBegin;
+	m_UILoading->setup("cUILoadingClientBegin");
 
 }
 
 void cMainMenu::Destroy()
 {
+	if (m_UI)
+	{
+		m_UI->destroy();
+		SAFE_DELETE(m_UI);
+	}
+	if (m_UILoading)
+	{
+		m_UILoading->destroy();
+		SAFE_DELETE(m_UILoading);
+	}
+
 }
 
 void cMainMenu::Update()
 {
-	if (GetAsyncKeyState(VK_LBUTTON) & 0001)
+	if (m_UI && !m_UILoading)
 	{
-		g_Scene->ChangeScene("game");
+		m_UI->update();	// ��ư�� ����Ƿ� update
+		if (m_UI->GetGameStart())
+		{
+			g_Scene->ChangeScene("game");
+			return;
+		}
 	}
-	m_pTessadar->Update();
+	else if (m_UILoading)
+	{
+		m_UILoading->update();
+		if (m_UILoading->GetLoadingEnd())
+		{
+			m_UILoading->destroy();
+			SAFE_DELETE(m_UILoading);
+
+		}
+	}
+
+
 }
 
 void cMainMenu::Render()
 {
-	g_pSprite->BeginScene();
-	g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
-	g_pSprite->End();
 
-	if (m_pGrid)
-		m_pGrid->Render();
 
-	m_pTessadar->Render();
+	if (m_UI && !m_UILoading) m_UI->renderBG();	// ��� ���� ���� ��
+	else if (m_UILoading) m_UILoading->renderBG();
 
+
+	if (m_UI && !m_UILoading) m_UI->render();	// ��� �� UI ��õ� ����
+	else if (m_UILoading) m_UILoading->render();
+
+}
+
+void cMainMenu::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	m_ptMouse.x = LOWORD(lParam);
+	m_ptMouse.y = HIWORD(lParam);
 }
 
 void cMainMenu::SetLight()
@@ -79,37 +131,4 @@ void cMainMenu::SetLight()
 	g_pD3DDevice->LightEnable(0, true);
 
 
-	//D3DLIGHT9 lightPoint;
-	//ZeroMemory(&lightPoint, sizeof(D3DLIGHT9));
-	//lightPoint.Type = D3DLIGHT_POINT;
-	//lightPoint.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightPoint.Diffuse = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
-	//lightPoint.Specular = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightPoint.Position = D3DXVECTOR3(2.0f, 2.0f, 2.0f);
-	//lightPoint.Range = 100.0f;
-	//g_pD3DDevice->SetLight(1, &lightPoint);
-
-	//g_pD3DDevice->LightEnable(1, true);
-
-
-	//D3DLIGHT9 lightSpot;
-	//ZeroMemory(&lightSpot, sizeof(D3DLIGHT9));
-	//lightSpot.Type = D3DLIGHT_SPOT;
-	//lightSpot.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightSpot.Diffuse = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);
-	//lightSpot.Specular = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	//lightSpot.Position = D3DXVECTOR3(0.0f, -50.0f, 0.0f);
-	//lightSpot.Range = 1000.0f;
-	//lightSpot.Phi = 60.0f;
-	//lightSpot.Theta = 25.0f;
-	//lightSpot.Falloff = 1.0f;
-	////lightSpot.Attenuation0
-	////lightSpot.Attenuation1
-
-	//vDir = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	//D3DXVec3Normalize(&vDir, &vDir);
-	//lightSpot.Direction = vDir;
-	//g_pD3DDevice->SetLight(2, &lightSpot);
-
-	//g_pD3DDevice->LightEnable(2, true);
 }
