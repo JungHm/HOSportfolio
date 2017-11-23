@@ -28,6 +28,11 @@ cTessadar::~cTessadar()
 	vecRange.clear();
 	vecHit.clear();
 	vecBarrier.clear();
+	for each(auto p in stormTex)
+	{
+		p->Release();
+		p = NULL;
+	}
 	SAFE_RELEASE(rangeTexture);
 	SAFE_RELEASE(hitTexture);
 	SAFE_RELEASE(BarrierTex);
@@ -202,7 +207,7 @@ void cTessadar::Render(D3DXMATRIXA16& matR, D3DXMATRIXA16& matT)
 		fTime = 0.0f;
 		SkillW = false;
 	}
-	
+
 	//else g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
 	if (SkillE && keepTime > ETime)

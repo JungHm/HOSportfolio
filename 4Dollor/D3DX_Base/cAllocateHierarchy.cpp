@@ -124,6 +124,10 @@ STDMETHODIMP cAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshC
 	SAFE_RELEASE(pBoneMesh->MeshData.pMesh);
 	SAFE_RELEASE(pBoneMesh->pSkinInfo);
 	SAFE_RELEASE(pBoneMesh->pOrigMesh);
+	for (int i = 0; i < pBoneMesh->vecMtlTex.size(); i++)
+	{
+		pBoneMesh->vecMtlTex[i]->GetTexture()->Release();
+	}
 
 
 	SAFE_DELETE_ARRAY(pBoneMesh->pCurrentBoneMatrices);

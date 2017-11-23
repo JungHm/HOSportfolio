@@ -7,8 +7,9 @@ private:
 public:
 	cParticle();
 	~cParticle();
-	void SetupParticle(int num, D3DXCOLOR c);
-	void RenderParticle();
+	void SetupParticle(int size,int rad, D3DXCOLOR c);
+	void RenderParticle(char* TextureName);
 	void UpdateParticle();
+	bool Update();
 };
 

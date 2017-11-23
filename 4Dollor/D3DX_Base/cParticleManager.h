@@ -6,6 +6,14 @@ struct Partice_info
 	cParticle* particle;
 	D3DXVECTOR3 position;
 	bool isOn;
+
+	Partice_info() :
+		isOn(false),
+		position(0, 0, 0),
+		particle(NULL)
+	{
+
+	}
 };
 
 class cParticleManager
@@ -16,12 +24,9 @@ public:
 	cParticleManager();
 	~cParticleManager();
 
-<<<<<<< HEAD
-	void AddParticle();
-=======
-	void AddHitParticle();
-	
-
->>>>>>> 1a2ef2cc514bb9e961f0e1f2d796ac3fe9e47d84
+	void AddHitParticle(D3DXVECTOR3 pos);
+	void Destroy();
+	void Update();
+	void Render(char* TextureName);
 };
 
