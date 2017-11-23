@@ -51,7 +51,7 @@ void cMapTool::SetUpPickingObj()
 	D3DXCreateBox(g_pD3DDevice, 30.0f, 20.0f, 13.0f, &m_sCollisionBox.pMesh, NULL);
 
 	// 노드용 스페어 구조체 초기화
-	ZeroMemory(&m_sNodeSphere, sizeof(ST_SPHERE));
+	ZeroMemory(&m_sNodeSphere, sizeof(ST_SPHERE_NODE));
 	D3DXMatrixIdentity(&m_sNodeSphere.matWrold);
 	m_sNodeSphere.isSelected = false;
 	D3DXCreateSphere(g_pD3DDevice, 2.5f, 15, 15, &m_sNodeSphere.pMesh, NULL);

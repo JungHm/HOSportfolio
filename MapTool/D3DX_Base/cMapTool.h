@@ -24,7 +24,7 @@ private:
 	cInfomation*	m_pInfo;			// 맵툴 정보	클래스
 	OBJECT			m_sObj;				// 현재 마우스로 움직이는 오브젝트 정보
 	ST_BOX			m_sCollisionBox;;	// 충돌용 박스
-	ST_SPHERE		m_sNodeSphere;		// 다익스트라 알고리즘의 노드 지정용 스페어
+	ST_SPHERE_NODE	m_sNodeSphere;		// 다익스트라 알고리즘의 노드 지정용 스페어
 	bool			m_isPicking;		// 피킹 중인 상태
 	SYNTHESIZE(int, m_nIndex, Index);	// 선택중인 오브젝트의 인덱스
 	SYNTHESIZE(int, m_eAllocateState, AllocateState);	// 현재 배치상태
@@ -32,7 +32,6 @@ private:
 	float			m_fStartX, m_fStartZ;
 	float			m_fEndX, m_fEndZ;
 	int				m_nFirstIndex;
-
 
 public:
 	cMapTool();

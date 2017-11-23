@@ -62,7 +62,7 @@ bool cPicking::IntersectTri(IN D3DXVECTOR3 v0, IN D3DXVECTOR3 v1, IN D3DXVECTOR3
 	return b;
 }
 
-bool cPicking::IntersectSphere(ST_SPHERE * pSphere)
+bool cPicking::IntersectSphere(ST_SPHERE_NODE * pSphere)
 {
 	cPicking r = (*this);
 
