@@ -21,6 +21,7 @@ public:
 	cSaveLoad();
 	~cSaveLoad();
 
+	void SetupObj();
 	// 저장 된 파일의 이름 Get
 	string GetFileName(int nIndex) { return m_sFileName[nIndex]; }
 	// 로더 된 매쉬 Get

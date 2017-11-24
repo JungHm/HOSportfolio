@@ -223,6 +223,7 @@ struct ST_UI_SIZE
 #include "cKeyManager.h"
 #include "cMtlTex.h"
 #include "cXFileManager.h"
+#include "cFireEffect.h"
 
 typedef struct tagObject
 {
