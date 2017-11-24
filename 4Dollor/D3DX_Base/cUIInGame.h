@@ -4,6 +4,7 @@
 #define SKILLCOUNT 5
 #define SKILLCOUNTNUM 10
 #define HPMAX 100
+#define FADEINSPEED 10
 
 struct tagHPBar
 {
@@ -28,9 +29,14 @@ private:
 	float m_HPBarSizeY;
 	float m_HPBarHeight;
 
+	tagUISpriteEfx m_Fade;
+
 public:
 	cUIInGame();
 	~cUIInGame();
+
+	void setupFadeAdd(wstring filePath);
+
 
 	// 스킬 언락. q = 1, w = 2 순서
 	void SetSkillUnlock(int SkillIndex, bool unlock);
@@ -52,7 +58,7 @@ public:
 	void updateBar(bool pc, D3DXVECTOR3 pt, int currHp);
 	// 체력바 랜더
 	void renderBar();
-
+	void renderFade();
 	void destroyOther();
 };
 

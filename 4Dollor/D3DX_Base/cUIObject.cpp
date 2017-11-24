@@ -1,12 +1,6 @@
 #include "stdafx.h"
 #include "cUIObject.h"
 
-/*
-현재 가상 함수로 쓰는게 아니라 이거 그대로 메인게임에 쓰는 중. 테스트용
-
-
-*/
-
 cUIObject::cUIObject()
 	: m_UIScale(0.5f)
 	, m_CollisionRectReduce(0.7f)

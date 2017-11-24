@@ -10,9 +10,39 @@ cUIInGame::cUIInGame()
 {
 }
 
-
 cUIInGame::~cUIInGame()
 {
+}
+
+void cUIInGame::setupFadeAdd(wstring filePath)
+{
+	ZeroMemory(&m_Fade, sizeof(tagUISpriteEfx));
+
+	D3DXMatrixIdentity(&m_Fade.matWorld);
+
+	D3DXCreateSprite(g_pD3DDevice, &m_Fade.sprite);
+
+	D3DXCreateTextureFromFileEx(
+		g_pD3DDevice,
+		filePath.c_str(),
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT,
+		0,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_MANAGED,
+		D3DX_FILTER_NONE,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(255, 255, 255),
+		&m_Fade.imgInfo,
+		NULL,
+		&m_Fade.texture);
+
+	SetRect(&m_Fade.drawRc, 0, 0, m_Fade.imgInfo.Width, m_Fade.imgInfo.Height);
+	m_Fade.alpha = 255;
+	m_Fade.scale = 1;
+	m_Fade.pt = { 0, 0, 0 };
+	m_Fade.enable = true;
 }
 
 int cUIInGame::updateButtonOverCallback(int num)
@@ -123,6 +153,7 @@ void cUIInGame::setupOther()
 {
 	setupHpBar(L"UI/ingame_img_bar_hp_bg.png");
 	setupHpBar(L"UI/ingame_img_bar_hp.dds");
+	setupFadeAdd(L"UI/black.png");
 }
 
 void cUIInGame::updateOther()
@@ -133,6 +164,8 @@ void cUIInGame::updateOther()
 void cUIInGame::renderOther()
 {
 	renderBar();
+	if (m_Fade.enable)
+		renderFade();
 }
 
 void cUIInGame::setupHpBar(wstring filePath)
@@ -219,7 +252,6 @@ void cUIInGame::updateBar(bool pc, D3DXVECTOR3 pt, int currHp)
 
 void cUIInGame::renderBar()
 {
-	
 	for (int i = 0; i < m_VHPBar.size(); i++)
 	{
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
@@ -240,10 +272,42 @@ void cUIInGame::renderBar()
 	}
 }
 
+void cUIInGame::renderFade()
+{
+	m_Fade.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+	m_Fade.alpha -= FADEINSPEED;
+	if (m_Fade.alpha <= 0)
+	{
+		m_Fade.alpha = 0;
+		m_Fade.enable = false;
+	}
+
+	D3DXMatrixAffineTransformation2D(&m_Fade.matWorld,
+		m_Fade.scale,
+		NULL,
+		NULL,
+		&D3DXVECTOR2(0, 0));
+
+	m_Fade.sprite->SetTransform(&m_Fade.matWorld);
+	RECT rc;
+	SetRect(&rc, 0, 0, MAX_XPIXEL, MAX_YPIXEL);
+	m_Fade.sprite->Draw(m_Fade.texture,
+		&rc,
+		NULL,
+		NULL,
+		D3DCOLOR_ARGB(m_Fade.alpha, 255, 255, 255));
+
+
+	m_Fade.sprite->End();
+}
+
 void cUIInGame::destroyOther()
 {
 	for (int i = 0; i < m_VHPBar.size(); i++)
 	{
 		m_VHPBar[i].texture->Release();
 	}
+	m_Fade.sprite->Release();
+	m_Fade.texture->Release();
 }

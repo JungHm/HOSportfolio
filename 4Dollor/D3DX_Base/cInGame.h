@@ -1,7 +1,6 @@
 #pragma once
 #include "iScene.h"
 
-class cUILoadingInGame;
 class cUIInGame;
 class cGrid;
 class cCamera;
@@ -16,7 +15,6 @@ class cInGame :
 	public iScene
 {
 private:
-	cUILoadingInGame*	m_UILoading;
 	cUIInGame*			m_UI;
 
   std::vector<ST_PC_VERTEXT>	m_vecVertex;

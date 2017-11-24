@@ -28,9 +28,6 @@ cInGame::~cInGame()
 
 void cInGame::SetUp()
 {
-	m_UILoading = new cUILoadingInGame;
-	m_UILoading->setup("cUILoadingInGame");
-
 	m_UI = new cUIInGame;
 	m_UI->setup("cInGame");
 
@@ -64,11 +61,7 @@ void cInGame::Destroy()
 		m_UI->destroy();
 		SAFE_DELETE(m_UI);
 	}
-	if (m_UILoading)
-	{
-		m_UILoading->destroy();
-		SAFE_DELETE(m_UILoading);
-	}
+	
 	SAFE_DELETE(m_pLoadMap);
 	SAFE_DELETE(m_pHeightMap);
 	SAFE_DELETE(m_pSkyBox);
@@ -140,21 +133,7 @@ void cInGame::Update()
 		}
 	}
 
-
-
-	//if (m_UI && !m_UILoading)
-	//{
-	//	m_UI->update();	// ��ư�� ����Ƿ� update
-	//	if (m_UI->GetGameEnd())
-	//	{
-	//		g_Scene->ChangeScene("menu");
-	//	}
-	//}
-	//else if (m_UILoading)
-	//{
-	//	g_Scene->ChangeScene("menu");
-	//}
-	if (m_UI && !m_UILoading)
+	if (m_UI)
 	{
 		m_UI->update();	// ��ư�� ����Ƿ� update
 		if (m_UI->GetGameEnd())
@@ -163,28 +142,17 @@ void cInGame::Update()
 			return;
 		}
 	}
-	else if (m_UILoading)
-	{
-		m_UILoading->update();
-		if (m_UILoading->GetLoadingEnd())
-		{
-			m_UILoading->destroy();
-			SAFE_DELETE(m_UILoading);
-		}
-	}
 }
 
 void cInGame::Render()
 {
-	if (m_UI && !m_UILoading) m_UI->renderBG();	// ��� ���� ���� ��
-	else if (m_UILoading) m_UILoading->renderBG();
+	if (m_UI) m_UI->renderBG();	// ��� ���� ���� ��
 
 
 
 
 
-	if (m_UI && !m_UILoading) m_UI->render();	// ��� �� UI ��õ� ����
-	else if (m_UILoading) m_UILoading->render();
+	if (m_UI) m_UI->render();	// ��� �� UI ��õ� ����
 
 	//g_pSprite->BeginScene();
 	  //g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);

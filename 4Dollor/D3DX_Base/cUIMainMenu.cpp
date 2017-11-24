@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "cUIMainMenu.h"
+#include "cUILoadingInGame.h"
 
 
 cUIMainMenu::cUIMainMenu()
 	: m_GameStart(false)
+	, m_GameReady(false)
+	, m_InGameLoadingEnable(false)
 {
 }
 
@@ -16,7 +19,12 @@ int cUIMainMenu::updateButtonCallback(int num)
 {
 	if (num == UIBUTTONCALLBACK_MAIN_READY)
 	{
-		m_GameStart = true;
+		// 준비 버튼 눌렸을 때 처리
+		m_GameReady = true;
+		m_MUIButton.find("ready")->second.used = true;
+		m_MUIButton.find("ready")->second.buttonState = UIBUTTONSTATE_DISENABLE;
+		m_GameReadyTime = GetTickCount() / 1000;
+		m_GameReadyEfx.find(m_GameReadyEfxPath[2])->second.enable = true;
 	}
 	else if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_ABILITY)
 	{
@@ -124,6 +132,18 @@ void cUIMainMenu::setupOther()
 	setupTextInput("기술", ptAbility, rcSizeAbility);
 	setupTextInput("특성", ptTalent, rcSizeTalent);
 	setupTextInput("준비", ptReady, rcSizeReady);
+
+	m_GameReadyEfxPath[0] = L"UI\\mainmenu_img_gamestart_1.dds";
+	m_GameReadyEfxPath[1] = L"UI\\mainmenu_img_gamestart_2.dds";
+	m_GameReadyEfxPath[2] = L"UI\\mainmenu_img_gamestart_3.dds";
+
+	setupAddTexture(m_GameReadyEfxPath[0]);
+	setupAddTexture(m_GameReadyEfxPath[1]);
+	setupAddTexture(m_GameReadyEfxPath[2]);
+	setupAddFadeImg(L"UI\\black.png");
+
+	m_InGameLoading = new cUILoadingInGame;
+	m_InGameLoading->setup("cUILoadingInGame");
 }
 
 void cUIMainMenu::setupTextInput(string strName, POINT pt, POINT rcPt)
@@ -136,9 +156,134 @@ void cUIMainMenu::setupTextInput(string strName, POINT pt, POINT rcPt)
 	m_VText.push_back(tv);
 }
 
+void cUIMainMenu::setupAddTexture(wstring filePath)
+{
+	tagUISpriteEfx se;
+	ZeroMemory(&se, sizeof(tagUISpriteEfx));
+	m_GameReadyEfx.insert(make_pair(filePath, se));
+	tagUISpriteEfx *pse = &m_GameReadyEfx.find(filePath)->second;
+
+	D3DXMatrixIdentity(&se.matWorld);
+
+	D3DXCreateSprite(g_pD3DDevice, &pse->sprite);
+
+	D3DXCreateTextureFromFileEx(
+		g_pD3DDevice,
+		filePath.c_str(),
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT,
+		0,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_MANAGED,
+		D3DX_FILTER_NONE,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(255, 255, 255),
+		&pse->imgInfo,
+		NULL,
+		&pse->texture);
+
+	SetRect(&pse->drawRc, 0, 0, pse->imgInfo.Width, pse->imgInfo.Height);
+	pse->alpha = 5;
+	pse->scale = 2.0f;
+	pse->pt = { 750, 250,0 };
+}
+
+void cUIMainMenu::setupAddFadeImg(wstring filePath)
+{
+	m_Fade;
+
+	ZeroMemory(&m_Fade, sizeof(tagUISpriteEfx));
+
+	D3DXMatrixIdentity(&m_Fade.matWorld);
+
+	D3DXCreateSprite(g_pD3DDevice, &m_Fade.sprite);
+
+	D3DXCreateTextureFromFileEx(
+		g_pD3DDevice,
+		filePath.c_str(),
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT,
+		0,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_MANAGED,
+		D3DX_FILTER_NONE,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(255, 255, 255),
+		&m_Fade.imgInfo,
+		NULL,
+		&m_Fade.texture);
+
+	SetRect(&m_Fade.drawRc, 0, 0, m_Fade.imgInfo.Width, m_Fade.imgInfo.Height);
+	m_Fade.alpha = 5;
+	m_Fade.scale = 1;
+	m_Fade.pt = { 0, 0,0 };
+}
+
 void cUIMainMenu::updateOther()
 {
+	updateGameReady();
+}
 
+void cUIMainMenu::updateGameReady()
+{
+	if (m_GameReady)
+	{
+		for (m_GameReadyEfxIt = m_GameReadyEfx.begin(); m_GameReadyEfxIt != m_GameReadyEfx.end(); m_GameReadyEfxIt++)
+		{
+			if (!m_GameReadyEfxIt->second.enable) continue;
+			D3DXMatrixIdentity(&m_GameReadyEfxIt->second.matWorld);
+			D3DXMATRIXA16 matT, matS;
+			D3DXMatrixIdentity(&matT);
+			D3DXMatrixIdentity(&matS);
+			if (!m_GameReadyEfxIt->second.reverse)
+			{
+				if (m_GameReadyEfxIt->second.scale > 0.7f)
+					m_GameReadyEfxIt->second.scale -= 0.07f;
+				if (m_GameReadyEfxIt->second.alpha < 255)
+					m_GameReadyEfxIt->second.alpha += 10;
+				if (m_GameReadyEfxIt->second.alpha > 255)
+					m_GameReadyEfxIt->second.alpha = 255;
+				if (m_GameReadyEfxIt->second.scale <= 0.7f && m_GameReadyEfxIt->second.alpha == 255)
+				{
+					m_GameReadyEfxIt->second.reverse = true;
+				}
+			}
+			else
+			{
+				if (m_GameReadyEfxIt->second.scale < 0)
+					m_GameReadyEfxIt->second.scale = 0;
+				else
+					m_GameReadyEfxIt->second.scale -= 0.001f;
+				if (m_GameReadyEfxIt->second.alpha != 0)
+				{
+					m_GameReadyEfxIt->second.alpha -= 7;
+					if (m_GameReadyEfxIt->second.alpha <= 0)
+					{
+						m_GameReadyEfxIt->second.alpha = 0;
+					}
+				}
+			}
+
+			D3DXMatrixScaling(&matS, m_GameReadyEfxIt->second.scale, m_GameReadyEfxIt->second.scale, m_GameReadyEfxIt->second.scale);
+			D3DXMatrixTranslation(&matT, m_GameReadyEfxIt->second.pt.x, m_GameReadyEfxIt->second.pt.y, m_GameReadyEfxIt->second.pt.z);
+			m_GameReadyEfxIt->second.matWorld = matS * matT;
+		}
+	}
+
+	if (m_GameReadyEfx.find(m_GameReadyEfxPath[2])->second.alpha == 0)
+	{
+		m_GameReadyEfx.find(m_GameReadyEfxPath[1])->second.enable = true;
+	}
+	if (m_GameReadyEfx.find(m_GameReadyEfxPath[1])->second.alpha == 0)
+	{
+		m_GameReadyEfx.find(m_GameReadyEfxPath[0])->second.enable = true;
+	}
+	if (m_GameReadyEfx.find(m_GameReadyEfxPath[0])->second.alpha == 0)
+	{
+		m_Fade.enable = true;
+	}
 }
 
 void cUIMainMenu::renderOther()
@@ -149,8 +294,96 @@ void cUIMainMenu::renderOther()
 		LPD3DXFONT font = g_pFontManager->GetFont(cFontManager::FT_SMALL);
 		font->DrawTextA(NULL, p.str.c_str(), p.str.length(), &p.rcText, DT_CENTER | DT_VCENTER, D3DCOLOR_ARGB(p.alpha, 255, 255, 255));
 	}
+	renderGameReady();
+	if (m_Fade.enable) renderFade();
+	if (m_InGameLoadingEnable) renderIngameLoading();
+}
+
+void cUIMainMenu::renderGameReady()
+{
+	if (KEY->isOnceKeyDown('A'))
+	{
+		for (m_GameReadyEfxIt = m_GameReadyEfx.begin(); m_GameReadyEfxIt != m_GameReadyEfx.end(); m_GameReadyEfxIt++)
+		{
+			m_GameReadyEfxIt->second.reverse = false;
+			m_GameReadyEfxIt->second.alpha = 0;
+			m_GameReadyEfxIt->second.scale = 2;
+		}
+	}
+	if (m_GameReady)
+	{
+		for (m_GameReadyEfxIt = m_GameReadyEfx.begin(); m_GameReadyEfxIt != m_GameReadyEfx.end(); m_GameReadyEfxIt++)
+		{
+			if (!m_GameReadyEfxIt->second.enable) continue;
+
+			m_GameReadyEfxIt->second.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+			D3DXMatrixAffineTransformation2D(&m_GameReadyEfxIt->second.matWorld,
+				m_GameReadyEfxIt->second.scale,
+				NULL,
+				NULL,
+				&D3DXVECTOR2(m_GameReadyEfxIt->second.pt.x / 2, m_GameReadyEfxIt->second.pt.y / 2));
+
+			m_GameReadyEfxIt->second.sprite->SetTransform(&m_GameReadyEfxIt->second.matWorld);
+
+			m_GameReadyEfxIt->second.sprite->Draw(m_GameReadyEfxIt->second.texture,
+				&m_GameReadyEfxIt->second.drawRc,
+				NULL,
+				NULL,
+				D3DCOLOR_ARGB(m_GameReadyEfxIt->second.alpha, 255, 255, 255));
+
+			m_GameReadyEfxIt->second.sprite->End();
+		}
+	}
+}
+
+void cUIMainMenu::renderFade()
+{
+	m_Fade.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+	m_Fade.alpha += FADEINSPEED;
+	if (m_Fade.alpha >= 255)
+	{
+		m_Fade.alpha = 255;
+		m_InGameLoadingEnable = true;	// 씬 전환 체크용
+	}
+
+	D3DXMatrixAffineTransformation2D(&m_Fade.matWorld,
+		m_Fade.scale,
+		NULL,
+		NULL,
+		&D3DXVECTOR2(0, 0));
+
+	m_Fade.sprite->SetTransform(&m_Fade.matWorld);
+	RECT rc;
+	SetRect(&rc, 0, 0, MAX_XPIXEL, MAX_YPIXEL);
+	m_Fade.sprite->Draw(m_Fade.texture,
+		&rc,
+		NULL,
+		NULL,
+		D3DCOLOR_ARGB(m_Fade.alpha, 255, 255, 255));
+
+
+	m_Fade.sprite->End();
+}
+
+void cUIMainMenu::renderIngameLoading()
+{
+	m_InGameLoading->renderBG();
+	m_InGameLoading->render();
+	m_GameStart = true;
 }
 
 void cUIMainMenu::destroyOther()
 {
+	for (m_GameReadyEfxIt = m_GameReadyEfx.begin(); m_GameReadyEfxIt != m_GameReadyEfx.end(); m_GameReadyEfxIt++)
+	{
+		m_GameReadyEfxIt->second.texture->Release();
+		m_GameReadyEfxIt->second.sprite->Release();
+	}
+	m_InGameLoading->destroy();
+	SAFE_DELETE(m_InGameLoading);
+	m_Fade.sprite->Release();
+	m_Fade.texture->Release();
+	g_pFontManager->Destroy();	// 안해주면 할당해제 안되었다고 오류남
 }
