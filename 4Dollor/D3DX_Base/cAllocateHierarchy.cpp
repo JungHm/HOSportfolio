@@ -41,7 +41,7 @@ STDMETHODIMP cAllocateHierarchy::CreateMeshContainer(LPCSTR Name, CONST D3DXMESH
 
 	//THIS_ LPCSTR Name,
 	pBoneMesh->Name = new char[strlen(Name) + 1];
-
+	
 	//CONST D3DXMATERIAL *pMaterials,	//¹è¿­
 	//DWORD NumMaterials,
 	if (pMaterials)
@@ -93,6 +93,26 @@ STDMETHODIMP cAllocateHierarchy::CreateMeshContainer(LPCSTR Name, CONST D3DXMESH
 	{
 		pSkinInfo->Clone(&pBoneMesh->pSkinInfo);
 	}
+
+	// OBB
+	if (pMeshData && pMeshData->pMesh)
+	{
+		D3DXVECTOR3	vMin(0, 0, 0), vMax(0, 0, 0);
+
+		LPVOID pV = NULL;
+		pMeshData->pMesh->LockVertexBuffer(0, &pV);
+
+		D3DXComputeBoundingBox((D3DXVECTOR3*)pV,
+			pMeshData->pMesh->GetNumVertices(),
+			D3DXGetFVFVertexSize(pMeshData->pMesh->GetFVF()),
+			&vMin, &vMax);
+
+		D3DXVec3Minimize(&m_vMin, &m_vMin, &vMin);
+		D3DXVec3Maximize(&m_vMax, &m_vMax, &vMax);
+
+		pMeshData->pMesh->UnlockVertexBuffer();
+	}
+
 	DWORD nNumBones = pSkinInfo->GetNumBones();
 
 	pBoneMesh->pBoneOffsetMatrices = new D3DXMATRIXA16[nNumBones];
