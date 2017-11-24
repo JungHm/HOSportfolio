@@ -36,6 +36,7 @@ struct tagUISpriteEfx	// 주로 연출용
 	bool reverse;
 	int second;
 	bool enable;
+	float rotate;
 };
 
 struct tagUISprite

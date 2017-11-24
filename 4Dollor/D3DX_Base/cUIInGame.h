@@ -6,6 +6,8 @@
 #define HPMAX 100
 #define FADEINSPEED 10
 #define SKILLUNLOCKEFXREPEATCOUNT 10
+#define DEADSIDE 2
+#define VICTORYRESOURCE 3
 
 struct tagHPBar
 {
@@ -23,7 +25,7 @@ class cUIInGame : public cUIObject
 private:
 	// 현재 버튼 클릭으로 씬 넘길 때 사용함.
 	SYNTHESIZE(bool, m_GameEnd, GameEnd);
-
+	bool m_IsVictory;
 	vector<tagHPBar> m_VHPBar;
 	// 미니언은 map으로 만들고 첫번째 인자에 걔들 클래스? 주소값을 넣자
 	float m_HPBarSizeX;
@@ -31,7 +33,10 @@ private:
 	float m_HPBarHeight;
 
 	tagUISpriteEfx m_Fade;
+	tagUISpriteEfx m_Dead;
+	tagUISpriteEfx m_DeadSide[DEADSIDE];
 	tagUISpriteEfx m_SkillUnlockEfx;
+	tagUISpriteEfx m_VictoryEfx[VICTORYRESOURCE];
 	int m_SkillUnlockEfxAlphaCount;	// 알파값 왔다갔다 반복 몇번
 	int m_LvUpCount;
 	vector<tagUISpriteButton*> m_SkillUnlock;
@@ -40,10 +45,21 @@ public:
 	cUIInGame();
 	~cUIInGame();
 
+	void setupDeadAdd();
+	void SetDead(bool deadEnable);
+	void rednerDead();
+
+	void setupDeadSideAdd(bool left);
+	void renderDeadSide();
+
 	void setupFadeAdd(wstring filePath);
 	void setupSkillLockList();
 	void setupSkillUnlockEfx(wstring filePath);
 
+	// 승리 시
+	void setupVictoryAdd(wstring filePath, int index, float scale);
+	void SetVictory();	// 승리 외 UI는 모두 숨기기 위함
+	void renderVictory();
 
 	// 스킬 언락. q = 1, w = 2 순서
 	void SetSkillUnlock(int SkillIndex, bool unlock);

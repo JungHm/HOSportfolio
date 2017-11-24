@@ -276,7 +276,6 @@ void cUIMainMenu::renderOther()
 {
 	for each(auto p in m_VText)
 	{
-		// 동적할당 해제 안되었다는 오류남
 		LPD3DXFONT font = g_pFontManager->GetFont(cFontManager::FT_SMALL);
 		font->DrawTextA(NULL, p.str.c_str(), p.str.length(), &p.rcText, DT_CENTER | DT_VCENTER, D3DCOLOR_ARGB(p.alpha, 255, 255, 255));
 	}
@@ -371,5 +370,4 @@ void cUIMainMenu::destroyOther()
 	SAFE_DELETE(m_InGameLoading);
 	m_Fade.sprite->Release();
 	m_Fade.texture->Release();
-	g_pFontManager->Destroy();	// 안해주면 할당해제 안되었다고 오류남
 }

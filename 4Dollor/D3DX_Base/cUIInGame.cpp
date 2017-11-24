@@ -9,11 +9,150 @@ cUIInGame::cUIInGame()
 	, m_HPBarHeight(18)
 	, m_LvUpCount(0)
 	, m_SkillUnlockEfxAlphaCount(0)
+	, m_IsVictory(false)
 {
 }
 
 cUIInGame::~cUIInGame()
 {
+}
+
+void cUIInGame::setupDeadAdd()
+{
+	wstring filePath = L"UI/ingame_img_deadbg.png";
+	ZeroMemory(&m_Dead, sizeof(tagUISpriteEfx));
+
+	D3DXMatrixIdentity(&m_Dead.matWorld);
+
+	D3DXCreateSprite(g_pD3DDevice, &m_Dead.sprite);
+
+	D3DXCreateTextureFromFileEx(
+		g_pD3DDevice,
+		filePath.c_str(),
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT,
+		0,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_MANAGED,
+		D3DX_FILTER_NONE,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(255, 255, 255),
+		&m_Dead.imgInfo,
+		NULL,
+		&m_Dead.texture);
+
+	SetRect(&m_Dead.drawRc, 0, 0, m_Dead.imgInfo.Width, m_Dead.imgInfo.Height);
+	m_Dead.alpha = 0;
+	m_Dead.scale = m_UIScale * 1.2f;
+	m_Dead.pt = { 0, 0, 0 };
+	m_Dead.enable = false;
+}
+
+void cUIInGame::SetDead(bool deadEnable)
+{
+	// enable = true면 죽음. false면 부활.
+	m_Dead.enable = deadEnable;
+}
+
+void cUIInGame::rednerDead()
+{
+	if (m_Dead.enable)
+	{
+		m_Dead.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+		D3DXMatrixAffineTransformation2D(&m_Dead.matWorld,
+			m_Dead.scale,
+			NULL,
+			NULL,
+			&D3DXVECTOR2(0, 0));
+
+		m_Dead.sprite->SetTransform(&m_Dead.matWorld);
+		RECT rc;
+		SetRect(&rc, 0, 0, m_Dead.imgInfo.Width, m_Dead.imgInfo.Height);
+		m_Dead.sprite->Draw(m_Dead.texture,
+			&rc,
+			NULL,
+			NULL,
+			D3DCOLOR_ARGB(m_Dead.alpha, 255, 255, 255));
+
+		m_Dead.sprite->End();
+	}
+}
+
+void cUIInGame::setupDeadSideAdd(bool left)
+{
+	int l = 0;
+	wstring filePath = L"UI/ingame_img_dead_right.png";
+	if (left)
+	{
+		filePath = L"UI/ingame_img_dead_left.png";
+		l = 1;
+	}
+	ZeroMemory(&m_DeadSide[l], sizeof(tagUISpriteEfx));
+
+	D3DXMatrixIdentity(&m_DeadSide[l].matWorld);
+
+	D3DXCreateSprite(g_pD3DDevice, &m_DeadSide[l].sprite);
+
+	D3DXCreateTextureFromFileEx(
+		g_pD3DDevice,
+		filePath.c_str(),
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT,
+		0,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_MANAGED,
+		D3DX_FILTER_NONE,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(255, 255, 255),
+		&m_DeadSide[l].imgInfo,
+		NULL,
+		&m_DeadSide[l].texture);
+
+	SetRect(&m_DeadSide[l].drawRc, 0, 0, m_DeadSide[l].imgInfo.Width, m_DeadSide[l].imgInfo.Height);
+	m_DeadSide[l].alpha = 255;
+	m_DeadSide[l].scale = m_UIScale;
+	m_DeadSide[l].enable = true;
+
+	if (left)
+	{
+		m_DeadSide[l].pt = { 0, 0, 0 };
+	}
+	else
+	{
+		m_DeadSide[l].pt = { float(MAX_XPIXEL - m_DeadSide[l].imgInfo.Width), 0, 0 };
+	}
+	
+}
+
+void cUIInGame::renderDeadSide()
+{
+	if (m_Dead.enable)
+	{
+		for (int i = 0; i < DEADSIDE; i++)
+		{
+			m_DeadSide[i].sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+			D3DXMatrixAffineTransformation2D(&m_DeadSide[i].matWorld,
+				m_DeadSide[i].scale,
+				NULL,
+				NULL,
+				&D3DXVECTOR2(0, 0));
+
+			m_DeadSide[i].sprite->SetTransform(&m_DeadSide[i].matWorld);
+			RECT rc;
+			SetRect(&rc, 0, 0, m_DeadSide[i].imgInfo.Width, m_DeadSide[i].imgInfo.Height);
+			m_DeadSide[i].sprite->Draw(m_DeadSide[i].texture,
+				&rc,
+				NULL,
+				&m_DeadSide[i].pt,
+				D3DCOLOR_ARGB(m_DeadSide[i].alpha, 255, 255, 255));
+
+			m_DeadSide[i].sprite->End();
+		}
+	}
 }
 
 void cUIInGame::setupFadeAdd(wstring filePath)
@@ -40,7 +179,7 @@ void cUIInGame::setupFadeAdd(wstring filePath)
 		NULL,
 		&m_Fade.texture);
 
-	SetRect(&m_Fade.drawRc, 0, 0, m_Fade.imgInfo.Width, m_Fade.imgInfo.Height);
+	SetRect(&m_Fade.drawRc, 0, 0, 0, 0);
 	m_Fade.alpha = 255;
 	m_Fade.scale = 1;
 	m_Fade.pt = { 0, 0, 0 };
@@ -88,6 +227,101 @@ void cUIInGame::setupSkillUnlockEfx(wstring filePath)
 	m_SkillUnlockEfx.pt = m_MUIButton.find("abil1")->second.pt * 2;
 	m_SkillUnlockEfx.matWorld = m_MUIButton.find("abil1")->second.matWorld;
 	m_SkillUnlockEfx.enable = false;
+}
+
+void cUIInGame::setupVictoryAdd(wstring filePath, int index, float scale)
+{
+	ZeroMemory(&m_VictoryEfx[index], sizeof(tagUISpriteEfx));
+
+	D3DXMatrixIdentity(&m_VictoryEfx[index].matWorld);
+
+	D3DXCreateSprite(g_pD3DDevice, &m_VictoryEfx[index].sprite);
+
+	D3DXCreateTextureFromFileEx(
+		g_pD3DDevice,
+		filePath.c_str(),
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT,
+		0,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_MANAGED,
+		D3DX_FILTER_NONE,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(255, 255, 255),
+		&m_VictoryEfx[index].imgInfo,
+		NULL,
+		&m_VictoryEfx[index].texture);
+
+	SetRect(&m_VictoryEfx[index].drawRc, 0, 0, m_VictoryEfx[index].imgInfo.Width, m_VictoryEfx[index].imgInfo.Height);
+	m_VictoryEfx[index].alpha = 255;
+	m_VictoryEfx[index].scale = scale;
+	m_VictoryEfx[index].pt = { 0,0,0 };
+	m_VictoryEfx[index].enable = true;
+}
+
+void cUIInGame::SetVictory()
+{
+	m_IsVictory = true;
+}
+
+void cUIInGame::renderVictory()
+{
+	if (m_IsVictory)
+	{
+		for (int i = 0; i < VICTORYRESOURCE; i++)
+		{
+			if (!m_VictoryEfx[i].enable) continue;
+			m_VictoryEfx[i].sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+			D3DXMatrixAffineTransformation2D(&m_VictoryEfx[i].matWorld,
+				m_VictoryEfx[i].scale,
+				NULL,
+				m_VictoryEfx[i].rotate,
+				&D3DXVECTOR2(0, 0));
+
+			m_VictoryEfx[i].sprite->SetTransform(&m_VictoryEfx[i].matWorld);
+			RECT rc;
+			SetRect(&rc, 0, 0, m_VictoryEfx[i].imgInfo.Width, m_VictoryEfx[i].imgInfo.Height);
+
+			if (i == 0)
+			{
+				if (m_VictoryEfx[i].alpha > 0)
+				{
+					m_VictoryEfx[i].alpha -= 10;
+					if (m_VictoryEfx[i].alpha <= 0)
+					{
+						m_VictoryEfx[i].alpha = 0;
+						m_VictoryEfx[i].enable = false;
+					}
+				}
+			}
+			if (i == 1)
+			{
+				m_VictoryEfx[i].rotate += 0.01;
+				m_VictoryEfx[i].sprite->Draw(m_VictoryEfx[i].texture,
+					&rc,
+					&D3DXVECTOR3(m_VictoryEfx[i].imgInfo.Width / 2, m_VictoryEfx[i].imgInfo.Height / 2, 0),
+					&m_VictoryEfx[i].pt,
+					D3DCOLOR_ARGB(m_VictoryEfx[i].alpha, 255, 255, 255));
+			}
+			else
+			{
+				m_VictoryEfx[i].sprite->Draw(m_VictoryEfx[i].texture,
+					&rc,
+					NULL,
+					&m_VictoryEfx[i].pt,
+					D3DCOLOR_ARGB(m_VictoryEfx[i].alpha, 255, 255, 255));
+			}
+			//m_VictoryEfx[i].sprite->Draw(m_VictoryEfx[i].texture,
+			//	&rc,
+			//	NULL,
+			//	&m_VictoryEfx[i].pt,
+			//	D3DCOLOR_ARGB(m_VictoryEfx[i].alpha, 255, 255, 255));
+
+			m_VictoryEfx[i].sprite->End();
+		}
+	}
 }
 
 int cUIInGame::updateButtonOverCallback(int num)
@@ -310,11 +544,21 @@ void cUIInGame::setupOther()
 	setupFadeAdd(L"UI/black.png");
 	setupSkillLockList();
 	setupSkillUnlockEfx(L"UI/ingame_img_unlock_efx.png");
+	setupDeadAdd();
+	setupDeadSideAdd(true);
+	setupDeadSideAdd(false);
+	setupVictoryAdd(L"UI/ingame_img_victory_bg.png",	0,	0.6f);
+	setupVictoryAdd(L"UI/ingame_img_victory_cycle.png",	1,	0.7f);
+	setupVictoryAdd(L"UI/ingame_img_victory_text.png",	2,	0.7f);
 }
 
 void cUIInGame::updateOther()
 {
 	if (KEY->isOnceKeyDown('0')) SetLevelUp();
+	if (KEY->isOnceKeyDown('8')) SetDead(true);
+	if (KEY->isOnceKeyDown('9')) SetDead(false);
+	if (KEY->isOnceKeyDown('7')) SetVictory();
+	if (KEY->isOnceKeyDown(VK_LBUTTON) && m_IsVictory) m_GameEnd = true;
 	skillChooseList();
 	updateSkillUnlockEfx();
 }
@@ -322,10 +566,12 @@ void cUIInGame::updateOther()
 void cUIInGame::renderOther()
 {
 	renderBar();
-	if (m_Fade.enable)
-		renderFade();
+	renderFade();
 	renderAbilityAddGuide();
 	renderSkillUnlockEfx();
+	rednerDead();
+	renderDeadSide();
+	renderVictory();
 }
 
 void cUIInGame::setupHpBar(wstring filePath)
@@ -434,32 +680,35 @@ void cUIInGame::renderBar()
 
 void cUIInGame::renderFade()
 {
-	m_Fade.sprite->Begin(D3DXSPRITE_ALPHABLEND);
-
-	m_Fade.alpha -= FADEINSPEED;
-	if (m_Fade.alpha <= 0)
+	if (m_Fade.enable)
 	{
-		m_Fade.alpha = 0;
-		m_Fade.enable = false;
+		m_Fade.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+		m_Fade.alpha -= FADEINSPEED;
+		if (m_Fade.alpha <= 0)
+		{
+			m_Fade.alpha = 0;
+			m_Fade.enable = false;
+		}
+
+		D3DXMatrixAffineTransformation2D(&m_Fade.matWorld,
+			m_Fade.scale,
+			NULL,
+			NULL,
+			&D3DXVECTOR2(0, 0));
+
+		m_Fade.sprite->SetTransform(&m_Fade.matWorld);
+		RECT rc;
+		SetRect(&rc, 0, 0, MAX_XPIXEL, MAX_YPIXEL);
+		m_Fade.sprite->Draw(m_Fade.texture,
+			&rc,
+			NULL,
+			NULL,
+			D3DCOLOR_ARGB(m_Fade.alpha, 255, 255, 255));
+
+
+		m_Fade.sprite->End();
 	}
-
-	D3DXMatrixAffineTransformation2D(&m_Fade.matWorld,
-		m_Fade.scale,
-		NULL,
-		NULL,
-		&D3DXVECTOR2(0, 0));
-
-	m_Fade.sprite->SetTransform(&m_Fade.matWorld);
-	RECT rc;
-	SetRect(&rc, 0, 0, MAX_XPIXEL, MAX_YPIXEL);
-	m_Fade.sprite->Draw(m_Fade.texture,
-		&rc,
-		NULL,
-		NULL,
-		D3DCOLOR_ARGB(m_Fade.alpha, 255, 255, 255));
-
-
-	m_Fade.sprite->End();
 }
 
 void cUIInGame::renderAbilityAddGuide()
@@ -525,4 +774,19 @@ void cUIInGame::destroyOther()
 	}
 	m_Fade.sprite->Release();
 	m_Fade.texture->Release();
+	m_Dead.sprite->Release();
+	m_Dead.texture->Release();
+	m_SkillUnlockEfx.sprite->Release();
+	m_SkillUnlockEfx.texture->Release();
+	
+	for (int i = 0; i < DEADSIDE; i++)
+	{
+		m_DeadSide[i].sprite->Release();
+		m_DeadSide[i].texture->Release();
+	}
+	for (int i = 0; i < VICTORYRESOURCE; i++)
+	{
+		m_VictoryEfx[i].sprite->Release();
+		m_VictoryEfx[i].texture->Release();
+	}
 }
