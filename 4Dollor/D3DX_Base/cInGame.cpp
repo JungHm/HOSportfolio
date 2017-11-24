@@ -28,6 +28,8 @@ cInGame::~cInGame()
 
 void cInGame::SetUp()
 {
+	g_Particle->Setup();
+
 	m_UILoading = new cUILoadingInGame;
 	m_UILoading->setup("cUILoadingInGame");
 
@@ -55,6 +57,7 @@ void cInGame::SetUp()
 
 void cInGame::Destroy()
 {
+	g_Particle->Destroy();
 	if (m_UI)
 	{
 		m_UI->destroy();

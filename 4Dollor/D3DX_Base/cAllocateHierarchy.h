@@ -21,7 +21,10 @@ struct ST_BONE_MESH : public D3DXMESHCONTAINER
 class cAllocateHierarchy : public ID3DXAllocateHierarchy
 {
 public:
-	
+	// OBB
+	SYNTHESIZE(D3DXVECTOR3, m_vMin, Min);
+	SYNTHESIZE(D3DXVECTOR3, m_vMax, Max);
+	//Func
 	cAllocateHierarchy();
 	~cAllocateHierarchy();
 

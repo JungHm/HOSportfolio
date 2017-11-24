@@ -27,7 +27,9 @@ public:
 	MATRIX16_FIX;
 	cXLoader();
 	~cXLoader();
-
+	// OBB
+	SYNTHESIZE(D3DXVECTOR3, m_vMin, Min);
+	SYNTHESIZE(D3DXVECTOR3, m_vMax, Max);
 	//xfile 로드 하는겁니다
 	void XfileLoad(IN wstring m_sPath);
 	void Update();

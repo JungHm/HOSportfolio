@@ -2,11 +2,6 @@
 
 class cCharacter;
 
-struct P_INFO
-{
-
-	//float CtQ, CtW, CtE;
-};
 
 class cPlayer
 {

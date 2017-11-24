@@ -1,10 +1,12 @@
 #pragma once
 
 class cObjLoader;
+class cFrustum;
 
 class cSaveLoad
 {
 private:
+	cFrustum*					m_pFrustum;					// 절두체 컬링용
 	cObjLoader*					m_pObjLoader;				// 오브젝트 로더 클래스
 	LPD3DXMESH					m_pObjMesh[OBJNUM];			// 로드한 매쉬를 종류별로 선택지정 
 	string						m_sFileName[OBJNUM];		// 파일 이름
