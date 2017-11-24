@@ -32,6 +32,8 @@ void cXLoader::XfileLoad(IN wstring m_sPath)
 		&m_pAnimControl);
 	D3DXMATRIX matW;
 	D3DXMatrixIdentity(&matW);
+	m_vMax = m_pAlloc.GetMax();
+	m_vMin = m_pAlloc.GetMin();
 
 	D3DXMatrixTranslation(&matW, 0, 0, 0);
 
@@ -66,7 +68,7 @@ void cXLoader::Render(D3DXMATRIXA16& matRT)
 	g_pD3DDevice->LightEnable(0, true);
 	ST_BONE* pBone = (ST_BONE*)m_pFrameRoot;
 
-	
+
 	RecursiveFrameRender(pBone, &pBone->matWorldTM, matRT);
 	g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
@@ -187,7 +189,7 @@ void cXLoader::RecursiveFrameRender(D3DXFRAME * pParent, D3DXMATRIXA16 * pParent
 		//g_pD3DDevice->SetTexture(0, pFrame->pMeshContainer->pMaterials);
 		for (size_t i = 0; i < pBoneMesh->numSubset; ++i)
 		{
-			
+
 			g_pD3DDevice->SetTexture(0, pBoneMesh->vecMtlTex[i]->GetTexture());
 			g_pD3DDevice->SetMaterial(&pBoneMesh->vecMtlTex[i]->GetMaterial());
 			pBoneMesh->MeshData.pMesh->DrawSubset(i);

@@ -27,6 +27,10 @@ public:
 	}
 	LPD3DXANIMATIONCONTROLLER GetAniCtrl(int key) { return m_pXFile[key]->getAnimCtrl(); }
 
+	// OBB
+	D3DXVECTOR3 GetMin(int key) { return m_pXFile[key]->GetMin(); }
+	D3DXVECTOR3 GetMax(int key) { return m_pXFile[key]->GetMax(); }
+	
 	void Destroy();
 	void KeyDestroy(int key);
 };
