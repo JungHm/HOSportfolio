@@ -11,6 +11,8 @@
 // Windows 헤더 파일:
 #include <windows.h>
 
+
+
 // C 런타임 헤더 파일입니다.
 #include <stdlib.h>
 #include <malloc.h>
@@ -21,10 +23,17 @@
 #include <list>
 #include <set>
 #include <map>
-
-
-// TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
 #include <d3dx9.h>
+
+struct Ray
+{
+	D3DXVECTOR3 origin;
+	D3DXVECTOR3 direction;
+};
+
+#include "cUtil.h"
+using namespace Util;
+
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 
@@ -88,6 +97,8 @@ public:\
 
 // 무한대
 #define INF 2345102
+
+
 
 struct ST_PC_VERTEXT
 {
@@ -184,6 +195,8 @@ struct ST_BOX
 	D3DXVECTOR3		vPosition;		// 위치 값
 };
 
+
+
 enum OBJECTKIND
 {
 	GATE_01,
@@ -207,6 +220,8 @@ enum OBJECTKIND
 #include "cMtlTex.h"
 #include "cFxLoad.h"
 #include "cParticleManager.h"
+#include "cFireEffect.h"
+
 
 typedef struct tagObject
 {
@@ -224,4 +239,3 @@ typedef struct tagObject
 	ST_SPHERE		sSphere;		// 스페어
 } OBJECT;
 
-//UTIL

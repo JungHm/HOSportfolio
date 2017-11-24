@@ -40,35 +40,6 @@ cMainGame::~cMainGame()
 	g_pDeviceManager->Destroy();
 }
 
-void cMainGame::ChangeAni()
-{
-	//LPD3DXANIMATIONSET pAS = nullptr;
-	//LPD3DXANIMATIONSET pASCompare = nullptr;
-	//D3DXTRACK_DESC desc;
-
-	//if (m_nState == 0)
-	//{
-	//	XFile->GetAniCtrl(m_nKey)->GetAnimationSet(m_dAttack, &pAS);
-	//	XFile->GetAniCtrl(m_nKey)->GetTrackAnimationSet(0, &pASCompare);
-	//	if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
-	//	{
-	//		XFile->GetAniCtrl(m_nKey)->GetTrackDesc(0, &desc);
-	//		if (desc.Position + 0.2 >= pAS->GetPeriod())
-	//		{
-	//			m_nState = 1;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		XFile->GetAniCtrl(m_nKey)->SetTrackAnimationSet(0, pAS);
-	//		XFile->GetAniCtrl(m_nKey)->SetTrackPosition(0, 0);
-	//	}
-	//}
-
-	//SAFE_RELEASE(pAS);
-	//SAFE_RELEASE(pASCompare);
-}
-
 void cMainGame::Setup()
 {
 	g_cCamera->Setup();

@@ -49,7 +49,7 @@ private:
 public:
 	cMainGame();
 	~cMainGame();
-	void ChangeAni();
+
 	void Setup();
 	void Update();
 	void Render();

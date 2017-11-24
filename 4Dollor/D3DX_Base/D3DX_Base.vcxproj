@@ -87,6 +87,7 @@
     <ClInclude Include="cCamera.h" />
     <ClInclude Include="cCharacter.h" />
     <ClInclude Include="cDeviceManager.h" />
+    <ClInclude Include="cFireEffect.h" />
     <ClInclude Include="cFontManager.h" />
     <ClInclude Include="cFrustum.h" />
     <ClInclude Include="cFxLoad.h" />
@@ -112,6 +113,7 @@
     <ClInclude Include="cTessadar.h" />
     <ClInclude Include="cTextureManager.h" />
     <ClInclude Include="cTimeManager.h" />
+    <ClInclude Include="cTower.h" />
     <ClInclude Include="cUIInGame.h" />
     <ClInclude Include="cUILoadingClientBegin.h" />
     <ClInclude Include="cUILoadingInGame.h" />
@@ -134,6 +136,7 @@
     <ClCompile Include="cCamera.cpp" />
     <ClCompile Include="cCharacter.cpp" />
     <ClCompile Include="cDeviceManager.cpp" />
+    <ClCompile Include="cFireEffect.cpp" />
     <ClCompile Include="cFontManager.cpp" />
     <ClCompile Include="cFrustum.cpp" />
     <ClCompile Include="cFxLoad.cpp" />
@@ -159,12 +162,14 @@
     <ClCompile Include="cTessadar.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
     <ClCompile Include="cTimeManager.cpp" />
+    <ClCompile Include="cTower.cpp" />
     <ClCompile Include="cUIInGame.cpp" />
     <ClCompile Include="cUILoadingClientBegin.cpp" />
     <ClCompile Include="cUILoadingInGame.cpp" />
     <ClCompile Include="cUIMainMenu.cpp" />
     <ClCompile Include="cUIObject.cpp" />
     <ClCompile Include="cUnit.cpp" />
+    <ClCompile Include="cUtil.cpp" />
     <ClCompile Include="cXFileManager.cpp" />
     <ClCompile Include="cXLoader.cpp" />
     <ClCompile Include="D3DX_Base.cpp" />
