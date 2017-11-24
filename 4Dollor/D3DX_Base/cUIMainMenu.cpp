@@ -33,10 +33,12 @@ int cUIMainMenu::updateButtonCallback(int num)
 			m_MUIButton.find("heroabil")->second.selected = true;
 			m_MUIButton.find("heroinfo")->second.selected = false;
 			m_MUIButton.find("herotalent")->second.selected = false;
+			heroinfoPopup(true);
 		}
 		else
 		{
 			m_MUIButton.find("heroabil")->second.selected = false;
+			heroinfoPopup(false);
 		}
 	}
 	else if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_EQUIP)
@@ -46,6 +48,7 @@ int cUIMainMenu::updateButtonCallback(int num)
 			m_MUIButton.find("heroabil")->second.selected = false;
 			m_MUIButton.find("heroinfo")->second.selected = true;
 			m_MUIButton.find("herotalent")->second.selected = false;
+			heroinfoPopup(false);
 		}
 		else
 		{
@@ -59,62 +62,45 @@ int cUIMainMenu::updateButtonCallback(int num)
 			m_MUIButton.find("heroabil")->second.selected = false;
 			m_MUIButton.find("heroinfo")->second.selected = false;
 			m_MUIButton.find("herotalent")->second.selected = true;
+			heroinfoPopup(false);
 		}
 		else
 		{
 			m_MUIButton.find("herotalent")->second.selected = false;
 		}
 	}
-	else if (num == UIBUTTONCALLBACK_MAIN_HEROSELECT_ROLE)
-	{
-
-	}
-	else if (num == UIBUTTONCALLBACK_MAIN_HEROSELECT_GAME)
-	{
-
-	}
-	else if (num == UIBUTTONCALLBACK_MAIN_HEROSELECT_HERO)
-	{
-
-	}
 	return 0;
 }
 
 int cUIMainMenu::updateButtonOverCallback(int num)
 {
-	if (num == UIBUTTONCALLBACK_MAIN_READY)
-	{
-		
-	}
-	else if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_ABILITY)
-	{
-		if (!m_MUIButton.find("heroabil")->second.selected)
-		{
-			// 마우스 오버 시 띄울 스킬 설명들
-			
-		}
-	}
-	else if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_EQUIP)
-	{
-
-	}
-	else if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_TALENT)
-	{
-
-	}
-	else if (num == UIBUTTONCALLBACK_MAIN_HEROSELECT_ROLE)
-	{
-
-	}
-	else if (num == UIBUTTONCALLBACK_MAIN_HEROSELECT_GAME)
-	{
-
-	}
-	else if (num == UIBUTTONCALLBACK_MAIN_HEROSELECT_HERO)
-	{
-
-	}
+	string s1 = "heroabil_1_popup";
+	string s2 = "heroabil_2_popup";
+	string s3 = "heroabil_3_popup";
+	string s4 = "heroabil_4_popup";
+	string s5 = "heroabil_5_popup";
+	string s6 = "heroabil_6_popup";
+	if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_ABILITY_1) heroinfoPopup2(s1, true); else heroinfoPopup2(s1, false);
+	if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_ABILITY_2) heroinfoPopup2(s2, true); else heroinfoPopup2(s2, false);
+	if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_ABILITY_3) heroinfoPopup2(s3, true); else heroinfoPopup2(s3, false);
+	if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_ABILITY_4) heroinfoPopup2(s4, true); else heroinfoPopup2(s4, false);
+	if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_ABILITY_5) heroinfoPopup2(s5, true); else heroinfoPopup2(s5, false);
+	if (num == UIBUTTONCALLBACK_MAIN_HEROINFO_ABILITY_6) heroinfoPopup2(s6, true); else heroinfoPopup2(s6, false);
 	return 0;
+}
+
+void cUIMainMenu::heroinfoPopup(bool enable)
+{
+	for (int i = 0; i < 7; i++)
+	{
+		string strAbil = "heroabil_" + to_string(i);
+		m_MUIButton.find(strAbil)->second.enable = enable;
+	}
+}
+
+void cUIMainMenu::heroinfoPopup2(string name, bool enable)
+{
+	m_MUIButton.find(name)->second.enable = enable;
 }
 
 void cUIMainMenu::setupOther()

@@ -334,12 +334,32 @@ void cUIObject::render()
 	renderOther();
 }
 
+void cUIObject::renderOptions()
+{
+	//g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	//g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	//g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+
+	//g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	//g_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	//g_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+
+	//g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
+}
+
+void cUIObject::renderOptionFalse()
+{
+	//g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+}
+
 void cUIObject::renderBG()
 {
 	for (m_MUISpriteBGIt = m_MUISpriteBG.begin(); m_MUISpriteBGIt != m_MUISpriteBG.end(); m_MUISpriteBGIt++)
 	{
 		if (!m_MUISpriteBGIt->second.enable) continue;
 		m_MUISpriteBGIt->second.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+		renderOptions();
 
 		updateMatWorld(m_MUISpriteBGIt->second.matWorld, m_MUISpriteBGIt->second.pt);
 
@@ -350,6 +370,8 @@ void cUIObject::renderBG()
 			NULL,	// 중심점. 회전시킬꺼면 imgInfo에서 Width / 2, Height / 2 넣으면 될듯
 			NULL,
 			D3DCOLOR_ARGB(255, 255, 255, 255));
+
+		renderOptionFalse();
 
 		m_MUISpriteBGIt->second.sprite->End();
 	}
@@ -362,6 +384,8 @@ void cUIObject::renderButton()
 		if (!m_MUIButtonIt->second.enable) continue;
 		m_MUIButtonIt->second.sprite->Begin(D3DXSPRITE_ALPHABLEND);
 
+		renderOptions();
+
 		updateMatWorld(m_MUIButtonIt->second.matWorld, m_MUIButtonIt->second.pt);
 		m_MUIButtonIt->second.sprite->SetTransform(&m_MUIButtonIt->second.matWorld);
 
@@ -370,6 +394,8 @@ void cUIObject::renderButton()
 			NULL,	// 중심점. 회전시킬꺼면 imgInfo에서 Width / 2, Height / 2 넣으면 될듯
 			NULL,
 			D3DCOLOR_ARGB(255, 255, 255, 255));
+
+		renderOptionFalse();
 
 		m_MUIButtonIt->second.sprite->End();
 	}
@@ -381,6 +407,8 @@ void cUIObject::renderNormal()
 	{
 		if (!m_MUISpriteIt->second.enable) continue;
 		m_MUISpriteIt->second.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+		renderOptions();
 
 		D3DXMatrixAffineTransformation2D(&m_MUISpriteIt->second.matWorld,
 			m_UIScale,
@@ -407,6 +435,8 @@ void cUIObject::renderNormal()
 				NULL,
 				D3DCOLOR_ARGB(255, 255, 255, 255));
 		}
+
+		renderOptionFalse();
 
 		m_MUISpriteIt->second.sprite->End();
 	}

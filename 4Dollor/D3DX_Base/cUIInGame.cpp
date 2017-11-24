@@ -7,6 +7,8 @@ cUIInGame::cUIInGame()
 	, m_HPBarSizeX(6.0f)
 	, m_HPBarSizeY(0.5f)
 	, m_HPBarHeight(18)
+	, m_LvUpCount(0)
+	, m_SkillUnlockEfxAlphaCount(0)
 {
 }
 
@@ -43,6 +45,49 @@ void cUIInGame::setupFadeAdd(wstring filePath)
 	m_Fade.scale = 1;
 	m_Fade.pt = { 0, 0, 0 };
 	m_Fade.enable = true;
+}
+
+void cUIInGame::setupSkillLockList()
+{
+	m_SkillUnlock.push_back(&m_MUIButton.find("unlockskill1")->second);
+	m_SkillUnlock.push_back(&m_MUIButton.find("unlockskill2")->second);
+	m_SkillUnlock.push_back(&m_MUIButton.find("unlockskill3")->second);
+
+	m_SkillUnlock[0]->pt = { m_MUIButton.find("charport")->second.pt.x, m_MUIButton.find("charport")->second.pt.y - 70 ,0 };
+	m_SkillUnlock[1]->pt = { m_MUIButton.find("charport")->second.pt.x, m_MUIButton.find("charport")->second.pt.y - 115 ,0 };
+	m_SkillUnlock[2]->pt = { m_MUIButton.find("charport")->second.pt.x, m_MUIButton.find("charport")->second.pt.y - 160 ,0 };
+}
+
+void cUIInGame::setupSkillUnlockEfx(wstring filePath)
+{
+	ZeroMemory(&m_SkillUnlockEfx, sizeof(tagUISpriteEfx));
+
+	D3DXMatrixIdentity(&m_SkillUnlockEfx.matWorld);
+
+	D3DXCreateSprite(g_pD3DDevice, &m_SkillUnlockEfx.sprite);
+
+	D3DXCreateTextureFromFileEx(
+		g_pD3DDevice,
+		filePath.c_str(),
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT,
+		0,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_MANAGED,
+		D3DX_FILTER_NONE,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(255, 255, 255),
+		&m_SkillUnlockEfx.imgInfo,
+		NULL,
+		&m_SkillUnlockEfx.texture);
+
+	SetRect(&m_SkillUnlockEfx.drawRc, 0, 0, m_SkillUnlockEfx.imgInfo.Width, m_SkillUnlockEfx.imgInfo.Height);
+	m_SkillUnlockEfx.alpha = 0;
+	m_SkillUnlockEfx.scale = m_UIScale;
+	m_SkillUnlockEfx.pt = m_MUIButton.find("abil1")->second.pt * 2;
+	m_SkillUnlockEfx.matWorld = m_MUIButton.find("abil1")->second.matWorld;
+	m_SkillUnlockEfx.enable = false;
 }
 
 int cUIInGame::updateButtonOverCallback(int num)
@@ -82,6 +127,35 @@ int cUIInGame::updateButtonCallback(int num)
 		return 5;
 	}
 
+	if (num == UIBUTTONCALLBACK_INGAME_PORTRAIT)
+	{
+		if(m_MUIButton.find("charport")->second.selected)
+			m_MUIButton.find("charport")->second.selected = false;
+		else m_MUIButton.find("charport")->second.selected = true;
+	}
+
+	if (num == UIBUTTONCALLBACK_INGAME_UNLOCKSKILL1)
+	{
+		SetSkillUnlock(1, true);
+		skillUnlockPtChange(0);
+		skillUnlockEfx(1);
+		m_LvUpCount--;
+	}
+	else if (num == UIBUTTONCALLBACK_INGAME_UNLOCKSKILL2)
+	{
+		SetSkillUnlock(2, true);
+		skillUnlockPtChange(1);
+		skillUnlockEfx(2);
+		m_LvUpCount--;
+	}
+	else if (num == UIBUTTONCALLBACK_INGAME_UNLOCKSKILL3)
+	{
+		SetSkillUnlock(3, true);
+		skillUnlockPtChange(2);
+		skillUnlockEfx(3);
+		m_LvUpCount--;
+	}
+
 	return 0;
 }
 
@@ -97,11 +171,86 @@ void cUIInGame::SetSkillUnlock(int SkillIndex, bool unlock)
 		m_MUISprite.find(skillNameImg)->second.enable = true;
 		m_MUISprite.find(skillNameLock)->second.enable = false;
 	}
-	else	// 스킬 재사용 가능 시 위에 기능 반대로 작동
+	else
 	{
 		m_MUIButton.find(skillName)->second.enable = false;
 		m_MUISprite.find(skillNameImg)->second.enable = false;
 		m_MUISprite.find(skillNameLock)->second.enable = true;
+	}
+}
+
+void cUIInGame::skillUnlockPtChange(int index)
+{
+	float interval = 45;
+	float basePtY = m_MUIButton.find("charport")->second.pt.y - 70;
+	m_SkillUnlock[index]->used = true;
+
+	for (int i = 0; i < 3; i++)
+	{
+		// 스킬이 아직 언락 안되었으면 기준점으로 출력 & 기준점 변경
+		// 스킬이 개방되었다면 기준점 그대로 유지
+		if (!m_SkillUnlock[i]->used)
+		{
+			m_SkillUnlock[i]->pt.y = basePtY;
+			basePtY -= interval;
+		}
+		m_SkillUnlock[i]->enable = false;
+	}
+}
+
+void cUIInGame::skillUnlockEfx(int index)
+{
+	string s = "abil" + to_string(index);
+	m_SkillUnlockEfx.pt = m_MUIButton.find(s)->second.pt * 2;
+	m_SkillUnlockEfx.enable = true;
+	m_SkillUnlockEfx.matWorld = m_MUIButton.find(s)->second.matWorld;
+}
+
+void cUIInGame::updateSkillUnlockEfx()
+{
+	if (m_SkillUnlockEfx.enable)
+	{
+		int alphaSpeed = 30;
+		if (m_SkillUnlockEfx.reverse)
+		{
+			m_SkillUnlockEfx.alpha -= alphaSpeed;
+			if (m_SkillUnlockEfx.alpha <= 0)
+			{
+				m_SkillUnlockEfx.alpha = 0;
+				m_SkillUnlockEfx.reverse = false;
+				m_SkillUnlockEfxAlphaCount++;
+			}
+		}
+		else
+		{
+			m_SkillUnlockEfx.alpha += alphaSpeed;
+			if (m_SkillUnlockEfx.alpha >= 255)
+			{
+				m_SkillUnlockEfx.alpha = 255;
+				m_SkillUnlockEfx.reverse = true;
+			}
+		}
+		if (m_SkillUnlockEfxAlphaCount >= SKILLUNLOCKEFXREPEATCOUNT)
+		{
+			m_SkillUnlockEfx.enable = false;
+			m_SkillUnlockEfxAlphaCount = 0;
+		}
+	}
+}
+
+void cUIInGame::skillChooseList()
+{
+	if (m_MUIButton.find("charport")->second.selected && m_LvUpCount > 0)
+	{
+		if(!m_SkillUnlock[0]->used) m_SkillUnlock[0]->enable = true;
+		if(!m_SkillUnlock[1]->used) m_SkillUnlock[1]->enable = true;
+		if(!m_SkillUnlock[2]->used) m_SkillUnlock[2]->enable = true;
+	}
+	else if (!m_MUIButton.find("charport")->second.selected)
+	{
+		m_SkillUnlock[0]->enable = false;
+		m_SkillUnlock[1]->enable = false;
+		m_SkillUnlock[2]->enable = false;
 	}
 }
 
@@ -149,16 +298,25 @@ void cUIInGame::SetSkillUseCooldown(int SkillIndex, float count)
 	}
 }
 
+void cUIInGame::SetLevelUp()
+{
+	SetLvUpAddCount(1);
+}
+
 void cUIInGame::setupOther()
 {
 	setupHpBar(L"UI/ingame_img_bar_hp_bg.png");
 	setupHpBar(L"UI/ingame_img_bar_hp.dds");
 	setupFadeAdd(L"UI/black.png");
+	setupSkillLockList();
+	setupSkillUnlockEfx(L"UI/ingame_img_unlock_efx.png");
 }
 
 void cUIInGame::updateOther()
 {
-
+	if (KEY->isOnceKeyDown('0')) SetLevelUp();
+	skillChooseList();
+	updateSkillUnlockEfx();
 }
 
 void cUIInGame::renderOther()
@@ -166,6 +324,8 @@ void cUIInGame::renderOther()
 	renderBar();
 	if (m_Fade.enable)
 		renderFade();
+	renderAbilityAddGuide();
+	renderSkillUnlockEfx();
 }
 
 void cUIInGame::setupHpBar(wstring filePath)
@@ -300,6 +460,61 @@ void cUIInGame::renderFade()
 
 
 	m_Fade.sprite->End();
+}
+
+void cUIInGame::renderAbilityAddGuide()
+{
+	// 스킬 찍을 수 있을 때만 떠야 됨
+	if (!m_MUIButton.find("charport")->second.selected && m_LvUpCount > 0)
+	{
+		m_MUISprite.find("choosebg")->second.enable = true;
+		int delay = 8;	// 화살표 표시되는 간격에 모두 사라졌다 등장하는 연출 시간 제어용. 4이하면 안됨
+		int t = GetTickCount() / 300 % delay;
+		if (t == delay / 2)
+		{
+			m_MUISprite.find("choose0")->second.enable = false;
+			m_MUISprite.find("choose1")->second.enable = false;
+			m_MUISprite.find("choose2")->second.enable = false;
+			m_MUISprite.find("choose3")->second.enable = false;
+		}
+		if (t > 3) return;
+
+		string tNum = "choose" + to_string(t);
+		if (!m_MUISprite.find(tNum)->second.enable)
+			m_MUISprite.find(tNum)->second.enable = true;
+	}
+	else
+	{
+		m_MUISprite.find("choosebg")->second.enable = false;
+		m_MUISprite.find("choose0")->second.enable = false;
+		m_MUISprite.find("choose1")->second.enable = false;
+		m_MUISprite.find("choose2")->second.enable = false;
+		m_MUISprite.find("choose3")->second.enable = false;
+	}
+}
+
+void cUIInGame::renderSkillUnlockEfx()
+{
+	if (m_SkillUnlockEfx.enable)
+	{
+		m_SkillUnlockEfx.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+		D3DXMatrixAffineTransformation2D(&m_SkillUnlockEfx.matWorld,
+			m_SkillUnlockEfx.scale,
+			NULL,
+			NULL,
+			&D3DXVECTOR2(0, 0));
+
+		m_SkillUnlockEfx.sprite->SetTransform(&m_SkillUnlockEfx.matWorld);
+
+		m_SkillUnlockEfx.sprite->Draw(m_SkillUnlockEfx.texture,
+			&m_SkillUnlockEfx.drawRc,
+			NULL,
+			&m_SkillUnlockEfx.pt,
+			D3DCOLOR_ARGB(m_SkillUnlockEfx.alpha, 255, 255, 255));
+
+		m_SkillUnlockEfx.sprite->End();
+	}
 }
 
 void cUIInGame::destroyOther()

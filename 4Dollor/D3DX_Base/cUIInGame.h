@@ -5,6 +5,7 @@
 #define SKILLCOUNTNUM 10
 #define HPMAX 100
 #define FADEINSPEED 10
+#define SKILLUNLOCKEFXREPEATCOUNT 10
 
 struct tagHPBar
 {
@@ -30,20 +31,32 @@ private:
 	float m_HPBarHeight;
 
 	tagUISpriteEfx m_Fade;
+	tagUISpriteEfx m_SkillUnlockEfx;
+	int m_SkillUnlockEfxAlphaCount;	// 알파값 왔다갔다 반복 몇번
+	int m_LvUpCount;
+	vector<tagUISpriteButton*> m_SkillUnlock;
 
 public:
 	cUIInGame();
 	~cUIInGame();
 
 	void setupFadeAdd(wstring filePath);
+	void setupSkillLockList();
+	void setupSkillUnlockEfx(wstring filePath);
 
 
 	// 스킬 언락. q = 1, w = 2 순서
 	void SetSkillUnlock(int SkillIndex, bool unlock);
+	// 스킬 선택해서 언락할 때 언락 가능한 남은 스킬들 위치 정렬
+	void skillUnlockPtChange(int index);
+	void skillUnlockEfx(int index);
+	void updateSkillUnlockEfx();
+	void skillChooseList();
 	// 스킬 사용 시. q = 1, w = 2 순서
 	void SetSkillUse(int SkillIndex, bool used);
 	// 스킬 사용 쿨타임 표시
 	void SetSkillUseCooldown(int SkillIndex, float count);
+	void SetLevelUp();
 
 	// 순수 가상함수로 실행하는 것들
 	void setupOther();
@@ -56,9 +69,17 @@ public:
 	void setupHpBar(wstring filePath);
 	// 체력 비율, matrix scale 계산
 	void updateBar(bool pc, D3DXVECTOR3 pt, int currHp);
+
 	// 체력바 랜더
 	void renderBar();
 	void renderFade();
+	void renderAbilityAddGuide();
+	void renderSkillUnlockEfx();
 	void destroyOther();
+
+	
+
+	// 레벨업 시 스킬 해방 몇개 할 수 있는지 count 누적.
+	void SetLvUpAddCount(int count) { m_LvUpCount += count; }
 };
 

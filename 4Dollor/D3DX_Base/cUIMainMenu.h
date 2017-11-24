@@ -38,6 +38,9 @@ public:
 	int updateButtonCallback(int num);
 	int updateButtonOverCallback(int num);
 
+	void heroinfoPopup(bool enable);
+	void heroinfoPopup2(string name, bool enable);
+
 	void setupOther();
 	void setupTextInput(string strName, POINT pt, POINT rcPt);
 	void setupAddTexture(wstring filePath);

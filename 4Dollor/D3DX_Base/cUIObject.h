@@ -56,6 +56,9 @@ public:
 	virtual int updateButtonCallback(int num) = 0;
 	// 랜더 그룹
 	virtual void render();
+	// 랜더 옵션
+	virtual void renderOptions();
+	virtual void renderOptionFalse();
 	// BG 랜더. 제일 먼저 해줘야 하므로 따로 빼놓음
 	virtual void renderBG();
 	// 버튼 랜더
