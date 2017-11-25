@@ -34,7 +34,7 @@ void cPlayer::Setup()
 
 void cPlayer::Update()
 {
-	m_pSphere.fRadius = m_Radius;
+	m_pSphere.fRadius = 0;
 	m_pSphere.vCenter = m_vPosition;
 
 	m_pChar->Update();
