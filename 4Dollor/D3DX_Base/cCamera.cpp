@@ -62,15 +62,15 @@ void cCamera::Update()
 	/*m_vEye = D3DXVECTOR3(m_fCamMove.x,
 		(18 + m_fCameraDistance)-m_fCamMove.y,
 		(m_fCameraDistance + (1 - m_fCameraDistance) / 3));*/
-	//m_vEye = D3DXVECTOR3(m_fCamMove.x,
-	//	58,
-	//	m_fCamMove.y - 48);
+	m_vEye = D3DXVECTOR3(m_fCamMove.x,
+		77,
+		m_fCamMove.y - 48);
 
-	//m_vLookAt = D3DXVECTOR3(m_fCamMove.x, 3, m_fCamMove.y);
+	m_vLookAt = D3DXVECTOR3(m_fCamMove.x, 3, m_fCamMove.y);
 	D3DXVec3TransformCoord(&m_vEye, &m_vEye, &matR);
 	D3DXVec3TransformCoord(&m_vLookAt, &m_vLookAt, &matR);
 
-	//m_vEye.z += (m_fCameraDistance + (1 - m_fCameraDistance) / 2);
+	m_vEye.z += (m_fCameraDistance + (1 - m_fCameraDistance) / 2);
 
 	//D3DXMATRIXA16 matView;
 	D3DXMatrixLookAtLH(&matView, &m_vEye, &m_vLookAt, &m_vUp);
@@ -112,10 +112,10 @@ void cCamera::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		m_fCameraDistance -= (GET_WHEEL_DELTA_WPARAM(wParam) / 60.f);
 		if (m_fCameraDistance < 0.0001f)
 			m_fCameraDistance = 0.0001f;
-		//if (m_fCameraDistance < -10.0001f)
-		//	m_fCameraDistance = -10.0001f;
-		//if (m_fCameraDistance > 15.0001f)
-		//	m_fCameraDistance = 15.0001f;
+		if (m_fCameraDistance < -10.0001f)
+			m_fCameraDistance = -10.0001f;
+		if (m_fCameraDistance > 15.0001f)
+			m_fCameraDistance = 15.0001f;
 		break;
 	}
 }
