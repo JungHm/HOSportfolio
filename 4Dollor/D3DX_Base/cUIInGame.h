@@ -20,6 +20,7 @@ struct tagHPBar
 	D3DXVECTOR3 pos;
 	vector<ST_PT_VERTEXT> vertex;
 	bool enable;
+	int id;
 };
 
 class cUIInGame : public cUIObject
@@ -29,10 +30,14 @@ private:
 	SYNTHESIZE(bool, m_GameEnd, GameEnd);
 	bool m_IsVictory;
 	vector<tagHPBar> m_VHPBar;
+	vector<tagHPBar> m_VHPBarMinion;
 	// 미니언은 map으로 만들고 첫번째 인자에 걔들 클래스? 주소값을 넣자
 	float m_HPBarSizeX;
 	float m_HPBarSizeY;
 	float m_HPBarHeight;
+	float m_HPBarSizeXM;
+	float m_HPBarSizeYM;
+	float m_HPBarHeightM;
 
 	tagUISpriteEfx m_Fade;
 	tagUISpriteEfx m_Dead;
@@ -57,6 +62,10 @@ public:
 	void setupFadeAdd(wstring filePath);
 	void setupSkillLockList();
 	void setupSkillUnlockEfx(wstring filePath);
+
+	void SetMinionAdd(int id);
+	void SetMinionDelete(int id);
+	void setupMinionAdd(wstring filePath, int id);
 
 	// 승리 시
 	void setupVictoryAdd(wstring filePath, int index, float scale, D3DXVECTOR3 pt);
@@ -84,12 +93,14 @@ public:
 	int updateButtonCallback(int num);
 
 	// 체력바 셋팅
-	void setupHpBar(wstring filePath);
+	void setupHpBar(wstring filePath, int id);
 	// 체력 비율, matrix scale 계산
 	void updateBar(bool pc, D3DXVECTOR3 pt, int currHp);
+	void updateBarMinion(int id, D3DXVECTOR3 pt, int currHp);
 
 	// 체력바 랜더
 	void renderBar();
+	void renderBarMinion();
 	void renderFade();
 	void renderAbilityAddGuide();
 	void renderSkillUnlockEfx();

@@ -172,6 +172,7 @@ void cInGame::Render()
 
 	m_pPlayer->Render();
 	m_UI->updateBar(true, m_pPlayer->GetPosition(), m_pPlayer->GetHp());
+	m_UI->updateBarMinion(10, { 0,0,0 }, 100);	// 미니언 추가되면 작업
 }
 
 void cInGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
