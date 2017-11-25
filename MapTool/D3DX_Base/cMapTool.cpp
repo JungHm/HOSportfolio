@@ -55,6 +55,8 @@ void cMapTool::SetUpPickingObj()
 	D3DXMatrixIdentity(&m_sNodeSphere.matWrold);
 	m_sNodeSphere.isSelected = false;
 	D3DXCreateSphere(g_pD3DDevice, 2.5f, 15, 15, &m_sNodeSphere.pMesh, NULL);
+	m_sTest.fRadius = 2.5f;
+	m_sTest.vCenter = m_sNodeSphere.vCenter;
 }
 
 void cMapTool::Setup()
@@ -65,6 +67,7 @@ void cMapTool::Setup()
 	m_pHeightMap->Setup("HeightMap/", "backGround.raw", "HeightMap.jpg");
 
 	m_pSaveLoad = new cSaveLoad;
+	m_pSaveLoad->SetupObj();
 
 	m_pInfo = new cInfomation;
 	m_pInfo->Setup();
@@ -276,6 +279,8 @@ void cMapTool::ObjPicking(IN UINT message, IN WPARAM wParam, IN LPARAM lParam)
 				m_sCollisionBox.vPosition.y = vOutPos.y + 10;
 				m_sCollisionBox.vPosition.z = vOutPos.z;
 				m_sNodeSphere.vCenter = vOutPos;
+				m_sTest.fRadius = 2.5f;
+				m_sTest.vCenter = vOutPos;
 				break;
 			}
 		}

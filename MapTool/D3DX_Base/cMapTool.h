@@ -32,6 +32,7 @@ private:
 	float			m_fStartX, m_fStartZ;
 	float			m_fEndX, m_fEndZ;
 	int				m_nFirstIndex;
+	ST_SPHERE		m_sTest;
 
 public:
 	cMapTool();
@@ -41,6 +42,8 @@ public:
 	void Update();
 	void Render();
 	
+	// 타워 충돌 테스트
+	ST_SPHERE GetSphere() { return m_sTest; }
 	// 피킹 상태인 오브젝트 초기화
 	void SetUpPickingObj();
 	// 오브젝트 피킹, 배치전 S * R * T 조정 함수

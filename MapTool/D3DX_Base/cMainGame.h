@@ -5,6 +5,7 @@
 class cMapTool;
 class cUIObject;
 class cSkyBox;
+class cTower;
 
 enum
 {
@@ -43,20 +44,12 @@ private:
 	cSkyBox*		m_pSkyBox;
 	int				m_nIndex;
 	POINT			m_nMousePos;
-
-	DWORD			m_dAttack;
-	
-//private:
-//	wstring			m_sPath;
-//	int				m_nKey;
-//	float			m_fBlendTime;
-//	float			m_fPassedBlendTime;
-//	int				m_nState;
+	cTower*			m_pTower;
 
 public:
 	cMainGame();
 	~cMainGame();
-	void ChangeAni();
+
 	void Setup();
 	void Update();
 	void Render();

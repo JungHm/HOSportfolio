@@ -6,11 +6,10 @@
 #include "cCamera.h"
 #include "cTessadar.h"
 #include "cPlayer.h"
-#include "cUtil.h"
 #include "cSaveLoad.h"
 #include "cHeightMap.h"
 #include "cSkyBox.h"
-
+#include "cTower.h"
 
 
 
@@ -48,6 +47,9 @@ void cInGame::SetUp()
 	m_pGrid = new cGrid;
 	m_pGrid->Setup("Grid", "field2.png", 65, 115, 5.0f);
 
+	m_pTower = new cTower;
+	m_pTower->Setup(D3DXVECTOR3(-252.370010, 0.100000, -12.779068), D3DXVECTOR3(252.751999, 0.100000, -27.856529));
+
 	cTessadar*	m_pTessadar;
 	m_pTessadar = new cTessadar;
 	m_pPlayer = new cPlayer;
@@ -71,8 +73,8 @@ void cInGame::Destroy()
 	SAFE_DELETE(m_pLoadMap);
 	SAFE_DELETE(m_pHeightMap);
 	SAFE_DELETE(m_pSkyBox);
-
 	SAFE_DELETE(m_pGrid);
+	SAFE_DELETE(m_pTower);
 
 	SAFE_DELETE(m_pPlayer);
 	//m_pRootNode->Destroy();
@@ -80,6 +82,12 @@ void cInGame::Destroy()
 
 void cInGame::Update()
 {
+	if (m_pTower)
+	{
+		m_pTower->Update();
+		m_pTower->RedFindEnemy(m_pPlayer->GetSphere());
+	}
+
 	m_pPlayer->Update();
 	if (m_pPlayer->GetLevel() < 4)//레벨에 따라 스킬 언락
 		m_UI->SetSkillUnlock(m_pPlayer->GetLevel(), true);
@@ -106,7 +114,7 @@ void cInGame::Update()
 	D3DXVECTOR3 pickPosition;
 	for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
 	{
-		if (Util::IntersectTri(Util::D3DXVec2TransformArray(m_ptMouse.x, m_ptMouse.y),
+		if (IntersectTri(D3DXVec2TransformArray(m_ptMouse.x, m_ptMouse.y),
 			m_pGrid->GetPicVertex()[i].p,
 			m_pGrid->GetPicVertex()[i + 1].p,
 			m_pGrid->GetPicVertex()[i + 2].p,
@@ -122,7 +130,7 @@ void cInGame::Update()
 		D3DXVECTOR3 pickPosition;
 		for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
 		{
-			if (Util::IntersectTri(Util::D3DXVec2TransformArray(m_ptMouse.x, m_ptMouse.y),
+			if (IntersectTri(D3DXVec2TransformArray(m_ptMouse.x, m_ptMouse.y),
 				m_pGrid->GetPicVertex()[i].p,
 				m_pGrid->GetPicVertex()[i + 1].p,
 				m_pGrid->GetPicVertex()[i + 2].p,
@@ -181,6 +189,11 @@ void cInGame::Render()
 
 	if (m_pGrid)
 		m_pGrid->Render();
+
+	if (m_pTower)
+		m_pTower->Render();
+
+
 
 	m_pPlayer->Render();
 }
