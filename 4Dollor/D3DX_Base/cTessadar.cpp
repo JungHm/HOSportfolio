@@ -233,7 +233,7 @@ void cTessadar::Render(D3DXMATRIXA16& matR, D3DXMATRIXA16& matT)
 
 
 
-	//g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
+	g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
 
 
 

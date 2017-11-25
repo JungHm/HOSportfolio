@@ -150,11 +150,7 @@ void cInGame::Update()
 		}
 	}
 
-<<<<<<< HEAD
-	if (m_UI && !m_UILoading)
-=======
 	if (m_UI)
->>>>>>> 37267a5cbbc467e2262bf3987c6a2e7f8e26ed54
 	{
 		m_UI->update();	// ��ư�� ����Ƿ� update
 		if (m_UI->GetGameEnd())
@@ -164,15 +160,6 @@ void cInGame::Update()
 		}
 	}
 
-<<<<<<< HEAD
-	//SphereCollision();
-=======
-	for (int i = 0; i < m_pLoadMap->GetFielBox().size(); i++)
-	{
-		tCollision(&Distance, m_pLoadMap->GetFielBox()[i].pMesh);
-	}
-
-	std::cout << Distance << std::endl;
 
 	//========미니언==========
 	minionCount++;
@@ -193,7 +180,6 @@ void cInGame::Update()
 
 	MINIONMANAGER->RedUpdate(m_pPlayer->GetPosition());
 	MINIONMANAGER->BlueUpdate(m_pPlayer->GetPosition());
->>>>>>> 37267a5cbbc467e2262bf3987c6a2e7f8e26ed54
 }
 
 void cInGame::Render()
