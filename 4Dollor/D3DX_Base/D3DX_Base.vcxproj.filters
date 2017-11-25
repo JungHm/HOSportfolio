@@ -1,11 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="cFrustum.cpp" />
     <ClCompile Include="cMtlTex.cpp" />
+    <ClCompile Include="cParticle.cpp" />
+    <ClCompile Include="cUtil.cpp" />
     <ClCompile Include="D3DX_Base.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="cAllocateHierarchy.cpp">
-      <Filter>XFile</Filter>
+    <ClCompile Include="cFxLoad.cpp">
+      <Filter>FxLoader</Filter>
     </ClCompile>
     <ClCompile Include="cCamera.cpp">
       <Filter>Manager</Filter>
@@ -19,14 +22,11 @@
     <ClCompile Include="cKeyManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="cInGame.cpp">
-      <Filter>Scene</Filter>
+    <ClCompile Include="cObjectManager.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="cMainGame.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="cMainMenu.cpp">
-      <Filter>Scene</Filter>
+    <ClCompile Include="cParticleManager.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="cSceneManager.cpp">
       <Filter>Manager</Filter>
@@ -43,8 +43,35 @@
     <ClCompile Include="cXFileManager.cpp">
       <Filter>XFile</Filter>
     </ClCompile>
-    <ClCompile Include="cXLoader.cpp">
-      <Filter>XFile</Filter>
+    <ClCompile Include="cMinion.cpp">
+      <Filter>Minion</Filter>
+    </ClCompile>
+    <ClCompile Include="cGrid.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="cHeightMap.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="cSaveLoad.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="cSkyBox.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="iMap.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="cGroup.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="cObject.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="cObjLoader.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="cObjMap.cpp">
+      <Filter>Object</Filter>
     </ClCompile>
     <ClCompile Include="cCharacter.cpp">
       <Filter>Player</Filter>
@@ -54,6 +81,27 @@
     </ClCompile>
     <ClCompile Include="cTessadar.cpp">
       <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="cUnit.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="cInGame.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="cMainGame.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="cMainMenu.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="iScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="cFireEffect.cpp">
+      <Filter>Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="cTower.cpp">
+      <Filter>Tower</Filter>
     </ClCompile>
     <ClCompile Include="cUIInGame.cpp">
       <Filter>UI</Filter>
@@ -70,62 +118,31 @@
     <ClCompile Include="cUIObject.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="cGroup.cpp">
-      <Filter>Object</Filter>
+    <ClCompile Include="cAllocateHierarchy.cpp">
+      <Filter>XFile</Filter>
     </ClCompile>
-    <ClCompile Include="cObject.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
-    <ClCompile Include="cObjLoader.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
-    <ClCompile Include="cObjMap.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
-    <ClCompile Include="cObjectManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="cGrid.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
-    <ClCompile Include="cHeightMap.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
-    <ClCompile Include="cSkyBox.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
-    <ClCompile Include="cUnit.cpp">
-      <Filter>Player</Filter>
-    </ClCompile>
-    <ClCompile Include="iMap.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
-    <ClCompile Include="cSaveLoad.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
-    <ClCompile Include="iScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="cFxLoad.cpp">
-      <Filter>FxLoader</Filter>
-    </ClCompile>
-    <ClCompile Include="cFrustum.cpp" />
-    <ClCompile Include="cParticle.cpp" />
-    <ClCompile Include="cParticleManager.cpp" />
-    <ClCompile Include="cUtil.cpp" />
-    <ClCompile Include="cMinion.cpp">
-      <Filter>Player\Minion</Filter>
-    <ClCompile Include="cTower.cpp">
-      <Filter>Tower</Filter>
-    </ClCompile>
-    <ClCompile Include="cFireEffect.cpp">
-      <Filter>Tower</Filter>
+    <ClCompile Include="cXLoader.cpp">
+      <Filter>XFile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cFrustum.h" />
     <ClInclude Include="cMtlTex.h" />
-    <ClInclude Include="cAllocateHierarchy.h">
-      <Filter>XFile</Filter>
+    <ClInclude Include="cParticle.h" />
+    <ClInclude Include="cFxLoad.h">
+      <Filter>FxLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="cUtil.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DX_Base.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="cCamera.h">
       <Filter>Manager</Filter>
@@ -139,14 +156,11 @@
     <ClInclude Include="cKeyManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="cInGame.h">
-      <Filter>Scene</Filter>
+    <ClInclude Include="cObjectManager.h">
+      <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="cMainGame.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="cMainMenu.h">
-      <Filter>Scene</Filter>
+    <ClInclude Include="cParticleManager.h">
+      <Filter>Manager</Filter>
     </ClInclude>
     <ClInclude Include="cSceneManager.h">
       <Filter>Manager</Filter>
@@ -163,8 +177,35 @@
     <ClInclude Include="cXFileManager.h">
       <Filter>XFile</Filter>
     </ClInclude>
-    <ClInclude Include="cXLoader.h">
-      <Filter>XFile</Filter>
+    <ClInclude Include="cMinion.h">
+      <Filter>Minion</Filter>
+    </ClInclude>
+    <ClInclude Include="cGrid.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="cHeightMap.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="cSaveLoad.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="cSkyBox.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="iMap.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="cGroup.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="cObject.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="cObjLoader.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="cObjMap.h">
+      <Filter>Object</Filter>
     </ClInclude>
     <ClInclude Include="cCharacter.h">
       <Filter>Player</Filter>
@@ -174,6 +215,30 @@
     </ClInclude>
     <ClInclude Include="cTessadar.h">
       <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="cUnit.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>resource</Filter>
+    </ClInclude>
+    <ClInclude Include="cInGame.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="cMainGame.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="cMainMenu.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="iScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="cFireEffect.h">
+      <Filter>Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="cTower.h">
+      <Filter>Tower</Filter>
     </ClInclude>
     <ClInclude Include="cUIInGame.h">
       <Filter>UI</Filter>
@@ -190,77 +255,14 @@
     <ClInclude Include="cUIObject.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="cGroup.h">
-      <Filter>Object</Filter>
-    </ClInclude>
-    <ClInclude Include="cObject.h">
-      <Filter>Object</Filter>
-    </ClInclude>
-    <ClInclude Include="cObjLoader.h">
-      <Filter>Object</Filter>
-    </ClInclude>
-    <ClInclude Include="cObjMap.h">
-      <Filter>Object</Filter>
-    </ClInclude>
-    <ClInclude Include="cObjectManager.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="cHeightMap.h">
-      <Filter>Map</Filter>
-    </ClInclude>
-    <ClInclude Include="cGrid.h">
-      <Filter>Map</Filter>
-    </ClInclude>
-    <ClInclude Include="cSkyBox.h">
-      <Filter>Map</Filter>
-    </ClInclude>
-    <ClInclude Include="cUnit.h">
-      <Filter>Player</Filter>
-    </ClInclude>
-    <ClInclude Include="iMap.h">
-      <Filter>Map</Filter>
-    </ClInclude>
-    <ClInclude Include="cSaveLoad.h">
-      <Filter>Map</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>resource</Filter>
-    </ClInclude>
-    <ClInclude Include="iScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="structUI.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header</Filter>
+    <ClInclude Include="cAllocateHierarchy.h">
+      <Filter>XFile</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="cUtil.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="D3DX_Base.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="cFxLoad.h">
-      <Filter>FxLoader</Filter>
-    </ClInclude>
-    <ClInclude Include="cFrustum.h" />
-    <ClInclude Include="cParticle.h" />
-    <ClInclude Include="cParticleManager.h" />
-
-    <ClInclude Include="cFireEffect.h" />
-    <ClInclude Include="cTower.h" />
-    <ClInclude Include="cMinion.h">
-      <Filter>Player\Minion</Filter>
-
-    <ClInclude Include="cTower.h">
-      <Filter>Tower</Filter>
-    </ClInclude>
-    <ClInclude Include="cFireEffect.h">
-      <Filter>Tower</Filter>
+    <ClInclude Include="cXLoader.h">
+      <Filter>XFile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -275,40 +277,41 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Manager">
-      <UniqueIdentifier>{e702bca2-5bad-4425-a181-75898cf4b8de}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene">
-      <UniqueIdentifier>{c0aed5c1-2cfd-4a51-ba1a-dd67525255eb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="XFile">
-      <UniqueIdentifier>{9e0f4560-9255-4961-a513-1ffaa046a1db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Player">
-      <UniqueIdentifier>{6e242abe-dd4e-4735-87b6-1c4d29718353}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI">
-      <UniqueIdentifier>{d940fd74-5ac1-4ec8-b090-5a1c7c0303b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Object">
-      <UniqueIdentifier>{b1af91f4-9c2f-4754-8197-18d0f6838f5c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Map">
-      <UniqueIdentifier>{b1ac6174-5c6c-4abd-8803-db7a06a6e3e7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="resource">
-      <UniqueIdentifier>{695fd547-3741-4f40-b265-1155815fa3d1}</UniqueIdentifier>
+    <Filter Include="FxLoader">
+      <UniqueIdentifier>{3d95efc5-98d9-447d-bf84-121cac5cf967}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header">
-      <UniqueIdentifier>{840ce5ab-e570-434b-bfc4-153322108b72}</UniqueIdentifier>
+      <UniqueIdentifier>{1db06045-5ad0-42a0-8b19-8272931775ee}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxLoader">
-      <UniqueIdentifier>{5c3709a0-4751-4c6d-aa9c-30292f4bc457}</UniqueIdentifier>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{a09dc53e-f80a-434d-bb7b-a4bc2ec9912f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Player\Minion">
-      <UniqueIdentifier>{41ca90fe-74ff-40cd-a257-9f6a51368274}</UniqueIdentifier>
+    <Filter Include="Minion">
+      <UniqueIdentifier>{81f9304c-7c58-4cc9-9d63-4876de59a8cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{41efff92-2da0-477b-8b42-d244c143233f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{9ecc91fe-5ec1-4dda-a4ad-e38dd097994e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{fb09ca6e-6099-4691-9e63-c34733794856}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{0e02752e-e1ed-40c5-bb44-9dfbfe932521}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Tower">
-      <UniqueIdentifier>{b88c77d8-50bc-4dbf-b372-0d8aced1997f}</UniqueIdentifier>
+      <UniqueIdentifier>{361ebb08-ad40-44a0-8bde-b5233a514235}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{1c6feb89-43fa-4555-be09-5f909738c917}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XFile">
+      <UniqueIdentifier>{82512c6d-48af-4835-8c8d-81f353d43354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Map">
+      <UniqueIdentifier>{8b522279-76f0-4ddb-9f99-36f39a28c8a4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -51,6 +51,9 @@ void cMinion::BlueXfileSetup()
 		m.pos = D3DXVECTOR3(BLUE_START_X, 1.0f, pos_rnd);
 		m.dir = D3DXVECTOR3(0.2f, 0.0f, 0.0f);
 
+		m.char_attack = false;
+		m.coll = false;
+
 		m.hp = 10;
 		m.attack = 1;
 		m.direction = MINI_DEATH;
@@ -97,6 +100,9 @@ void cMinion::RedXfileSetup()
 		m.team = TEAM_RED;
 		m.pos = D3DXVECTOR3(RED_START_X, 1.0f, pos_rnd);
 		m.dir = D3DXVECTOR3(-0.2f, 0.0f, 0.0f);
+
+		m.char_attack = false;
+		m.coll = false;
 
 		m.hp = 10;
 		m.attack = 1;
@@ -152,6 +158,29 @@ void cMinion::BlueSetup()
 			blue_minion[i].attack = 1;
 
 			blue_minion[i].direction = MINI_STAY;
+
+			blue_minion[i].attack_count = 0;
+			D3DXMatrixIdentity(&blue_minion[i].matWorld);
+			D3DXMatrixIdentity(&blue_minion[i].matTrans);
+			D3DXMatrixIdentity(&blue_minion[i].matScale);
+			D3DXMatrixIdentity(&blue_minion[i].matRot);
+
+			blue_minion[i].count = 0;
+			blue_minion[i].fBlendTime = 0.3f;
+
+			blue_minion[i].char_attack = false;
+			blue_minion[i].coll = false;
+
+			if (blue_minion[i].dis == LONG_DIS)
+			{
+				XfileAnimSetup(blue_minion[i].nKey, "Anim-1 ", "Anim-2 ", blue_minion[i].ani_walk, blue_minion[i].ani_attack);
+			}
+			else
+			{
+				XfileAnimSetup(blue_minion[i].nKey, "Anim-2 ", "Anim-3 ", blue_minion[i].ani_walk, blue_minion[i].ani_attack);
+			}
+
+
 			break;
 		}
 	}
@@ -181,6 +210,29 @@ void cMinion::RedSetup()
 			red_minion[i].attack = 1;
 
 			red_minion[i].direction = MINI_STAY;
+
+			red_minion[i].attack_count = 0;
+			D3DXMatrixIdentity(&red_minion[i].matWorld);
+			D3DXMatrixIdentity(&red_minion[i].matTrans);
+			D3DXMatrixIdentity(&red_minion[i].matScale);
+			D3DXMatrixIdentity(&red_minion[i].matRot);
+
+			red_minion[i].count = 0;
+			red_minion[i].fBlendTime = 0.3f;
+
+			red_minion[i].char_attack = false;
+			red_minion[i].coll = false;
+
+			if (red_minion[i].dis == LONG_DIS)
+			{
+				XfileAnimSetup(red_minion[i].nKey, "Anim-1 ", "Anim-2 ", red_minion[i].ani_walk, red_minion[i].ani_attack);
+			}
+			else
+			{
+				XfileAnimSetup(red_minion[i].nKey, "Anim-3 ", "Anim-4 ", red_minion[i].ani_walk, red_minion[i].ani_attack);
+			}
+
+
 			break;
 		}
 	}
@@ -205,8 +257,6 @@ void cMinion::BlueUpdate(D3DXVECTOR3 chPos)
 			//D3DXVec3TransformNormal(&blue_minion[i].dir, &blue_minion[i].dir, &blue_minion[i].matRot);
 
 			blue_minion[i].matWorld = blue_minion[i].matScale * blue_minion[i].matRot * blue_minion[i].matTrans;
-
-			blue_minion[i].c_World = blue_minion[i].c_Rot * blue_minion[i].matTrans;
 
 			BlueDirection(i, chPos);
 			BlueXfileUpdate(i);
@@ -236,8 +286,6 @@ void cMinion::RedUpdate(D3DXVECTOR3 chPos)
 
 			red_minion[i].matWorld = red_minion[i].matScale * red_minion[i].matRot * red_minion[i].matTrans;
 
-			red_minion[i].c_World = red_minion[i].c_Rot * red_minion[i].matTrans;
-
 			RedDirection(i, chPos);
 			RedXfileUpdate(i);
 		}
@@ -257,7 +305,7 @@ void cMinion::BlueXfileUpdate(int index)
 	LPD3DXANIMATIONSET pASCompare = nullptr;
 	D3DXTRACK_DESC desc;
 
-	if (blue_minion[index].direction == MINI_WALK)
+	if (blue_minion[index].direction == MINI_WALK || (blue_minion[index].direction == MINI_AGGRO && !blue_minion[index].char_attack))
 	{
 		XFile->GetAniCtrl(blue_minion[index].nKey)->GetAnimationSet(blue_minion[index].ani_walk, &pAS);
 		XFile->GetAniCtrl(blue_minion[index].nKey)->GetTrackAnimationSet(0, &pASCompare);
@@ -273,7 +321,7 @@ void cMinion::BlueXfileUpdate(int index)
 		}
 	}
 
-	if (blue_minion[index].direction == MINI_ATTACK)
+	if (blue_minion[index].direction == MINI_ATTACK || (blue_minion[index].direction == MINI_AGGRO && blue_minion[index].char_attack))
 	{
 		XFile->GetAniCtrl(blue_minion[index].nKey)->GetAnimationSet(blue_minion[index].ani_attack, &pAS);
 		XFile->GetAniCtrl(blue_minion[index].nKey)->GetTrackAnimationSet(0, &pASCompare);
@@ -300,7 +348,7 @@ void cMinion::RedXfileUpdate(int index)
 	LPD3DXANIMATIONSET pASCompare = nullptr;
 	D3DXTRACK_DESC desc;
 
-	if (red_minion[index].direction == MINI_WALK)
+	if (red_minion[index].direction == MINI_WALK || (red_minion[index].direction == MINI_AGGRO && !red_minion[index].char_attack))
 	{
 		XFile->GetAniCtrl(red_minion[index].nKey)->GetAnimationSet(red_minion[index].ani_walk, &pAS);
 		XFile->GetAniCtrl(red_minion[index].nKey)->GetTrackAnimationSet(0, &pASCompare);
@@ -316,7 +364,7 @@ void cMinion::RedXfileUpdate(int index)
 		}
 	}
 
-	if (red_minion[index].direction == MINI_ATTACK)
+	if (red_minion[index].direction == MINI_ATTACK || (red_minion[index].direction == MINI_AGGRO && red_minion[index].char_attack))
 	{
 		XFile->GetAniCtrl(red_minion[index].nKey)->GetAnimationSet(red_minion[index].ani_attack, &pAS);
 		XFile->GetAniCtrl(red_minion[index].nKey)->GetTrackAnimationSet(0, &pASCompare);
@@ -375,7 +423,7 @@ void cMinion::BlueDirection(int index, D3DXVECTOR3 chPos)
 	case MINI_STAY:
 		blue_minion[index].count++;
 
-		if (blue_minion[index].count == 100)
+		if (blue_minion[index].count == 50)
 		{
 			blue_minion[index].direction = MINI_WALK;
 		}
@@ -443,14 +491,37 @@ void cMinion::BlueDirection(int index, D3DXVECTOR3 chPos)
 
 			float distance = GetDistance(chPos, blue_minion[index].pos);
 
-			if (distance >= CHAR_MINI_ATTACK && distance < CHAR_MINI_RANGE) {
-				D3DXVec3TransformNormal(&blue_minion[index].dir, &blue_minion[index].dir, &rotY);
-				blue_minion[index].pos += blue_minion[index].dir;
+			if (blue_minion[index].dis == LONG_DIS)
+			{
+				if (distance >= CHAR_MINI_LONG_ATTACK && distance < CHAR_MINI_RANGE) {
+					D3DXVec3TransformNormal(&blue_minion[index].dir, &blue_minion[index].dir, &rotY);
+					blue_minion[index].pos += blue_minion[index].dir;
+					blue_minion[index].char_attack = false;
+				}
+
+				if (distance < CHAR_MINI_LONG_ATTACK)
+				{
+					// 시선만 방향 따라다님, 공격
+					blue_minion[index].char_attack = true;
+					//캐릭터 pos 값과 hp 받아서 공격
+				}
+
 			}
 
-			if (distance < CHAR_MINI_ATTACK)
+			else
 			{
-				// 시선만 방향 따라다님, 공격
+				if (distance >= CHAR_MINI_ATTACK && distance < CHAR_MINI_RANGE) {
+					D3DXVec3TransformNormal(&blue_minion[index].dir, &blue_minion[index].dir, &rotY);
+					blue_minion[index].pos += blue_minion[index].dir;
+					blue_minion[index].char_attack = false;
+				}
+
+				if (distance < CHAR_MINI_ATTACK)
+				{
+					// 시선만 방향 따라다님, 공격
+					blue_minion[index].char_attack = true;
+					//캐릭터 pos 값과 hp 받아서 공격
+				}
 			}
 		}
 
@@ -466,15 +537,38 @@ void cMinion::BlueDirection(int index, D3DXVECTOR3 chPos)
 
 			float distance = GetDistance(chPos, blue_minion[index].pos);
 
-			if (distance >= CHAR_MINI_ATTACK && distance < CHAR_MINI_RANGE) {
-				D3DXVec3TransformNormal(&blue_minion[index].dir, &blue_minion[index].dir, &rotY);
+			if (blue_minion[index].dis == LONG_DIS)
+			{
+				if (distance >= CHAR_MINI_LONG_ATTACK && distance < CHAR_MINI_RANGE) {
+					D3DXVec3TransformNormal(&blue_minion[index].dir, &blue_minion[index].dir, &rotY);
 
-				blue_minion[index].pos += blue_minion[index].dir;
+					blue_minion[index].pos += blue_minion[index].dir;
+					blue_minion[index].char_attack = false;
+				}
+
+				if (distance < CHAR_MINI_LONG_ATTACK)
+				{
+					// 시선만 방향 따라다님, 공격
+					blue_minion[index].char_attack = true;
+					//캐릭터 pos 값과 hp 받아서 공격
+				}
 			}
 
-			if (distance < CHAR_MINI_ATTACK)
+			else
 			{
-				// 시선만 방향 따라다님, 공격
+				if (distance >= CHAR_MINI_ATTACK && distance < CHAR_MINI_RANGE) {
+					D3DXVec3TransformNormal(&blue_minion[index].dir, &blue_minion[index].dir, &rotY);
+
+					blue_minion[index].pos += blue_minion[index].dir;
+					blue_minion[index].char_attack = false;
+				}
+
+				if (distance < CHAR_MINI_ATTACK)
+				{
+					// 시선만 방향 따라다님, 공격
+					blue_minion[index].char_attack = true;
+					//캐릭터 pos 값과 hp 받아서 공격
+				}
 			}
 		}
 
@@ -611,7 +705,7 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 	case MINI_STAY:
 		red_minion[index].count++;
 
-		if (red_minion[index].count == 100)
+		if (red_minion[index].count == 50)
 		{
 			red_minion[index].direction = MINI_WALK;
 		}
@@ -677,16 +771,40 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 
 			float distance = GetDistance(chPos, red_minion[index].pos);
 
-			if (distance >= CHAR_MINI_ATTACK && distance < CHAR_MINI_RANGE)
+			if (red_minion[index].dis == LONG_DIS)
 			{
-				D3DXVec3TransformNormal(&red_minion[index].dir, &red_minion[index].dir, &rotY);
-				red_minion[index].pos += red_minion[index].dir;
+				if (distance >= CHAR_MINI_LONG_ATTACK && distance < CHAR_MINI_RANGE)
+				{
+					D3DXVec3TransformNormal(&red_minion[index].dir, &red_minion[index].dir, &rotY);
+					red_minion[index].pos += red_minion[index].dir;
+					red_minion[index].char_attack = false;
+				}
+
+				if (distance < CHAR_MINI_LONG_ATTACK)
+				{
+					// 시선만 방향 따라다님, 공격
+					red_minion[index].char_attack = true;
+					//캐릭터 pos 값과 hp 받아서 공격
+				}
 			}
 
-			if (distance < CHAR_MINI_ATTACK)
+			else
 			{
-				// 시선만 방향 따라다님, 공격
+				if (distance >= CHAR_MINI_ATTACK && distance < CHAR_MINI_RANGE)
+				{
+					D3DXVec3TransformNormal(&red_minion[index].dir, &red_minion[index].dir, &rotY);
+					red_minion[index].pos += red_minion[index].dir;
+					red_minion[index].char_attack = false;
+				}
+
+				if (distance < CHAR_MINI_ATTACK)
+				{
+					// 시선만 방향 따라다님, 공격
+					red_minion[index].char_attack = true;
+					//캐릭터 pos 값과 hp 받아서 공격
+				}
 			}
+
 		}
 
 		else
@@ -701,15 +819,38 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 
 			float distance = GetDistance(chPos, red_minion[index].pos);
 
-			if (distance >= CHAR_MINI_ATTACK && distance < CHAR_MINI_RANGE) {
-				D3DXVec3TransformNormal(&red_minion[index].dir, &red_minion[index].dir, &rotY);
+			if (red_minion[index].dis == LONG_DIS)
+			{
+				if (distance >= CHAR_MINI_LONG_ATTACK && distance < CHAR_MINI_RANGE) {
+					D3DXVec3TransformNormal(&red_minion[index].dir, &red_minion[index].dir, &rotY);
 
-				red_minion[index].pos += red_minion[index].dir;
+					red_minion[index].pos += red_minion[index].dir;
+					red_minion[index].char_attack = false;
+				}
+
+				if (distance < CHAR_MINI_LONG_ATTACK)
+				{
+					// 시선만 방향 따라다님, 공격
+					red_minion[index].char_attack = true;
+					//캐릭터 pos 값과 hp 받아서 공격
+				}
 			}
 
-			if (distance < CHAR_MINI_ATTACK)
+			else
 			{
-				// 시선만 방향 따라다님, 공격
+				if (distance >= CHAR_MINI_ATTACK && distance < CHAR_MINI_RANGE) {
+					D3DXVec3TransformNormal(&red_minion[index].dir, &red_minion[index].dir, &rotY);
+
+					red_minion[index].pos += red_minion[index].dir;
+					red_minion[index].char_attack = false;
+				}
+
+				if (distance < CHAR_MINI_ATTACK)
+				{
+					// 시선만 방향 따라다님, 공격
+					red_minion[index].char_attack = true;
+					//캐릭터 pos 값과 hp 받아서 공격
+				}
 			}
 		}
 

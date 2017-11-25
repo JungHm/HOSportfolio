@@ -12,12 +12,14 @@
 #define MINI_LONG_DIS		50
 #define MINI_SHORT_DIS		15
 
-#define BLUE_START_X		(float)-250
-#define RED_START_X			(float)250
+#define BLUE_START_X			(float)-250
+#define RED_START_X				(float)250
 
-#define CHAR_MINI_RANGE		(float)35
-#define CHAR_MINI_ATTACK	(float)10
-#define MINI_TO_MINI_RANGE	(float)10
+#define CHAR_MINI_RANGE			(float)35
+#define CHAR_MINI_ATTACK		(float)15
+#define CHAR_MINI_LONG_ATTACK	(float)40
+
+#define MINI_TO_MINI_RANGE		(float)10
 
 enum MINION_DISTANCE
 {
@@ -65,20 +67,12 @@ struct tagMinion
 	MINION_DISTANCE dis;
 	DIRECTION direction;	// minion의 상태 구분
 
-
-	LPD3DXMESH cube;	// 리소스 불러오기 전까지 작업할 큐브
-	D3DMATERIAL9 mtrl;
-
-	LPD3DXMESH cylinder;	// 바운딩 박스
-	D3DMATERIAL9 c_mtrl;
-	D3DXMATRIXA16 c_World;
-	D3DXMATRIXA16 c_Rot;
-
 	int count;
 
 	float coll_angleY;
+	bool char_attack;		// 미니언이 캐릭터 공격하는 bool값
 
-	//xFile
+							//xFile
 	wstring sPath;
 	DWORD dAttack;
 	DWORD dNone;
@@ -97,8 +91,6 @@ struct tagMinion
 		D3DXMatrixIdentity(&matTrans);
 		D3DXMatrixIdentity(&matScale);
 		D3DXMatrixIdentity(&matRot);
-		D3DXMatrixIdentity(&c_World);
-		D3DXMatrixIdentity(&c_Rot);
 
 		pos = D3DXVECTOR3(0, 0, 0);
 		dir = D3DXVECTOR3(0, 0, 0.1f);
