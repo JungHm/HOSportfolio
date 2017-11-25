@@ -229,7 +229,7 @@ void cUIInGame::setupSkillUnlockEfx(wstring filePath)
 	m_SkillUnlockEfx.enable = false;
 }
 
-void cUIInGame::setupVictoryAdd(wstring filePath, int index, float scale)
+void cUIInGame::setupVictoryAdd(wstring filePath, int index, float scale, D3DXVECTOR3 pt)
 {
 	ZeroMemory(&m_VictoryEfx[index], sizeof(tagUISpriteEfx));
 
@@ -254,15 +254,23 @@ void cUIInGame::setupVictoryAdd(wstring filePath, int index, float scale)
 		&m_VictoryEfx[index].texture);
 
 	SetRect(&m_VictoryEfx[index].drawRc, 0, 0, m_VictoryEfx[index].imgInfo.Width, m_VictoryEfx[index].imgInfo.Height);
-	m_VictoryEfx[index].alpha = 255;
+	m_VictoryEfx[index].alpha = 0;
 	m_VictoryEfx[index].scale = scale;
-	m_VictoryEfx[index].pt = { 0,0,0 };
-	m_VictoryEfx[index].enable = true;
+	m_VictoryEfx[index].pt = pt;
+	m_VictoryEfx[index].enable = false;
 }
 
 void cUIInGame::SetVictory()
 {
 	m_IsVictory = true;
+	m_VictoryEfx[1].enable = true;
+
+	// UI 전부 비활성화
+	m_UIViewEnable = false;
+	for (m_MUISpriteBGIt = m_MUISpriteBG.begin(); m_MUISpriteBGIt != m_MUISpriteBG.end(); m_MUISpriteBGIt++)
+	{
+		m_MUISpriteBGIt->second.enable = false;
+	}
 }
 
 void cUIInGame::renderVictory()
@@ -271,6 +279,7 @@ void cUIInGame::renderVictory()
 	{
 		for (int i = 0; i < VICTORYRESOURCE; i++)
 		{
+			if (i == 0) continue;
 			if (!m_VictoryEfx[i].enable) continue;
 			m_VictoryEfx[i].sprite->Begin(D3DXSPRITE_ALPHABLEND);
 
@@ -278,7 +287,7 @@ void cUIInGame::renderVictory()
 				m_VictoryEfx[i].scale,
 				NULL,
 				m_VictoryEfx[i].rotate,
-				&D3DXVECTOR2(0, 0));
+				&D3DXVECTOR2(m_VictoryEfx[i].pt.x, m_VictoryEfx[i].pt.y));
 
 			m_VictoryEfx[i].sprite->SetTransform(&m_VictoryEfx[i].matWorld);
 			RECT rc;
@@ -286,22 +295,58 @@ void cUIInGame::renderVictory()
 
 			if (i == 0)
 			{
-				if (m_VictoryEfx[i].alpha > 0)
-				{
-					m_VictoryEfx[i].alpha -= 10;
-					if (m_VictoryEfx[i].alpha <= 0)
-					{
-						m_VictoryEfx[i].alpha = 0;
-						m_VictoryEfx[i].enable = false;
-					}
-				}
+				m_VictoryEfx[i].alpha = 50;
 			}
 			if (i == 1)
 			{
+				if (m_VictoryEfx[i].alpha < 255)
+				{
+					m_VictoryEfx[i].alpha += 5;
+					//m_VictoryEfx[i].rotate += 1;
+					if (m_VictoryEfx[i].alpha >= 255)
+					{
+						m_VictoryEfx[i].alpha = 0;
+						m_VictoryEfx[i].enable = false;
+						m_VictoryEfx[2].enable = true;
+						m_VictoryEfx[2].alpha = 0;
+						m_VictoryEfx[2].scale = 3;
+					}
+				}
+			}
+			if (i == 2)
+			{
 				m_VictoryEfx[i].rotate += 0.01;
+
+				m_VictoryEfx[i].alpha += 10;
+				if (m_VictoryEfx[i].alpha >= 255) m_VictoryEfx[i].alpha = 255;
+
+				if (m_VictoryEfx[i].scale > VICTORYCYCLESCALE)
+				{
+					m_VictoryEfx[i].scale -= 0.2f;
+				}
+				if (m_VictoryEfx[i].scale <= VICTORYCYCLESCALE)
+				{
+					m_VictoryEfx[i].scale = VICTORYCYCLESCALE;
+					m_VictoryEfx[3].enable = true;
+				}
+
 				m_VictoryEfx[i].sprite->Draw(m_VictoryEfx[i].texture,
 					&rc,
 					&D3DXVECTOR3(m_VictoryEfx[i].imgInfo.Width / 2, m_VictoryEfx[i].imgInfo.Height / 2, 0),
+					NULL,
+					D3DCOLOR_ARGB(m_VictoryEfx[i].alpha, 255, 255, 255));
+			}
+			else if (i == 3)
+			{
+				if (m_VictoryEfx[i].scale <= VICTORYCYCLESCALE)
+				{
+					m_VictoryEfx[i].alpha += 10;
+					if (m_VictoryEfx[i].alpha >= 255) m_VictoryEfx[i].alpha = 255;
+				}
+
+				m_VictoryEfx[i].sprite->Draw(m_VictoryEfx[i].texture,
+					&rc,
+					NULL,
 					&m_VictoryEfx[i].pt,
 					D3DCOLOR_ARGB(m_VictoryEfx[i].alpha, 255, 255, 255));
 			}
@@ -547,30 +592,38 @@ void cUIInGame::setupOther()
 	setupDeadAdd();
 	setupDeadSideAdd(true);
 	setupDeadSideAdd(false);
-	setupVictoryAdd(L"UI/ingame_img_victory_bg.png",	0,	0.6f);
-	setupVictoryAdd(L"UI/ingame_img_victory_cycle.png",	1,	0.7f);
-	setupVictoryAdd(L"UI/ingame_img_victory_text.png",	2,	0.7f);
+	setupVictoryAdd(L"UI/black.png",					0,	2000.0f, { 0,0,0 });
+	setupVictoryAdd(L"UI/ingame_img_victory_bg.png",	1,	0.6f, { 0,0,0 });
+	setupVictoryAdd(L"UI/ingame_img_victory_cycle.png",	2,	VICTORYCYCLESCALE, { MAX_XPIXEL / 2 -  50,MAX_YPIXEL / 2 - 100,0 });
+	setupVictoryAdd(L"UI/ingame_img_victory_text.png",	3,	0.7f, { MAX_XPIXEL / 2 - 375,MAX_YPIXEL / 2 - 225,0 });
 }
 
 void cUIInGame::updateOther()
 {
-	if (KEY->isOnceKeyDown('0')) SetLevelUp();
-	if (KEY->isOnceKeyDown('8')) SetDead(true);
-	if (KEY->isOnceKeyDown('9')) SetDead(false);
-	if (KEY->isOnceKeyDown('7')) SetVictory();
+	if (m_UIViewEnable)
+	{
+		if (KEY->isOnceKeyDown('0')) SetLevelUp();
+		if (KEY->isOnceKeyDown('8')) SetDead(true);
+		if (KEY->isOnceKeyDown('9')) SetDead(false);
+		if (KEY->isOnceKeyDown('7')) SetVictory();
+		skillChooseList();
+		updateSkillUnlockEfx();
+	}
+	// 승리 후 클릭하면 씬전환
 	if (KEY->isOnceKeyDown(VK_LBUTTON) && m_IsVictory) m_GameEnd = true;
-	skillChooseList();
-	updateSkillUnlockEfx();
 }
 
 void cUIInGame::renderOther()
 {
-	renderBar();
-	renderFade();
-	renderAbilityAddGuide();
-	renderSkillUnlockEfx();
-	rednerDead();
-	renderDeadSide();
+	if (m_UIViewEnable)
+	{
+		renderBar();
+		renderFade();
+		renderAbilityAddGuide();
+		renderSkillUnlockEfx();
+		rednerDead();
+		renderDeadSide();
+	}
 	renderVictory();
 }
 
@@ -660,6 +713,7 @@ void cUIInGame::renderBar()
 {
 	for (int i = 0; i < m_VHPBar.size(); i++)
 	{
+		if (!m_VHPBar[i].enable) continue;
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);

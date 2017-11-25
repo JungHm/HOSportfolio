@@ -38,8 +38,7 @@ cMainMenu,,,,,,,,,,,,,
 ,,,,,,,,,,,,,
 ,,,,,,,,,,,,,
 cInGame,,,,,,,,,,,,,
-86,PT.xy,enable,used,BG,IndexName,rotate,rotateSpd,Button,Func,normal,over,select,disenable
-700,400,1,0,0,l1,0,0,1,150,mainmenu_btn_ready_1.dds,mainmenu_btn_ready_2.dds,mainmenu_btn_ready_2.dds,mainmenu_btn_ready_3.dds
+85,PT.xy,enable,used,BG,IndexName,rotate,rotateSpd,Button,Func,normal,over,select,disenable
 300,436,1,0,1,botboard,0,0,0,99,ingame_img_bottom_bord_bg.png,0,0,0
 356,410,0,0,0,abil1img,0,0,0,99,ingame_img_ability1.png,0,0,0
 401,410,0,0,0,abil2img,0,0,0,99,ingame_img_ability2.png,0,0,0

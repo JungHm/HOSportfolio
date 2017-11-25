@@ -4,6 +4,7 @@
 cUIObject::cUIObject()
 	: m_UIScale(0.5f)
 	, m_CollisionRectReduce(0.7f)
+	, m_UIViewEnable(true)
 {
 }
 
@@ -214,7 +215,11 @@ void cUIObject::setup(string className)
 
 void cUIObject::update()
 {
-	updateButton();
+	if (m_UIViewEnable)
+	{
+		updateButton();
+	}
+	
 	updateOther();
 }
 
@@ -329,8 +334,11 @@ void cUIObject::updateButtonState(D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt, int &b
 
 void cUIObject::render()
 {
-	renderNormal();
-	renderButton();
+	if (m_UIViewEnable)
+	{
+		renderNormal();
+		renderButton();
+	}
 	renderOther();
 }
 

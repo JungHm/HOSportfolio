@@ -286,15 +286,6 @@ void cUIMainMenu::renderOther()
 
 void cUIMainMenu::renderGameReady()
 {
-	if (KEY->isOnceKeyDown('A'))
-	{
-		for (m_GameReadyEfxIt = m_GameReadyEfx.begin(); m_GameReadyEfxIt != m_GameReadyEfx.end(); m_GameReadyEfxIt++)
-		{
-			m_GameReadyEfxIt->second.reverse = false;
-			m_GameReadyEfxIt->second.alpha = 0;
-			m_GameReadyEfxIt->second.scale = 2;
-		}
-	}
 	if (m_GameReady)
 	{
 		for (m_GameReadyEfxIt = m_GameReadyEfx.begin(); m_GameReadyEfxIt != m_GameReadyEfx.end(); m_GameReadyEfxIt++)

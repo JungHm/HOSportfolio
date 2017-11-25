@@ -19,6 +19,7 @@ protected:
 
 	float m_CollisionRectReduce;	// Rect를 이미지 크기보다 작게 해야 이쁘게  됨. 그것을 위한 사이즈 조정용 변수
 	float m_UIScale;	// UI 전체 크기를 변경. 현재 이미지들이 겜에 비해 너무 큼.
+	bool m_UIViewEnable;
 
 public:
 	cUIObject();

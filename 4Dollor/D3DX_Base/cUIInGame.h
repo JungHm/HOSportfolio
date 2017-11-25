@@ -7,7 +7,8 @@
 #define FADEINSPEED 10
 #define SKILLUNLOCKEFXREPEATCOUNT 10
 #define DEADSIDE 2
-#define VICTORYRESOURCE 3
+#define VICTORYRESOURCE 4
+#define VICTORYCYCLESCALE 0.7
 
 struct tagHPBar
 {
@@ -18,6 +19,7 @@ struct tagHPBar
 	D3DXMATRIXA16 matWorld;
 	D3DXVECTOR3 pos;
 	vector<ST_PT_VERTEXT> vertex;
+	bool enable;
 };
 
 class cUIInGame : public cUIObject
@@ -57,7 +59,7 @@ public:
 	void setupSkillUnlockEfx(wstring filePath);
 
 	// ½Â¸® ½Ã
-	void setupVictoryAdd(wstring filePath, int index, float scale);
+	void setupVictoryAdd(wstring filePath, int index, float scale, D3DXVECTOR3 pt);
 	void SetVictory();	// ½Â¸® ¿Ü UI´Â ¸ðµÎ ¼û±â±â À§ÇÔ
 	void renderVictory();
 
