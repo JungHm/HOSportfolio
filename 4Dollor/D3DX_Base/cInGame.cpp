@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "cInGame.h"
 #include "cUILoadingInGame.h"
 #include "cUIInGame.h"
@@ -11,22 +11,18 @@
 #include "cSkyBox.h"
 #include "cTower.h"
 
-
-
 cInGame::cInGame()
 {
 }
 
-
 cInGame::~cInGame()
 {
-
-
-
 }
 
 void cInGame::SetUp()
 {
+	m_isColl = false;
+
 	g_Particle->Setup();
 
 	m_UILoading = new cUILoadingInGame;
@@ -55,6 +51,17 @@ void cInGame::SetUp()
 	m_pPlayer = new cPlayer;
 	m_pPlayer->SetCharacter(m_pTessadar);
 	m_pPlayer->Setup();
+
+	//=========미니언===========
+	MINIONMANAGER->BlueXfileSetup();
+	MINIONMANAGER->RedXfileSetup();
+	MINIONMANAGER->BlueSetup();
+	MINIONMANAGER->RedSetup();
+	MINIONMANAGER->BlueSetup();
+	MINIONMANAGER->RedSetup();
+	MINIONMANAGER->BlueSetup();
+	MINIONMANAGER->RedSetup();
+	minionCount = 0;
 }
 
 void cInGame::Destroy()
@@ -164,6 +171,33 @@ void cInGame::Update()
 			SAFE_DELETE(m_UILoading);
 		}
 	}
+
+	for (int i = 0; i < m_pLoadMap->GetFielBox().size(); i++)
+	{
+		tCollision(&Distance, m_pLoadMap->GetFielBox()[i].pMesh);
+	}
+
+	std::cout << Distance << std::endl;
+
+	//========미니언==========
+	minionCount++;
+
+	int rnd;
+
+	if (minionCount % 1000 == 0)
+	{
+		MINIONMANAGER->BlueSetup();
+		MINIONMANAGER->RedSetup();
+		MINIONMANAGER->BlueSetup();
+		MINIONMANAGER->RedSetup();
+		MINIONMANAGER->BlueSetup();
+		MINIONMANAGER->RedSetup();
+
+	}
+
+
+	MINIONMANAGER->RedUpdate(m_pPlayer->GetPosition());
+	MINIONMANAGER->BlueUpdate(m_pPlayer->GetPosition());
 }
 
 void cInGame::Render()
@@ -175,8 +209,8 @@ void cInGame::Render()
 	else if (m_UILoading) m_UILoading->render();
 
 	//g_pSprite->BeginScene();
-	  //g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
-	  //g_pSprite->End();
+	//g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
+	//g_pSprite->End();
 
 	if (m_pLoadMap)
 		m_pLoadMap->CreateObjRender();
@@ -193,13 +227,30 @@ void cInGame::Render()
 	if (m_pTower)
 		m_pTower->Render();
 
-
-
 	m_pPlayer->Render();
+
+	//=======미니언=======
+	MINIONMANAGER->BlueRender();
+	MINIONMANAGER->RedRender();
 }
 
 void cInGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	m_ptMouse.x = LOWORD(lParam);
 	m_ptMouse.y = HIWORD(lParam);
+}
+
+void cInGame::tCollision(OUT float* fDistans, IN LPD3DXMESH pObjMesh)
+{
+	D3DXIntersect(
+		pObjMesh,											//	충돌할 메쉬
+		&m_pPlayer->GetPosition(),							//	해당 충돌할 녀석의 포지션
+		&m_pPlayer->GetDir(),								//	" 방향
+		&m_isColl, NULL, NULL, NULL, fDistans, NULL, NULL);
+
+	//printf_s("%f\n", Distance);
+
+	//std::cout << m_pPlayer->GetPosition().x << " " << m_pPlayer->GetPosition().y << " " << m_pPlayer->GetPosition().z << endl;
+	/*std::cout << Distance << std::endl;*/
+	//std::cout << m_pPlayer->GetDir().x << " " << m_pPlayer->GetDir().y << " " << m_pPlayer->GetDir().z << endl;
 }
