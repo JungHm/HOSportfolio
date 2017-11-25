@@ -25,11 +25,12 @@ void cInGame::SetUp()
 
 	g_Particle->Setup();
 
-	m_UILoading = new cUILoadingInGame;
-	m_UILoading->setup("cUILoadingInGame");
-
 	m_UI = new cUIInGame;
 	m_UI->setup("cInGame");
+
+
+	D3DXVECTOR2 temp;
+	g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
 
 	m_pLoadMap = new cSaveLoad;
 	m_pLoadMap->LoadFieldObj();
@@ -72,15 +73,11 @@ void cInGame::Destroy()
 		m_UI->destroy();
 		SAFE_DELETE(m_UI);
 	}
-	if (m_UILoading)
-	{
-		m_UILoading->destroy();
-		SAFE_DELETE(m_UILoading);
-	}
 	SAFE_DELETE(m_pLoadMap);
 	SAFE_DELETE(m_pHeightMap);
 	SAFE_DELETE(m_pSkyBox);
 	SAFE_DELETE(m_pGrid);
+	SAFE_RELEASE(m_pD3DTexture);
 	SAFE_DELETE(m_pTower);
 
 	SAFE_DELETE(m_pPlayer);
@@ -152,23 +149,13 @@ void cInGame::Update()
 		}
 	}
 
-
-
-	if (m_UI && !m_UILoading)
+	if (m_UI)
 	{
 		m_UI->update();	// ��ư�� ����Ƿ� update
 		if (m_UI->GetGameEnd())
 		{
 			g_Scene->ChangeScene("menu");
-		}
-	}
-	else if (m_UILoading)
-	{
-		m_UILoading->update();
-		if (m_UILoading->GetLoadingEnd())
-		{
-			m_UILoading->destroy();
-			SAFE_DELETE(m_UILoading);
+			return;
 		}
 	}
 
@@ -202,11 +189,13 @@ void cInGame::Update()
 
 void cInGame::Render()
 {
-	if (m_UI && !m_UILoading) m_UI->renderBG();	// ��� ���� ���� ��
-	else if (m_UILoading) m_UILoading->renderBG();
+	if (m_UI) m_UI->renderBG();	// ��� ���� ���� ��
 
-	if (m_UI && !m_UILoading) m_UI->render();	// ��� �� UI ��õ� ����
-	else if (m_UILoading) m_UILoading->render();
+
+
+
+
+	if (m_UI) m_UI->render();	// ��� �� UI ��õ� ����
 
 	//g_pSprite->BeginScene();
 	//g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
@@ -229,9 +218,13 @@ void cInGame::Render()
 
 	m_pPlayer->Render();
 
+	m_UI->updateBar(true, m_pPlayer->GetPosition(), m_pPlayer->GetHp());
+	//m_UI->updateBarMinion(10, { 0,0,0 }, 100);	// 미니언 추가되면 작업
+
 	//=======미니언=======
 	MINIONMANAGER->BlueRender();
 	MINIONMANAGER->RedRender();
+
 }
 
 void cInGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

@@ -23,6 +23,7 @@ class cParticleManager
 private:
 	vector<Partice_info> pInfo;
 public:
+
 	SINGLETONE(cParticleManager);
 	//cParticleManager();
 	//~cParticleManager();

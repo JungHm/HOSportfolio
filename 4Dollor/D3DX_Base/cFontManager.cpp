@@ -67,6 +67,6 @@ void cFontManager::Destroy()
 {
 	for each (auto it in m_mapFont)
 	{
-		//SAFE_RELEASE(it.second);
+		SAFE_RELEASE(it.second);
 	}
 }

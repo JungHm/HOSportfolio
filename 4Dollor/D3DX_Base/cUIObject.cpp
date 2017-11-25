@@ -1,15 +1,10 @@
 #include "stdafx.h"
 #include "cUIObject.h"
 
-/*
-현재 가상 함수로 쓰는게 아니라 이거 그대로 메인게임에 쓰는 중. 테스트용
-
-
-*/
-
 cUIObject::cUIObject()
 	: m_UIScale(0.5f)
 	, m_CollisionRectReduce(0.7f)
+	, m_UIViewEnable(true)
 {
 }
 
@@ -220,7 +215,11 @@ void cUIObject::setup(string className)
 
 void cUIObject::update()
 {
-	updateButton();
+	if (m_UIViewEnable)
+	{
+		updateButton();
+	}
+	
 	updateOther();
 }
 
@@ -233,6 +232,10 @@ void cUIObject::updateButton()
 		// 이 아래부터 pt 값은 matWorld의 _41, _42 값을 줘야 한다. Scale, Trans가 적용된 World를 기준으로 해야됨
 		if (m_MUIButtonIt->second.used) continue;	// 사용 중이면 버튼 업데이트를 안함 (버튼 기능 비활성)
 		updateButtonState(m_MUIButtonIt->second.imgInfo, D3DXVECTOR3(m_MUIButtonIt->second.matWorld._41, m_MUIButtonIt->second.matWorld._42, 0), m_MUIButtonIt->second.buttonState, m_MUIButtonIt->second.buttonFunc);
+		if (m_MUIButtonIt->second.selected)
+		{
+			m_MUIButtonIt->second.buttonState = UIBUTTONSTATE_SELECT;
+		}
 	}
 }
 
@@ -272,47 +275,89 @@ void cUIObject::updateButtonState(D3DXIMAGE_INFO imgInfo, D3DXVECTOR3 pt, int &b
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	// 충돌 관련은 수업 코드와 동일함
 	if (PtInRect(&rc, ptMouse))
 	{
-		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+		if (KEY->isStayKeyDown(VK_LBUTTON))
 		{
-			if (buttonState == UIBUTTONSTATE_OVER)	// 오버 상태일 때 클릭 시
-			{
-				buttonState = UIBUTTONSTATE_SELECT;
-				updateButtonCallback(buttonFunc);
-			}
-			else if (buttonState == UIBUTTONSTATE_SELECT)
-			{
-				buttonState = UIBUTTONSTATE_OVER;
-			}
+			buttonState = UIBUTTONSTATE_SELECT;
 		}
 		else
 		{
-			if (buttonState == UIBUTTONSTATE_SELECT)
-			{
-				// 마우스 클릭 시 기능 실행
-				//updateButtonCallback(buttonFunc);
-			}
-			else if (buttonState == UIBUTTONSTATE_OVER)
-			{
-				// 마우스 오버 시 기능 실행
-				updateButtonOverCallback(buttonFunc);
-			}
-			buttonState = UIBUTTONSTATE_OVER;	// 오버 시 상태 변경
+			buttonState = UIBUTTONSTATE_OVER;
+			updateButtonOverCallback(buttonFunc);
+		}
+		if (KEY->isOnceKeyUp(VK_LBUTTON) && buttonState == UIBUTTONSTATE_OVER)
+		{
+			updateButtonCallback(buttonFunc);
 		}
 	}
 	else
 	{
 		buttonState = UIBUTTONSTATE_NORMAL;
 	}
+	
+	//if (PtInRect(&rc, ptMouse))
+	//{
+	//	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+	//	{
+	//		if (buttonState == UIBUTTONSTATE_OVER)	// 오버 상태일 때 클릭 시
+	//		{
+	//			buttonState = UIBUTTONSTATE_SELECT;
+	//			updateButtonCallback(buttonFunc);
+	//		}
+	//		else if (buttonState == UIBUTTONSTATE_SELECT)
+	//		{
+	//			buttonState = UIBUTTONSTATE_OVER;
+	//			updateButtonCallback(buttonFunc);
+	//		}
+	//	}
+	//	else
+	//	{
+	//		if (buttonState == UIBUTTONSTATE_SELECT)
+	//		{
+	//			// 마우스 클릭 시 기능 실행
+	//			//updateButtonCallback(buttonFunc);
+	//		}
+	//		else if (buttonState == UIBUTTONSTATE_OVER)
+	//		{
+	//			// 마우스 오버 시 기능 실행
+	//			updateButtonOverCallback(buttonFunc);
+	//		}
+	//		buttonState = UIBUTTONSTATE_OVER;	// 오버 시 상태 변경
+	//	}
+	//}
+	//else
+	//{
+	//	buttonState = UIBUTTONSTATE_NORMAL;
+	//}
 }
 
 void cUIObject::render()
 {
-	renderNormal();
-	renderButton();
+	if (m_UIViewEnable)
+	{
+		renderNormal();
+		renderButton();
+	}
 	renderOther();
+}
+
+void cUIObject::renderOptions()
+{
+	//g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	//g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	//g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+
+	//g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	//g_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	//g_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+
+	//g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
+}
+
+void cUIObject::renderOptionFalse()
+{
+	//g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 }
 
 void cUIObject::renderBG()
@@ -321,6 +366,8 @@ void cUIObject::renderBG()
 	{
 		if (!m_MUISpriteBGIt->second.enable) continue;
 		m_MUISpriteBGIt->second.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+		renderOptions();
 
 		updateMatWorld(m_MUISpriteBGIt->second.matWorld, m_MUISpriteBGIt->second.pt);
 
@@ -331,6 +378,8 @@ void cUIObject::renderBG()
 			NULL,	// 중심점. 회전시킬꺼면 imgInfo에서 Width / 2, Height / 2 넣으면 될듯
 			NULL,
 			D3DCOLOR_ARGB(255, 255, 255, 255));
+
+		renderOptionFalse();
 
 		m_MUISpriteBGIt->second.sprite->End();
 	}
@@ -343,6 +392,8 @@ void cUIObject::renderButton()
 		if (!m_MUIButtonIt->second.enable) continue;
 		m_MUIButtonIt->second.sprite->Begin(D3DXSPRITE_ALPHABLEND);
 
+		renderOptions();
+
 		updateMatWorld(m_MUIButtonIt->second.matWorld, m_MUIButtonIt->second.pt);
 		m_MUIButtonIt->second.sprite->SetTransform(&m_MUIButtonIt->second.matWorld);
 
@@ -351,6 +402,8 @@ void cUIObject::renderButton()
 			NULL,	// 중심점. 회전시킬꺼면 imgInfo에서 Width / 2, Height / 2 넣으면 될듯
 			NULL,
 			D3DCOLOR_ARGB(255, 255, 255, 255));
+
+		renderOptionFalse();
 
 		m_MUIButtonIt->second.sprite->End();
 	}
@@ -362,6 +415,8 @@ void cUIObject::renderNormal()
 	{
 		if (!m_MUISpriteIt->second.enable) continue;
 		m_MUISpriteIt->second.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+		renderOptions();
 
 		D3DXMatrixAffineTransformation2D(&m_MUISpriteIt->second.matWorld,
 			m_UIScale,
@@ -388,6 +443,8 @@ void cUIObject::renderNormal()
 				NULL,
 				D3DCOLOR_ARGB(255, 255, 255, 255));
 		}
+
+		renderOptionFalse();
 
 		m_MUISpriteIt->second.sprite->End();
 	}

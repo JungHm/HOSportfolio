@@ -2,18 +2,24 @@
 
 class cCharacter;
 
+struct P_INFO
+{
+	
+	//float CtQ, CtW, CtE;
+};
 
 class cPlayer
 {
 private://player 기본 정보
 	int experience;
 	SYNTHESIZE(int, level, Level);
-	int m_Hp, m_Mp, m_Shield;
+	SYNTHESIZE(int, m_Hp, Hp);
+	SYNTHESIZE(int, m_Mp, Mp);
+	SYNTHESIZE(int, m_Shield, Shield);
 	int Att;
 	SYNTHESIZE(float, m_Radius, Radius);
-
 	//공격용
-	SYNTHESIZE(float, distance, Distance);
+	SYNTHESIZE(float ,distance,Distance);
 	bool isAttack;
 
 private:

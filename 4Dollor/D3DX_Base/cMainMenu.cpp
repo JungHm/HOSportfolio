@@ -7,7 +7,7 @@
 #include "cObjMap.h"
 #include "cUIMainMenu.h"
 #include "cUILoadingClientBegin.h"
-
+#include "cUILoadingInGame.h"
 
 
 cMainMenu::cMainMenu()
@@ -41,18 +41,15 @@ cMainMenu::~cMainMenu()
 		SAFE_DELETE(m_UILoading);
 	}
 
-
 }
 
 void cMainMenu::SetUp()
 {
-
 	m_UI = new cUIMainMenu;
 	m_UI->setup("cMainMenu");	// ���̺� �� �з�� �̸�� ����ϹǷ� Ŭ���� �̸�� ����
 
 	m_UILoading = new cUILoadingClientBegin;
 	m_UILoading->setup("cUILoadingClientBegin");
-
 }
 
 void cMainMenu::Destroy()
@@ -67,45 +64,16 @@ void cMainMenu::Destroy()
 		m_UILoading->destroy();
 		SAFE_DELETE(m_UILoading);
 	}
-
 }
 
 void cMainMenu::Update()
 {
-	if (m_UI && !m_UILoading)
-	{
-		m_UI->update();	// ��ư�� ����Ƿ� update
-		if (m_UI->GetGameStart())
-		{
-			g_Scene->ChangeScene("game");
-			return;
-		}
-	}
-	else if (m_UILoading)
-	{
-		m_UILoading->update();
-		if (m_UILoading->GetLoadingEnd())
-		{
-			m_UILoading->destroy();
-			SAFE_DELETE(m_UILoading);
-
-		}
-	}
-
-
+	UpdateUI();
 }
 
 void cMainMenu::Render()
 {
-
-
-	if (m_UI && !m_UILoading) m_UI->renderBG();	// ��� ���� ���� ��
-	else if (m_UILoading) m_UILoading->renderBG();
-
-
-	if (m_UI && !m_UILoading) m_UI->render();	// ��� �� UI ��õ� ����
-	else if (m_UILoading) m_UILoading->render();
-
+	RenderUI();
 }
 
 void cMainMenu::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -131,4 +99,36 @@ void cMainMenu::SetLight()
 	g_pD3DDevice->LightEnable(0, true);
 
 
+}
+
+void cMainMenu::UpdateUI()
+{
+	if (m_UI && !m_UILoading)
+	{
+		m_UI->update();
+
+		if (m_UI->GetGameStart())
+		{
+			g_Scene->ChangeScene("game");
+			return;
+		}
+	}
+	else if (m_UILoading)
+	{
+		m_UILoading->update();
+		if (m_UILoading->GetLoadingEnd())
+		{
+			m_UILoading->destroy();
+			SAFE_DELETE(m_UILoading);
+		}
+	}
+}
+
+void cMainMenu::RenderUI()
+{
+	if (m_UI && !m_UILoading) m_UI->renderBG();	// ��� ���� ���� ��
+	else if (m_UILoading) m_UILoading->renderBG();
+
+	if (m_UI && !m_UILoading) m_UI->render();	// ��� �� UI ��õ� ����
+	else if (m_UILoading) m_UILoading->render();
 }

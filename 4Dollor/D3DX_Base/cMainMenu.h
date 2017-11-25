@@ -24,7 +24,6 @@ private:
 	cUIMainMenu*	m_UI;
 	cUILoadingClientBegin* m_UILoading;
 
-
 	LPDIRECT3DTEXTURE9		m_pD3DTexture;
 
 private:
@@ -40,6 +39,7 @@ public:
 	virtual void Render() override;
 	virtual void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 	void SetLight();
-
+	void UpdateUI();
+	void RenderUI();
 };
 
