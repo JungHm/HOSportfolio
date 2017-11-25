@@ -770,10 +770,9 @@ void cUIInGame::renderAbilityAddGuide()
 	// 스킬 찍을 수 있을 때만 떠야 됨
 	if (!m_MUIButton.find("charport")->second.selected && m_LvUpCount > 0)
 	{
-		m_MUISprite.find("choosebg")->second.enable = true;
 		int delay = 8;	// 화살표 표시되는 간격에 모두 사라졌다 등장하는 연출 시간 제어용. 4이하면 안됨
 		int t = GetTickCount() / 300 % delay;
-		if (t == delay / 2)
+		if (t == delay / 2 + 2)
 		{
 			m_MUISprite.find("choose0")->second.enable = false;
 			m_MUISprite.find("choose1")->second.enable = false;
@@ -788,7 +787,6 @@ void cUIInGame::renderAbilityAddGuide()
 	}
 	else
 	{
-		m_MUISprite.find("choosebg")->second.enable = false;
 		m_MUISprite.find("choose0")->second.enable = false;
 		m_MUISprite.find("choose1")->second.enable = false;
 		m_MUISprite.find("choose2")->second.enable = false;
