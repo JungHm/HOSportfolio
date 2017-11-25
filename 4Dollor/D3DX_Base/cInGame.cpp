@@ -87,10 +87,14 @@ void cInGame::Destroy()
 
 void cInGame::Update()
 {
+
+	
+
 	if (m_pTower)
 	{
 		m_pTower->Update();
 		m_pTower->RedFindEnemy(m_pPlayer->GetSphere());
+		//m_pTower->RedFindEnemy(MINIONMANAGER->GetBlueMinion()[0].sSphere());
 	}
 
 	m_pPlayer->Update();
@@ -150,6 +154,8 @@ void cInGame::Update()
 		}
 	}
 
+
+
 	if (m_UI)
 	{
 		m_UI->update();	// ��ư�� ����Ƿ� update
@@ -159,7 +165,6 @@ void cInGame::Update()
 			return;
 		}
 	}
-
 
 	//========미니언==========
 	minionCount++;
@@ -177,18 +182,41 @@ void cInGame::Update()
 
 	}
 
-
 	MINIONMANAGER->RedUpdate(m_pPlayer->GetPosition());
 	MINIONMANAGER->BlueUpdate(m_pPlayer->GetPosition());
+
+	//for (int i = 0; i < m_pLoadMap->GetFielBox().size(); i++)
+	//{
+	//	if (!m_isColl)
+	//	{
+	//		D3DXIntersect(m_pLoadMap->GetFielBox()[i].pMesh,
+	//			&m_pPlayer->GetPosition(),
+	//			&m_pPlayer->GetDir(),
+	//			&m_isColl,
+	//			NULL, NULL, NULL,
+	//			&m_fDist,
+	//			NULL, NULL);
+	//	}
+
+	//	else
+	//	{
+	//		m_
+	//	}
+	//}
+	//ST_PC_VERTEXT v, v1;
+
+	//v.c = D3DXCOLOR(1, 0, 0, 1);
+	//v.p = m_pPlayer->GetPosition();
+	//m_vecvetex.push_back(v);
+	//v1.c = D3DXCOLOR(0, 1, 0, 1);
+	//v1.p = m_pPlayer->GetPosition() + m_pPlayer->GetDir() * 200;
+	//m_vecvetex.push_back(v1);
+
 }
 
 void cInGame::Render()
 {
 	if (m_UI) m_UI->renderBG();	// ��� ���� ���� ��
-
-
-
-
 
 	if (m_UI) m_UI->render();	// ��� �� UI ��õ� ����
 
@@ -212,14 +240,23 @@ void cInGame::Render()
 		m_pTower->Render();
 
 	m_pPlayer->Render();
+	ST_PC_VERTEXT v, v1;
 
+	v.c = D3DXCOLOR(1, 0, 0, 1);
+	v.p = m_pPlayer->GetPosition();
+	m_vecvetex.push_back(v);
+	v1.c = D3DXCOLOR(0, 1, 0, 1);
+	v1.p = m_pPlayer->GetPosition() + (m_pPlayer->GetDir()) * 200;
+	m_vecvetex.push_back(v1);
 	m_UI->updateBar(true, m_pPlayer->GetPosition(), m_pPlayer->GetHp());
 	//m_UI->updateBarMinion(10, { 0,0,0 }, 100);	// 미니언 추가되면 작업
+	g_pD3DDevice->SetFVF(ST_PC_VERTEXT::FVF);
+	g_pD3DDevice->DrawPrimitiveUP(D3DPT_LINELIST, m_vecvetex.size() / 2, &m_vecvetex[0], sizeof(ST_PC_VERTEXT));
 
+	m_vecvetex.clear();
 	//=======미니언=======
 	MINIONMANAGER->BlueRender();
 	MINIONMANAGER->RedRender();
-
 }
 
 void cInGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
