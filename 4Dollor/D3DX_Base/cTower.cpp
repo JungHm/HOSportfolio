@@ -60,6 +60,7 @@ void cTower::Update()
 	}
 
 	XFile->GetXFile(m_sTower[TEAM_BLUE].nKey)->Update();
+
 	if (m_sTower[TEAM_BLUE].isFind)
 	{	
 		XFile->GetAniCtrl(m_sTower[TEAM_BLUE].nKey)->AdvanceTime(g_pTimeManager->GetEllapsedTime(), NULL);
@@ -72,6 +73,7 @@ void cTower::Update()
 	}
 
 	XFile->GetXFile(m_sTower[TEAM_RED].nKey)->Update();
+
 	if (m_sTower[TEAM_RED].isFind)
 	{
 		XFile->GetAniCtrl(m_sTower[TEAM_RED].nKey)->AdvanceTime(g_pTimeManager->GetEllapsedTime(), NULL);

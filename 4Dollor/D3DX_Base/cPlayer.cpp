@@ -39,9 +39,11 @@ void cPlayer::Update()
 
 	m_pChar->Update();
 	m_pChar->SetmousePos(m_ptMouse);
+
 	if ((GetAsyncKeyState(VK_F2) & 0x8001) && level <= 20)//치트키 레벨업
 	{
 		experience += 2;
+
 		if (experience / 100 >= 1)
 		{
 			level += experience / 100;
@@ -54,6 +56,7 @@ void cPlayer::Update()
 	coolQ = m_pChar->GetCoolQ();
 	coolW = m_pChar->GetCoolW();
 	coolE = m_pChar->GetCoolE();
+
 	if (coolQ > 0.0f)// 쿨타임 max 보다 작다면 쿨을 돌려준다
 	{
 

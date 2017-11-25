@@ -11,22 +11,18 @@
 #include "cSkyBox.h"
 #include "cTower.h"
 
-
-
 cInGame::cInGame()
 {
 }
 
-
 cInGame::~cInGame()
 {
-
-
-
 }
 
 void cInGame::SetUp()
 {
+	m_isColl = false;
+
 	g_Particle->Setup();
 
 	m_UILoading = new cUILoadingInGame;
@@ -164,6 +160,13 @@ void cInGame::Update()
 			SAFE_DELETE(m_UILoading);
 		}
 	}
+
+	for (int i = 0; i < m_pLoadMap->GetFielBox().size(); i++)
+	{
+		tCollision(&Distance, m_pLoadMap->GetFielBox()[i].pMesh);
+	}
+
+	std::cout << Distance << std::endl;
 }
 
 void cInGame::Render()
@@ -193,8 +196,6 @@ void cInGame::Render()
 	if (m_pTower)
 		m_pTower->Render();
 
-
-
 	m_pPlayer->Render();
 }
 
@@ -202,4 +203,19 @@ void cInGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	m_ptMouse.x = LOWORD(lParam);
 	m_ptMouse.y = HIWORD(lParam);
+}
+
+void cInGame::tCollision(OUT float* fDistans, IN LPD3DXMESH pObjMesh)
+{
+	D3DXIntersect(
+		pObjMesh,											//	충돌할 메쉬
+		&m_pPlayer->GetPosition(),							//	해당 충돌할 녀석의 포지션
+		&m_pPlayer->GetDir(),								//	" 방향
+		&m_isColl, NULL, NULL, NULL, fDistans, NULL, NULL);
+
+	//printf_s("%f\n", Distance);
+
+	//std::cout << m_pPlayer->GetPosition().x << " " << m_pPlayer->GetPosition().y << " " << m_pPlayer->GetPosition().z << endl;
+	/*std::cout << Distance << std::endl;*/
+	//std::cout << m_pPlayer->GetDir().x << " " << m_pPlayer->GetDir().y << " " << m_pPlayer->GetDir().z << endl;
 }

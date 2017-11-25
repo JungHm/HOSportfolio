@@ -4,13 +4,13 @@
 //
 
 #pragma once
-
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
 #include "targetver.h"
 #define _CRT_SECURE_NO_DEPRECATE      // C4996 오류 무시. 과거 문자열(_s가 없는 것)을 사용하지 마라는 정도의 오류// Windows 헤더 파일:
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용은 Windows 헤더에서 제외합니다.
 // Windows 헤더 파일:
 #include <windows.h>
-
+#include <iostream>
 
 
 // C 런타임 헤더 파일입니다.

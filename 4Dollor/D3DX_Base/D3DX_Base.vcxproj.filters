@@ -112,9 +112,13 @@
     <ClCompile Include="cFrustum.cpp" />
     <ClCompile Include="cParticle.cpp" />
     <ClCompile Include="cParticleManager.cpp" />
-    <ClCompile Include="cFireEffect.cpp" />
-    <ClCompile Include="cTower.cpp" />
     <ClCompile Include="cUtil.cpp" />
+    <ClCompile Include="cTower.cpp">
+      <Filter>Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="cFireEffect.cpp">
+      <Filter>Tower</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cMtlTex.h" />
@@ -244,8 +248,12 @@
     <ClInclude Include="cFrustum.h" />
     <ClInclude Include="cParticle.h" />
     <ClInclude Include="cParticleManager.h" />
-    <ClInclude Include="cFireEffect.h" />
-    <ClInclude Include="cTower.h" />
+    <ClInclude Include="cTower.h">
+      <Filter>Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="cFireEffect.h">
+      <Filter>Tower</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="D3DX_Base.ico">
@@ -288,6 +296,9 @@
     </Filter>
     <Filter Include="FxLoader">
       <UniqueIdentifier>{5c3709a0-4751-4c6d-aa9c-30292f4bc457}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tower">
+      <UniqueIdentifier>{b88c77d8-50bc-4dbf-b372-0d8aced1997f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
