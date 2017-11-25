@@ -1,7 +1,7 @@
 #pragma once
 #include "cUIObject.h"
 
-#define FADEINSPEED 10	// 값이 낮을수록 느림
+#define FADEINSPEED 3	// 값이 낮을수록 느림
 
 class cUILoadingInGame;
 

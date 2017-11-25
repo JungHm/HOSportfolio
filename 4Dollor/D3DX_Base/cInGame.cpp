@@ -6,11 +6,10 @@
 #include "cCamera.h"
 #include "cTessadar.h"
 #include "cPlayer.h"
-#include "cUtil.h"
 #include "cSaveLoad.h"
 #include "cHeightMap.h"
 #include "cSkyBox.h"
-
+#include "cTower.h"
 
 
 
@@ -28,8 +27,7 @@ cInGame::~cInGame()
 
 void cInGame::SetUp()
 {
-	m_UILoading = new cUILoadingInGame;
-	m_UILoading->setup("cUILoadingInGame");
+	g_Particle->Setup();
 
 	m_UI = new cUIInGame;
 	m_UI->setup("cInGame");
@@ -50,6 +48,9 @@ void cInGame::SetUp()
 	m_pGrid = new cGrid;
 	m_pGrid->Setup("Grid", "field2.png", 65, 115, 5.0f);
 
+	m_pTower = new cTower;
+	m_pTower->Setup(D3DXVECTOR3(-252.370010, 0.100000, -12.779068), D3DXVECTOR3(252.751999, 0.100000, -27.856529));
+
 	cTessadar*	m_pTessadar;
 	m_pTessadar = new cTessadar;
 	m_pPlayer = new cPlayer;
@@ -59,22 +60,18 @@ void cInGame::SetUp()
 
 void cInGame::Destroy()
 {
+	g_Particle->Destroy();
 	if (m_UI)
 	{
 		m_UI->destroy();
 		SAFE_DELETE(m_UI);
 	}
-	if (m_UILoading)
-	{
-		m_UILoading->destroy();
-		SAFE_DELETE(m_UILoading);
-	}
 	SAFE_DELETE(m_pLoadMap);
 	SAFE_DELETE(m_pHeightMap);
 	SAFE_DELETE(m_pSkyBox);
-
 	SAFE_DELETE(m_pGrid);
 	SAFE_RELEASE(m_pD3DTexture);
+	SAFE_DELETE(m_pTower);
 
 	SAFE_DELETE(m_pPlayer);
 	//m_pRootNode->Destroy();
@@ -82,6 +79,11 @@ void cInGame::Destroy()
 
 void cInGame::Update()
 {
+	if (m_pTower)
+	{
+		m_pTower->Update();
+		m_pTower->RedFindEnemy(m_pPlayer->GetSphere());
+	}
 
 	m_pPlayer->Update();
 	if (m_pPlayer->GetLevel() < 4)//레벨에 따라 스킬 언락
@@ -109,7 +111,7 @@ void cInGame::Update()
 	D3DXVECTOR3 pickPosition;
 	for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
 	{
-		if (Util::IntersectTri(Util::D3DXVec2TransformArray(m_ptMouse.x, m_ptMouse.y),
+		if (IntersectTri(D3DXVec2TransformArray(m_ptMouse.x, m_ptMouse.y),
 			m_pGrid->GetPicVertex()[i].p,
 			m_pGrid->GetPicVertex()[i + 1].p,
 			m_pGrid->GetPicVertex()[i + 2].p,
@@ -125,7 +127,7 @@ void cInGame::Update()
 		D3DXVECTOR3 pickPosition;
 		for (int i = 0; i < m_pGrid->GetPicVertex().size(); i += 3)
 		{
-			if (Util::IntersectTri(Util::D3DXVec2TransformArray(m_ptMouse.x, m_ptMouse.y),
+			if (IntersectTri(D3DXVec2TransformArray(m_ptMouse.x, m_ptMouse.y),
 				m_pGrid->GetPicVertex()[i].p,
 				m_pGrid->GetPicVertex()[i + 1].p,
 				m_pGrid->GetPicVertex()[i + 2].p,
@@ -154,7 +156,7 @@ void cInGame::Update()
 	//{
 	//	g_Scene->ChangeScene("menu");
 	//}
-	if (m_UI && !m_UILoading)
+	if (m_UI)
 	{
 		m_UI->update();	// ��ư�� ����Ƿ� update
 		if (m_UI->GetGameEnd())
@@ -163,28 +165,17 @@ void cInGame::Update()
 			return;
 		}
 	}
-	else if (m_UILoading)
-	{
-		m_UILoading->update();
-		if (m_UILoading->GetLoadingEnd())
-		{
-			m_UILoading->destroy();
-			SAFE_DELETE(m_UILoading);
-		}
-	}
 }
 
 void cInGame::Render()
 {
-	if (m_UI && !m_UILoading) m_UI->renderBG();	// ��� ���� ���� ��
-	else if (m_UILoading) m_UILoading->renderBG();
+	if (m_UI) m_UI->renderBG();	// ��� ���� ���� ��
 
 
 
 
 
-	if (m_UI && !m_UILoading) m_UI->render();	// ��� �� UI ��õ� ����
-	else if (m_UILoading) m_UILoading->render();
+	if (m_UI) m_UI->render();	// ��� �� UI ��õ� ����
 
 	//g_pSprite->BeginScene();
 	  //g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
@@ -201,6 +192,11 @@ void cInGame::Render()
 
 	if (m_pGrid)
 		m_pGrid->Render();
+
+	if (m_pTower)
+		m_pTower->Render();
+
+
 
 	m_pPlayer->Render();
 	m_UI->updateBar(true, m_pPlayer->GetPosition(), m_pPlayer->GetHp());	// 100에 테사 현재 HP 넣으면 됨

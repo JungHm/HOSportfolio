@@ -15,12 +15,12 @@ cParticle::~cParticle()
 {
 }
 
-void cParticle::SetupParticle(int num, D3DXCOLOR c)
+void cParticle::SetupParticle(int size, int rad, D3DXCOLOR c)
 {
-	m_vecParticle.resize(1000);
+	m_vecParticle.resize(size);//10
 	for (int i = 0; i < m_vecParticle.size(); i++)
 	{
-		float fRadius = rand() % 100 / 10.0f;
+		float fRadius = rand() % rad / 10.0f;//1
 		m_vecParticle[i].p = D3DXVECTOR3(0, 0, fRadius);
 
 		D3DXVECTOR3 vAngle = D3DXVECTOR3(
@@ -68,7 +68,7 @@ void cParticle::SetupParticle(int num, D3DXCOLOR c)
 	g_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 }
 
-void cParticle::RenderParticle()
+void cParticle::RenderParticle(char* TextureName)
 {
 	D3DXMATRIXA16 matWorld;
 	D3DXMatrixIdentity(&matWorld);
@@ -79,7 +79,7 @@ void cParticle::RenderParticle()
 	g_pD3DDevice->SetRenderState(D3DRS_ZWRITEENABLE, false);
 
 	g_pD3DDevice->SetFVF(ST_PC_VERTEXT::FVF);
-	g_pD3DDevice->SetTexture(0, g_pTextureManager->GetTexture("batman.png"));
+	g_pD3DDevice->SetTexture(0, g_pTextureManager->GetTexture(TextureName));
 	g_pD3DDevice->DrawPrimitiveUP(D3DPT_POINTLIST,
 		m_vecParticle.size(),
 		&m_vecParticle[0],
@@ -109,4 +109,26 @@ void cParticle::UpdateParticle()
 	{
 		m_vecParticle[i].c = color;// D3DCOLOR_ARGB(nAlpha, 150, 60, 70);
 	}
+}
+
+bool cParticle::Update()
+{
+	static int nAlpha = 0;
+	static int nDelta = 5;
+	nAlpha += nDelta;
+	if (nAlpha > 255)
+	{
+		nAlpha = 255;
+		nDelta *= -1;
+	}
+	if (nAlpha < 0)
+	{
+		nAlpha = 255;
+		return false;
+	}
+	for (int i = 0; i < m_vecParticle.size(); i++)
+	{
+		m_vecParticle[i].c = color;// D3DCOLOR_ARGB(nAlpha, 150, 60, 70);
+	}
+	return true;
 }

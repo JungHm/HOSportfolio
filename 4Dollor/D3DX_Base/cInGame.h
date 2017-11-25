@@ -1,7 +1,6 @@
 #pragma once
 #include "iScene.h"
 
-class cUILoadingInGame;
 class cUIInGame;
 class cGrid;
 class cCamera;
@@ -10,22 +9,22 @@ class cPlayer;
 class cSaveLoad;
 class cHeightMap;
 class cSkyBox;
-
+class cTower;
 
 class cInGame :
 	public iScene
 {
 private:
-	cUILoadingInGame*	m_UILoading;
 	cUIInGame*			m_UI;
 
-  std::vector<ST_PC_VERTEXT>	m_vecVertex;
+	std::vector<ST_PC_VERTEXT>	m_vecVertex;
 	cGrid*		m_pGrid;
 	cCamera*	m_pCamera;
 	cPlayer*	m_pPlayer;
 	cSaveLoad*  m_pLoadMap;
 	cHeightMap* m_pHeightMap;
 	cSkyBox*    m_pSkyBox;
+	cTower*		m_pTower;
 
 	LPDIRECT3DTEXTURE9		m_pD3DTexture;
 

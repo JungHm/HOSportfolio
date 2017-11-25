@@ -34,6 +34,9 @@ void cPlayer::Setup()
 
 void cPlayer::Update()
 {
+	m_pSphere.fRadius = m_Radius;
+	m_pSphere.vCenter = m_vPosition;
+
 	m_pChar->Update();
 	m_pChar->SetmousePos(m_ptMouse);
 	if ((GetAsyncKeyState(VK_F2) & 0x8001) && level <= 20)//치트키 레벨업

@@ -20,6 +20,7 @@ private://player 기본 정보
 	//공격용
 	SYNTHESIZE(float ,distance,Distance);
 	bool isAttack;
+
 private:
 	D3DXMATRIXA16 matWorld, matR, matT;
 	cCharacter* m_pChar;
@@ -30,8 +31,10 @@ private:
 	SYNTHESIZE(D3DXVECTOR3, m_vDirection, Dir);
 	SYNTHESIZE(D3DXVECTOR3, m_vFrom, From);
 	SYNTHESIZE(D3DXVECTOR3, m_ptMouse, MousePos);
+
 private:
-	
+	SYNTHESIZE(ST_SPHERE, m_pSphere, Sphere);
+
 public:
 	MATRIX16_FIX;
 	cPlayer();

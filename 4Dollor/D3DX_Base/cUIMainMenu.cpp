@@ -21,6 +21,7 @@ int cUIMainMenu::updateButtonCallback(int num)
 	{
 		// 준비 버튼 눌렸을 때 처리
 		m_GameReady = true;
+		m_UIViewEnable = false;
 		m_MUIButton.find("ready")->second.used = true;
 		m_MUIButton.find("ready")->second.buttonState = UIBUTTONSTATE_DISENABLE;
 		m_GameReadyTime = GetTickCount() / 1000;
@@ -276,6 +277,7 @@ void cUIMainMenu::renderOther()
 {
 	for each(auto p in m_VText)
 	{
+		if (!m_UIViewEnable) continue;
 		LPD3DXFONT font = g_pFontManager->GetFont(cFontManager::FT_SMALL);
 		font->DrawTextA(NULL, p.str.c_str(), p.str.length(), &p.rcText, DT_CENTER | DT_VCENTER, D3DCOLOR_ARGB(p.alpha, 255, 255, 255));
 	}
