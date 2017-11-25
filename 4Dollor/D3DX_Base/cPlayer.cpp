@@ -5,12 +5,12 @@
 cPlayer::cPlayer()
 	: m_vPosition(0, 0, 0)
 	, m_vDirection(0, 0, -1)
-	, m_Radius(5.0f)
 {
 	m_vFrom = m_vPosition;
 	D3DXMatrixIdentity(&matWorld);
 	D3DXMatrixIdentity(&matT); D3DXMatrixIdentity(&matR);
 	Attack = false;
+
 	level = 1; experience = 2;
 	m_Hp = m_Mp = Att = 100;
 	m_Shield = 10;
@@ -39,11 +39,9 @@ void cPlayer::Update()
 
 	m_pChar->Update();
 	m_pChar->SetmousePos(m_ptMouse);
-
 	if ((GetAsyncKeyState(VK_F2) & 0x8001) && level <= 20)//치트키 레벨업
 	{
 		experience += 2;
-
 		if (experience / 100 >= 1)
 		{
 			level += experience / 100;
@@ -56,7 +54,6 @@ void cPlayer::Update()
 	coolQ = m_pChar->GetCoolQ();
 	coolW = m_pChar->GetCoolW();
 	coolE = m_pChar->GetCoolE();
-
 	if (coolQ > 0.0f)// 쿨타임 max 보다 작다면 쿨을 돌려준다
 	{
 
@@ -64,7 +61,6 @@ void cPlayer::Update()
 		isQcool = true;
 	}
 	else isQcool = false;
-
 	if (coolW > 0.0f)// 쿨타임 max 보다 작다면 쿨을 돌려준다
 	{
 		m_pChar->SetCoolW(coolW - g_pTimeManager->GetEllapsedTime());

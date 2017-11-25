@@ -205,6 +205,12 @@ enum OBJECTKIND
 	OBJNUM
 };
 
+enum TEAM
+{
+	TEAM_BLUE,
+	TEAM_RED
+};
+
 #include "cKeyManager.h"
 #include "cObject.h"
 #include "cObjectManager.h"
@@ -220,7 +226,7 @@ enum OBJECTKIND
 #include "cFxLoad.h"
 #include "cParticleManager.h"
 #include "cFireEffect.h"
-
+#include "cMinion.h"
 
 typedef struct tagObject
 {

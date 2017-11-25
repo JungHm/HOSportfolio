@@ -1,11 +1,5 @@
 #pragma once
 
-enum TEAM
-{
-	TEAM_BLUE,         // 팀은 크게 파란팀(아군), 빨간팀(적군)으로 나뉨
-	TEAM_RED           // 중립몬스터 추가 시, enum문에 추가
-};
-
 enum TOWER_STATE
 {
 	NONE, FIRE

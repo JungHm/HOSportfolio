@@ -98,6 +98,7 @@
     <ClInclude Include="cKeyManager.h" />
     <ClInclude Include="cMainGame.h" />
     <ClInclude Include="cMainMenu.h" />
+    <ClInclude Include="cMinion.h" />
     <ClInclude Include="cMtlTex.h" />
     <ClInclude Include="cObject.h" />
     <ClInclude Include="cObjectManager.h" />
@@ -147,6 +148,7 @@
     <ClCompile Include="cKeyManager.cpp" />
     <ClCompile Include="cMainGame.cpp" />
     <ClCompile Include="cMainMenu.cpp" />
+    <ClCompile Include="cMinion.cpp" />
     <ClCompile Include="cMtlTex.cpp" />
     <ClCompile Include="cObject.cpp" />
     <ClCompile Include="cObjectManager.cpp" />
