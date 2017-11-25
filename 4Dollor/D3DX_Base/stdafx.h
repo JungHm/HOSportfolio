@@ -99,7 +99,6 @@ public:\
 #define INF 2345102
 
 
-
 struct ST_PC_VERTEXT
 {
 	D3DXVECTOR3	p;
@@ -237,5 +236,6 @@ typedef struct tagObject
 	D3DXVECTOR3		vPosition;		// 로테이션 값
 	vector<cMtlTex*>	vecMtlTex;
 	ST_SPHERE		sSphere;		// 스페어
+	bool			isShow;
 } OBJECT;
 

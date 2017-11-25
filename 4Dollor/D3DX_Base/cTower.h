@@ -45,14 +45,5 @@ public:
 	void Render();
 	void BlueFindEnemy(ST_SPHERE sSphere);
 	void RedFindEnemy(ST_SPHERE sSphere);
-
-	// 두점 사이의 거리
-	float getDistance(float startX, float startY, float endX, float endY)
-	{
-		float x = endX - startX;
-		float y = endY - startY;
-
-		return sqrtf(x * x + y * y);
-	}
 };
 

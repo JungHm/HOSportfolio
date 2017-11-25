@@ -16,4 +16,7 @@ namespace Util
 
 
 	bool IntersectTri(IN Ray r, IN D3DXVECTOR3 & v0, IN D3DXVECTOR3 & v1, IN D3DXVECTOR3 & v2, OUT D3DXVECTOR3& vPickedPosition);
+
+	// 두점 사이의 거리
+	float getDistance(float startX, float startY, float endX, float endY);
 }

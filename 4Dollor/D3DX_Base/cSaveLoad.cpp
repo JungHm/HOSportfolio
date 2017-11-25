@@ -89,6 +89,7 @@ void cSaveLoad::CreateObj(IN int nKind, IN LPD3DXMESH pMesh, IN vector<cMtlTex*>
 	obj.fAngleY = fAngleY;
 	obj.sSphere.vCenter = vPos;
 	obj.sSphere.fRadius = vScal.x * 100.0f;
+	obj.isShow = false;
 
 	m_vecFieldObj.push_back(obj);
 }
@@ -142,6 +143,8 @@ void cSaveLoad::CreateObjRender()
 	{
 		if (m_pFrustum->IsInside(&m_vecFieldObj[i].sSphere))
 		{
+			m_vecFieldObj[i].isShow = true;
+
 			D3DXMatrixScaling(&m_vecFieldObj[i].matScal, m_vecFieldObj[i].vScaling.x, m_vecFieldObj[i].vScaling.y, m_vecFieldObj[i].vScaling.z);
 			D3DXMatrixRotationY(&m_vecFieldObj[i].matRotY, m_vecFieldObj[i].fAngleY);
 			D3DXMatrixTranslation(&m_vecFieldObj[i].matTrans, m_vecFieldObj[i].vPosition.x, m_vecFieldObj[i].vPosition.y, m_vecFieldObj[i].vPosition.z);
@@ -156,6 +159,10 @@ void cSaveLoad::CreateObjRender()
 				g_pD3DDevice->SetTexture(0, m_vecFieldObj[i].vecMtlTex[j]->GetTexture());
 				m_vecFieldObj[i].pMesh->DrawSubset(j);
 			}
+		}
+		else
+		{
+			m_vecFieldObj[i].isShow = false;
 		}
 	}
 

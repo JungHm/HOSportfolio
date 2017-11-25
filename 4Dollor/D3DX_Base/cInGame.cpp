@@ -22,6 +22,7 @@ cInGame::~cInGame()
 void cInGame::SetUp()
 {
 	m_isColl = false;
+	m_fDist = 0.0f;
 
 	g_Particle->Setup();
 
@@ -141,8 +142,6 @@ void cInGame::Update()
 		}
 	}
 
-
-
 	if (m_UI && !m_UILoading)
 	{
 		m_UI->update();	// ��ư�� ����Ƿ� update
@@ -161,12 +160,7 @@ void cInGame::Update()
 		}
 	}
 
-	for (int i = 0; i < m_pLoadMap->GetFielBox().size(); i++)
-	{
-		tCollision(&Distance, m_pLoadMap->GetFielBox()[i].pMesh);
-	}
-
-	std::cout << Distance << std::endl;
+	//SphereCollision();
 }
 
 void cInGame::Render()
@@ -205,17 +199,19 @@ void cInGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	m_ptMouse.y = HIWORD(lParam);
 }
 
-void cInGame::tCollision(OUT float* fDistans, IN LPD3DXMESH pObjMesh)
+void cInGame::SphereCollision()
 {
-	D3DXIntersect(
-		pObjMesh,											//	충돌할 메쉬
-		&m_pPlayer->GetPosition(),							//	해당 충돌할 녀석의 포지션
-		&m_pPlayer->GetDir(),								//	" 방향
-		&m_isColl, NULL, NULL, NULL, fDistans, NULL, NULL);
+	for (int i = 0; i < m_pLoadMap->GetFieldObj().size(); i++)
+	{
+		if (!m_pLoadMap->GetFieldObj()[i].isShow) continue;
 
-	//printf_s("%f\n", Distance);
-
-	//std::cout << m_pPlayer->GetPosition().x << " " << m_pPlayer->GetPosition().y << " " << m_pPlayer->GetPosition().z << endl;
-	/*std::cout << Distance << std::endl;*/
-	//std::cout << m_pPlayer->GetDir().x << " " << m_pPlayer->GetDir().y << " " << m_pPlayer->GetDir().z << endl;
+		if (getDistance(
+			m_pLoadMap->GetFieldObj()[i].vPosition.x,
+			m_pLoadMap->GetFieldObj()[i].vPosition.z,
+			m_pPlayer->GetPosition().x,
+			m_pPlayer->GetPosition().z) < m_pLoadMap->GetFieldObj()[i].sSphere.fRadius)
+		{
+			break;
+		}
+	}
 }
