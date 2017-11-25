@@ -579,7 +579,7 @@ void cUIInGame::SetSkillUseCooldown(int SkillIndex, float count)
 
 void cUIInGame::SetLevelUp()
 {
-	SetLvUpAddCount(1);
+	SetLvUpAddCount();
 }
 
 void cUIInGame::setupOther()

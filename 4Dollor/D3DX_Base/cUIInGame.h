@@ -98,6 +98,6 @@ public:
 	
 
 	// 레벨업 시 스킬 해방 몇개 할 수 있는지 count 누적.
-	void SetLvUpAddCount(int count) { m_LvUpCount += count; }
+	void SetLvUpAddCount() { m_LvUpCount += 1; }
 };
 
