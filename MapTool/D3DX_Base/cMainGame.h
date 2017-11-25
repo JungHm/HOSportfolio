@@ -5,7 +5,7 @@
 class cMapTool;
 class cUIObject;
 class cSkyBox;
-class cTower;
+//class cTower;
 
 enum
 {
@@ -44,7 +44,7 @@ private:
 	cSkyBox*		m_pSkyBox;
 	int				m_nIndex;
 	POINT			m_nMousePos;
-	cTower*			m_pTower;
+	//cTower*			m_pTower;
 
 public:
 	cMainGame();

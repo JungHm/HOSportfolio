@@ -12,7 +12,7 @@ cMainGame::cMainGame()
 	, m_pRootUI(NULL)
 	, m_pSkyBox(NULL)
 	, m_nIndex(0)
-	, m_pTower(NULL)
+	//, m_pTower(NULL)
 {
 	m_sUIObj[GATE_01] = "MapToolUI/Ui_Gate.png";
 	m_sUIObj[WALL_01] = "MapToolUI/Ui_Wall1.png";
@@ -28,7 +28,7 @@ cMainGame::cMainGame()
 
 cMainGame::~cMainGame()
 {
-	SAFE_DELETE(m_pTower);
+	//SAFE_DELETE(m_pTower);
 	SAFE_DELETE(m_pMapTool);
 	m_pRootUI->Destroy();
 	SAFE_DELETE(m_pSprite);
@@ -64,8 +64,8 @@ void cMainGame::Setup()
 	m_pMapTool = new cMapTool;
 	m_pMapTool->Setup();
 
-	m_pTower = new cTower;
-	m_pTower->Setup(D3DXVECTOR3(-252.370010, 0.100000, -12.779068), D3DXVECTOR3(252.751999, 0.100000, -27.856529));
+	//m_pTower = new cTower;
+	//m_pTower->Setup(D3DXVECTOR3(-252.370010, 0.100000, -12.779068), D3DXVECTOR3(252.751999, 0.100000, -27.856529));
 
 	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, true);
 	g_pD3DDevice->SetRenderState(D3DRS_AMBIENT, 0x00202020);
@@ -82,11 +82,11 @@ void cMainGame::Update()
 	if (m_pMapTool) m_pMapTool->Update();
 	if (m_pRootUI) m_pRootUI->Update();
 	
-	m_pTower->BlueFindEnemy(m_pMapTool->GetSphere());
-	m_pTower->RedFindEnemy(m_pMapTool->GetSphere());
+	//m_pTower->BlueFindEnemy(m_pMapTool->GetSphere());
+	//m_pTower->RedFindEnemy(m_pMapTool->GetSphere());
 
 	m_pImageCursor->SetPosition(m_nMousePos.x, m_nMousePos.y);
-	if (m_pTower) m_pTower->Update();
+	//if (m_pTower) m_pTower->Update();
 }
 
 void cMainGame::Render()
@@ -97,7 +97,7 @@ void cMainGame::Render()
 	if (m_pSkyBox) m_pSkyBox->Render();
 	if (m_pMapTool) m_pMapTool->Render();
 	if (m_pRootUI) m_pRootUI->Render(m_pSprite);
-	if (m_pTower) m_pTower->Render();
+	//if (m_pTower) m_pTower->Render();
 	//===================================
 	g_pD3DDevice->EndScene();
 	g_pD3DDevice->Present(NULL, NULL, NULL, NULL);
