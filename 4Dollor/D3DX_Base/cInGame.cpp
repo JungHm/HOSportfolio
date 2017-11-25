@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "cInGame.h"
 #include "cUILoadingInGame.h"
 #include "cUIInGame.h"
@@ -52,6 +52,17 @@ void cInGame::SetUp()
 	m_pPlayer = new cPlayer;
 	m_pPlayer->SetCharacter(m_pTessadar);
 	m_pPlayer->Setup();
+
+	//=========미니언===========
+	MINIONMANAGER->BlueXfileSetup();
+	MINIONMANAGER->RedXfileSetup();
+	MINIONMANAGER->BlueSetup();
+	MINIONMANAGER->RedSetup();
+	MINIONMANAGER->BlueSetup();
+	MINIONMANAGER->RedSetup();
+	MINIONMANAGER->BlueSetup();
+	MINIONMANAGER->RedSetup();
+	minionCount = 0;
 }
 
 void cInGame::Destroy()
@@ -154,6 +165,26 @@ void cInGame::Update()
 	}
 
 	std::cout << Distance << std::endl;
+
+	//========미니언==========
+	minionCount++;
+
+	int rnd;
+
+	if (minionCount % 1000 == 0)
+	{
+		MINIONMANAGER->BlueSetup();
+		MINIONMANAGER->RedSetup();
+		MINIONMANAGER->BlueSetup();
+		MINIONMANAGER->RedSetup();
+		MINIONMANAGER->BlueSetup();
+		MINIONMANAGER->RedSetup();
+
+	}
+
+
+	MINIONMANAGER->RedUpdate(m_pPlayer->GetPosition());
+	MINIONMANAGER->BlueUpdate(m_pPlayer->GetPosition());
 }
 
 void cInGame::Render()
@@ -167,8 +198,8 @@ void cInGame::Render()
 	if (m_UI) m_UI->render();	// ��� �� UI ��õ� ����
 
 	//g_pSprite->BeginScene();
-	  //g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
-	  //g_pSprite->End();
+	//g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
+	//g_pSprite->End();
 
 	if (m_pLoadMap)
 		m_pLoadMap->CreateObjRender();
@@ -186,8 +217,14 @@ void cInGame::Render()
 		m_pTower->Render();
 
 	m_pPlayer->Render();
+
 	m_UI->updateBar(true, m_pPlayer->GetPosition(), m_pPlayer->GetHp());
 	//m_UI->updateBarMinion(10, { 0,0,0 }, 100);	// 미니언 추가되면 작업
+
+	//=======미니언=======
+	MINIONMANAGER->BlueRender();
+	MINIONMANAGER->RedRender();
+
 }
 
 void cInGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

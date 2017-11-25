@@ -33,6 +33,8 @@ private:
 	BOOL  m_isColl;
 	float Distance;
 
+	int minionCount;
+
 public:
 	cInGame();
 	~cInGame();
