@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="cMtlTex.cpp" />
@@ -112,11 +112,14 @@
     <ClCompile Include="cFrustum.cpp" />
     <ClCompile Include="cParticle.cpp" />
     <ClCompile Include="cParticleManager.cpp" />
-    <ClCompile Include="cFireEffect.cpp" />
-    <ClCompile Include="cTower.cpp" />
     <ClCompile Include="cUtil.cpp" />
     <ClCompile Include="cMinion.cpp">
       <Filter>Player\Minion</Filter>
+    <ClCompile Include="cTower.cpp">
+      <Filter>Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="cFireEffect.cpp">
+      <Filter>Tower</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -247,10 +250,17 @@
     <ClInclude Include="cFrustum.h" />
     <ClInclude Include="cParticle.h" />
     <ClInclude Include="cParticleManager.h" />
+
     <ClInclude Include="cFireEffect.h" />
     <ClInclude Include="cTower.h" />
     <ClInclude Include="cMinion.h">
       <Filter>Player\Minion</Filter>
+
+    <ClInclude Include="cTower.h">
+      <Filter>Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="cFireEffect.h">
+      <Filter>Tower</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -297,6 +307,8 @@
     </Filter>
     <Filter Include="Player\Minion">
       <UniqueIdentifier>{41ca90fe-74ff-40cd-a257-9f6a51368274}</UniqueIdentifier>
+    <Filter Include="Tower">
+      <UniqueIdentifier>{b88c77d8-50bc-4dbf-b372-0d8aced1997f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

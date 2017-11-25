@@ -11,6 +11,7 @@ private://player 기본 정보
 	int m_Hp, m_Mp, m_Shield;
 	int Att;
 	SYNTHESIZE(float, m_Radius, Radius);
+
 	//공격용
 	SYNTHESIZE(float, distance, Distance);
 	bool isAttack;

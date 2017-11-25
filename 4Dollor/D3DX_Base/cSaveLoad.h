@@ -18,7 +18,7 @@ private:
 	SYNTHESIZE(vector<ST_COST>, m_vecCost, Cost);			// 다익스트라 길찾기 갱신 값
 	SYNTHESIZE_PASS_BY_REF(vector<ST_SPHERE_NODE>, m_vecFieldNodeSphere, FieldNodeSphere); // 필드에 배치되는 다익스트라 노드 스페어
 	SYNTHESIZE_PASS_BY_REF(vector<ST_PC_VERTEXT>, m_vecNodeLine, NodeLinde);			   // 각 노드들의 연결 라인
-
+	
 public:
 	cSaveLoad();
 	~cSaveLoad();
