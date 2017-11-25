@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "cSaveLoad.h"
 #include "cObjLoader.h"
+#include "cFrustum.h"
 
 cSaveLoad::cSaveLoad()
 	: m_pObjLoader(NULL)
@@ -11,8 +12,8 @@ cSaveLoad::cSaveLoad()
 	m_sFileName[WALL_02] = "Wall_02.obj";
 	m_sFileName[WALL_03] = "Wall_03.obj";
 	m_sFileName[WALL_04] = "Wall_04.obj";
-	m_sFileName[WALL_05] = "Wall_05.obj";	
-	m_sFileName[FOUNTAIN] = "Storm_Doodad_KingsCrest_Fountain_00.obj";	
+	m_sFileName[WALL_05] = "Wall_05.obj";
+	m_sFileName[FOUNTAIN] = "Storm_Doodad_KingsCrest_Fountain_00.obj";
 	m_sFileName[ROCK_00] = "Storm_Doodad_KingsCrest_BigChunkyRock_00_Sc2.obj";
 	m_sFileName[ROCK_04] = "Storm_Doodad_KingsCrest_BigChunkyRock_04_Sc2.obj";
 	m_sFileName[ROCK_05] = "Storm_Doodad_KingsCrest_BigChunkyRock_05_Sc2.obj";
@@ -24,18 +25,21 @@ cSaveLoad::cSaveLoad()
 	m_pObjMesh[WALL_02] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[WALL_02], "obj", m_sFileName[WALL_02]);
 	m_pObjMesh[WALL_03] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[WALL_03], "obj", m_sFileName[WALL_03]);
 	m_pObjMesh[WALL_04] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[WALL_04], "obj", m_sFileName[WALL_04]);
-	m_pObjMesh[WALL_05] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[WALL_05], "obj", m_sFileName[WALL_05]);	
-	m_pObjMesh[FOUNTAIN] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[FOUNTAIN], "obj", m_sFileName[FOUNTAIN]);	
+	m_pObjMesh[WALL_05] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[WALL_05], "obj", m_sFileName[WALL_05]);
+	m_pObjMesh[FOUNTAIN] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[FOUNTAIN], "obj", m_sFileName[FOUNTAIN]);
 	m_pObjMesh[ROCK_00] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[ROCK_00], "obj", m_sFileName[ROCK_00]);
 	m_pObjMesh[ROCK_04] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[ROCK_04], "obj", m_sFileName[ROCK_04]);
 	m_pObjMesh[ROCK_05] = m_pObjLoader->LoadMesh(m_mapObjMtlTex[ROCK_05], "obj", m_sFileName[ROCK_05]);
+
+	m_pFrustum = new cFrustum;
+	m_pFrustum->Setup();
 }
 
 cSaveLoad::~cSaveLoad()
 {
 	for (unsigned int i = 0; i < m_vecFieldObj.size(); i++)
 	{
-	//	SAFE_RELEASE(m_vecFieldObj[i].pMesh);
+		//	SAFE_RELEASE(m_vecFieldObj[i].pMesh);
 	}
 
 	for (int i = 0; i < OBJNUM; i++)
@@ -130,24 +134,28 @@ void cSaveLoad::CostSetup(IN int nSize)
 
 void cSaveLoad::CreateObjRender()
 {
+	m_pFrustum->Update();
 	g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
 
 	// 배치된 오브젝트 렌더
 	for (unsigned int i = 0; i < m_vecFieldObj.size(); i++)
 	{
-		D3DXMatrixScaling(&m_vecFieldObj[i].matScal, m_vecFieldObj[i].vScaling.x, m_vecFieldObj[i].vScaling.y, m_vecFieldObj[i].vScaling.z);
-		D3DXMatrixRotationY(&m_vecFieldObj[i].matRotY, m_vecFieldObj[i].fAngleY);
-		D3DXMatrixTranslation(&m_vecFieldObj[i].matTrans, m_vecFieldObj[i].vPosition.x, m_vecFieldObj[i].vPosition.y, m_vecFieldObj[i].vPosition.z);
-
-		m_vecFieldObj[i].matWorld = m_vecFieldObj[i].matScal * m_vecFieldObj[i].matRotY * m_vecFieldObj[i].matTrans;
-
-		g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_vecFieldObj[i].matWorld);
-
-		for (size_t j = 0; j < m_vecFieldObj[i].vecMtlTex.size(); j++)
+		if (m_pFrustum->IsInside(&m_vecFieldObj[i].sSphere))
 		{
-			g_pD3DDevice->SetMaterial(&m_vecFieldObj[i].vecMtlTex[j]->GetMaterial());
-			g_pD3DDevice->SetTexture(0, m_vecFieldObj[i].vecMtlTex[j]->GetTexture());
-			m_vecFieldObj[i].pMesh->DrawSubset(j);
+			D3DXMatrixScaling(&m_vecFieldObj[i].matScal, m_vecFieldObj[i].vScaling.x, m_vecFieldObj[i].vScaling.y, m_vecFieldObj[i].vScaling.z);
+			D3DXMatrixRotationY(&m_vecFieldObj[i].matRotY, m_vecFieldObj[i].fAngleY);
+			D3DXMatrixTranslation(&m_vecFieldObj[i].matTrans, m_vecFieldObj[i].vPosition.x, m_vecFieldObj[i].vPosition.y, m_vecFieldObj[i].vPosition.z);
+
+			m_vecFieldObj[i].matWorld = m_vecFieldObj[i].matScal * m_vecFieldObj[i].matRotY * m_vecFieldObj[i].matTrans;
+
+			g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_vecFieldObj[i].matWorld);
+
+			for (size_t j = 0; j < m_vecFieldObj[i].vecMtlTex.size(); j++)
+			{
+				g_pD3DDevice->SetMaterial(&m_vecFieldObj[i].vecMtlTex[j]->GetMaterial());
+				g_pD3DDevice->SetTexture(0, m_vecFieldObj[i].vecMtlTex[j]->GetTexture());
+				m_vecFieldObj[i].pMesh->DrawSubset(j);
+			}
 		}
 	}
 

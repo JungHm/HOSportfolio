@@ -4,6 +4,7 @@
 #include "cMapTool.h"
 #include "cUIButton.h"
 #include "cSkyBox.h"
+#include "cTower.h"
 
 cMainGame::cMainGame()
 	: m_pMapTool(NULL)
@@ -11,10 +12,7 @@ cMainGame::cMainGame()
 	, m_pRootUI(NULL)
 	, m_pSkyBox(NULL)
 	, m_nIndex(0)
-	//, m_nKey(0)
-	//, m_fBlendTime(0.3f)
-	//, m_fPassedBlendTime(0.0f)
-	//, m_nState(0)
+	, m_pTower(NULL)
 {
 	m_sUIObj[GATE_01] = "MapToolUI/Ui_Gate.png";
 	m_sUIObj[WALL_01] = "MapToolUI/Ui_Wall1.png";
@@ -26,14 +24,11 @@ cMainGame::cMainGame()
 	m_sUIObj[ROCK_00] = "MapToolUI/Ui_Rock1.png";
 	m_sUIObj[ROCK_04] = "MapToolUI/Ui_Rock2.png";
 	m_sUIObj[ROCK_05] = "MapToolUI/Ui_Rock3.png";
-
-	//m_sPath = L"obj/tower_0.x";
 }
 
 cMainGame::~cMainGame()
 {
-	//XFile->KeyDestroy(m_nKey);
-
+	SAFE_DELETE(m_pTower);
 	SAFE_DELETE(m_pMapTool);
 	m_pRootUI->Destroy();
 	SAFE_DELETE(m_pSprite);
@@ -45,57 +40,8 @@ cMainGame::~cMainGame()
 	g_pDeviceManager->Destroy();
 }
 
-void cMainGame::ChangeAni()
-{
-	//LPD3DXANIMATIONSET pAS = nullptr;
-	//LPD3DXANIMATIONSET pASCompare = nullptr;
-	//D3DXTRACK_DESC desc;
-
-	//if (m_nState == 0)
-	//{
-	//	XFile->GetAniCtrl(m_nKey)->GetAnimationSet(m_dAttack, &pAS);
-	//	XFile->GetAniCtrl(m_nKey)->GetTrackAnimationSet(0, &pASCompare);
-	//	if (!strcmp(pAS->GetName(), pASCompare->GetName())) //이미 Idle인 경우.
-	//	{
-	//		XFile->GetAniCtrl(m_nKey)->GetTrackDesc(0, &desc);
-	//		if (desc.Position + 0.2 >= pAS->GetPeriod())
-	//		{
-	//			m_nState = 1;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		XFile->GetAniCtrl(m_nKey)->SetTrackAnimationSet(0, pAS);
-	//		XFile->GetAniCtrl(m_nKey)->SetTrackPosition(0, 0);
-	//	}
-	//}
-
-	//SAFE_RELEASE(pAS);
-	//SAFE_RELEASE(pASCompare);
-}
-
 void cMainGame::Setup()
 {
-	//XFile->SetXFile(m_nKey, m_sPath);
-	//
-	//LPD3DXANIMATIONSET pAS;
-
-	//for (DWORD i = 0; i < XFile->GetAniCtrl(m_nKey)->GetNumAnimationSets(); ++i)
-	//{
-	//	XFile->GetAniCtrl(m_nKey)->GetAnimationSet(i, &pAS);
-
-	//	if (!strncmp(pAS->GetName(), "Anim-2 ", strlen(pAS->GetName())))
-	//	{
-	//		m_dAttack = i;
-	//	}
-	//}
-
-	//XFile->GetAniCtrl(m_nKey)->GetAnimationSet(m_dAttack, &pAS);
-	//XFile->GetAniCtrl(m_nKey)->SetTrackAnimationSet(0, pAS);
-	//XFile->GetAniCtrl(m_nKey)->ResetTime();
-
-	//SAFE_RELEASE(pAS);
-
 	g_cCamera->Setup();
 	
 	D3DLIGHT9 light;
@@ -118,6 +64,9 @@ void cMainGame::Setup()
 	m_pMapTool = new cMapTool;
 	m_pMapTool->Setup();
 
+	m_pTower = new cTower;
+	m_pTower->Setup(D3DXVECTOR3(-252.370010, 0.100000, -12.779068), D3DXVECTOR3(252.751999, 0.100000, -27.856529));
+
 	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, true);
 	g_pD3DDevice->SetRenderState(D3DRS_AMBIENT, 0x00202020);
 	g_pD3DDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
@@ -127,19 +76,17 @@ void cMainGame::Setup()
 
 void cMainGame::Update()
 {
-	//XFile->GetAniCtrl(m_nKey)->AdvanceTime(g_pTimeManager->GetEllapsedTime(), NULL);
-	//double a = XFile->GetAniCtrl(m_nKey)->GetTime();
-
-	//ChangeAni();
-	//XFile->GetXFile(m_nKey)->Update();
-
 	g_pTimeManager->Update();
 	g_cCamera->Update();
 	
 	if (m_pMapTool) m_pMapTool->Update();
 	if (m_pRootUI) m_pRootUI->Update();
+	
+	m_pTower->BlueFindEnemy(m_pMapTool->GetSphere());
+	m_pTower->RedFindEnemy(m_pMapTool->GetSphere());
 
 	m_pImageCursor->SetPosition(m_nMousePos.x, m_nMousePos.y);
+	if (m_pTower) m_pTower->Update();
 }
 
 void cMainGame::Render()
@@ -147,15 +94,10 @@ void cMainGame::Render()
 	g_pD3DDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(127, 127, 127), 1.0f, 0);
 	g_pD3DDevice->BeginScene();
 	//===================================
-	//D3DXMATRIXA16 matWorld; D3DXMatrixIdentity(&matWorld);
-	//D3DXMATRIXA16 matS;
-	//D3DXMatrixScaling(&matS, 2.5f, 2.5f, 2.5f);
-	//matWorld = matS;
-	//XFile->GetXFile(m_nKey)->Render(matWorld);
-
 	if (m_pSkyBox) m_pSkyBox->Render();
 	if (m_pMapTool) m_pMapTool->Render();
 	if (m_pRootUI) m_pRootUI->Render(m_pSprite);
+	if (m_pTower) m_pTower->Render();
 	//===================================
 	g_pD3DDevice->EndScene();
 	g_pD3DDevice->Present(NULL, NULL, NULL, NULL);

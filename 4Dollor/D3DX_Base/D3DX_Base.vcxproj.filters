@@ -112,6 +112,9 @@
     <ClCompile Include="cFrustum.cpp" />
     <ClCompile Include="cParticle.cpp" />
     <ClCompile Include="cParticleManager.cpp" />
+    <ClCompile Include="cFireEffect.cpp" />
+    <ClCompile Include="cTower.cpp" />
+    <ClCompile Include="cUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cMtlTex.h" />
@@ -241,6 +244,8 @@
     <ClInclude Include="cFrustum.h" />
     <ClInclude Include="cParticle.h" />
     <ClInclude Include="cParticleManager.h" />
+    <ClInclude Include="cFireEffect.h" />
+    <ClInclude Include="cTower.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="D3DX_Base.ico">

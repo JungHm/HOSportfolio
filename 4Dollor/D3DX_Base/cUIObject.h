@@ -19,6 +19,7 @@ protected:
 
 	float m_CollisionRectReduce;	// Rect를 이미지 크기보다 작게 해야 이쁘게  됨. 그것을 위한 사이즈 조정용 변수
 	float m_UIScale;	// UI 전체 크기를 변경. 현재 이미지들이 겜에 비해 너무 큼.
+	bool m_UIViewEnable;
 
 public:
 	cUIObject();
@@ -56,6 +57,9 @@ public:
 	virtual int updateButtonCallback(int num) = 0;
 	// 랜더 그룹
 	virtual void render();
+	// 랜더 옵션
+	virtual void renderOptions();
+	virtual void renderOptionFalse();
 	// BG 랜더. 제일 먼저 해줘야 하므로 따로 빼놓음
 	virtual void renderBG();
 	// 버튼 랜더
