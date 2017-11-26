@@ -241,7 +241,8 @@ void cInGame::Render()
 
 	m_pPlayer->Render();
 	ST_PC_VERTEXT v, v1;
-
+	D3DXMATRIXA16 matWorld; D3DXMatrixIdentity(&matWorld);
+	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
 	v.c = D3DXCOLOR(1, 0, 0, 1);
 	v.p = m_pPlayer->GetPosition();
 	m_vecvetex.push_back(v);
