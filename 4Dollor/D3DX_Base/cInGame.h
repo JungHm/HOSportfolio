@@ -33,7 +33,6 @@ private:
 	POINT m_ptMouse;
 	BOOL  m_isColl;
 	float m_fDist;
-	D3DXVECTOR3 m_vDir;
 
 	int minionCount;
 

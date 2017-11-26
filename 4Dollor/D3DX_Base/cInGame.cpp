@@ -54,8 +54,6 @@ void cInGame::SetUp()
 	m_pPlayer->SetCharacter(m_pTessadar);
 	m_pPlayer->Setup();
 
-	m_pPlayer->SetPosition(m_pLoadMap->GetFieldNodeSphere()[0].vCenter);
-
 	//=========미니언===========
 	MINIONMANAGER->BlueXfileSetup();
 	MINIONMANAGER->RedXfileSetup();
@@ -164,8 +162,6 @@ void cInGame::Update()
 		}
 	}
 
-	//D3DXVec3Lerp(&m_vDir, &m_pPlayer->GetPosition(), &m_pPlayer->GetDir(), g_pTimeManager->GetEllapsedTime());
-
 	//========미니언==========
 	minionCount++;
 
@@ -240,20 +236,20 @@ void cInGame::Render()
 
 	m_pPlayer->Render();
 
-	ST_PC_VERTEXT v, v1;
+	//ST_PC_VERTEXT v, v1;
 
-	v.c = D3DXCOLOR(1, 0, 0, 1);
-	v.p = m_pPlayer->GetPosition();
-	m_vecvetex.push_back(v);
-	v1.c = D3DXCOLOR(0, 1, 0, 1);
-	v1.p = m_pPlayer->GetPosition() + (m_vDir) * 200;
-	m_vecvetex.push_back(v1);
+	//v.c = D3DXCOLOR(1, 0, 0, 1);
+	//v.p = m_pPlayer->GetPosition();
+	//m_vecvetex.push_back(v);
+	//v1.c = D3DXCOLOR(0, 1, 0, 1);
+	//v1.p = m_pPlayer->GetPosition() + (m_pPlayer->GetDir()) * 200;
+	//m_vecvetex.push_back(v1);
 	m_UI->updateBar(true, m_pPlayer->GetPosition(), m_pPlayer->GetHp());
 	//m_UI->updateBarMinion(10, { 0,0,0 }, 100);	// 미니언 추가되면 작업
-	g_pD3DDevice->SetFVF(ST_PC_VERTEXT::FVF);
-	g_pD3DDevice->DrawPrimitiveUP(D3DPT_LINELIST, m_vecvetex.size() / 2, &m_vecvetex[0], sizeof(ST_PC_VERTEXT));
+	//g_pD3DDevice->SetFVF(ST_PC_VERTEXT::FVF);
+	//g_pD3DDevice->DrawPrimitiveUP(D3DPT_LINELIST, m_vecvetex.size() / 2, &m_vecvetex[0], sizeof(ST_PC_VERTEXT));
 
-	m_vecvetex.clear();
+	//m_vecvetex.clear();
 	//=======미니언=======
 	MINIONMANAGER->BlueRender();
 	MINIONMANAGER->RedRender();

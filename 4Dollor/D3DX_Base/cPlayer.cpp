@@ -139,7 +139,6 @@ void cPlayer::Update()
 	D3DXMatrixLookAtLH(&matR, &D3DXVECTOR3(0, 0, 0), &-mDir, &vUp);
 	D3DXMatrixTranspose(&matR, &matR);
 
-
 	if (m_pChar->GetState() == STAND || m_pChar->GetState() == WALK)
 		moveTo();
 }
