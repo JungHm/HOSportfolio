@@ -22,14 +22,16 @@ cInGame::~cInGame()
 void cInGame::SetUp()
 {
 	m_isColl = false;
+	m_fDist = 0.0f;
 
 	g_Particle->Setup();
 
-	m_UILoading = new cUILoadingInGame;
-	m_UILoading->setup("cUILoadingInGame");
-
 	m_UI = new cUIInGame;
 	m_UI->setup("cInGame");
+
+
+	D3DXVECTOR2 temp;
+	g_pTextureManager->AddTexture(L"lichKing/textures/box.png", m_pD3DTexture, &temp);
 
 	m_pLoadMap = new cSaveLoad;
 	m_pLoadMap->LoadFieldObj();
@@ -72,15 +74,11 @@ void cInGame::Destroy()
 		m_UI->destroy();
 		SAFE_DELETE(m_UI);
 	}
-	if (m_UILoading)
-	{
-		m_UILoading->destroy();
-		SAFE_DELETE(m_UILoading);
-	}
 	SAFE_DELETE(m_pLoadMap);
 	SAFE_DELETE(m_pHeightMap);
 	SAFE_DELETE(m_pSkyBox);
 	SAFE_DELETE(m_pGrid);
+	SAFE_RELEASE(m_pD3DTexture);
 	SAFE_DELETE(m_pTower);
 
 	SAFE_DELETE(m_pPlayer);
@@ -89,10 +87,14 @@ void cInGame::Destroy()
 
 void cInGame::Update()
 {
+
+	
+
 	if (m_pTower)
 	{
 		m_pTower->Update();
 		m_pTower->RedFindEnemy(m_pPlayer->GetSphere());
+		//m_pTower->RedFindEnemy(MINIONMANAGER->GetBlueMinion()[0].sSphere());
 	}
 
 	m_pPlayer->Update();
@@ -154,30 +156,15 @@ void cInGame::Update()
 
 
 
-	if (m_UI && !m_UILoading)
+	if (m_UI)
 	{
 		m_UI->update();	// ��ư�� ����Ƿ� update
 		if (m_UI->GetGameEnd())
 		{
 			g_Scene->ChangeScene("menu");
+			return;
 		}
 	}
-	else if (m_UILoading)
-	{
-		m_UILoading->update();
-		if (m_UILoading->GetLoadingEnd())
-		{
-			m_UILoading->destroy();
-			SAFE_DELETE(m_UILoading);
-		}
-	}
-
-	for (int i = 0; i < m_pLoadMap->GetFielBox().size(); i++)
-	{
-		tCollision(&Distance, m_pLoadMap->GetFielBox()[i].pMesh);
-	}
-
-	std::cout << Distance << std::endl;
 
 	//========미니언==========
 	minionCount++;
@@ -195,18 +182,43 @@ void cInGame::Update()
 
 	}
 
-
 	MINIONMANAGER->RedUpdate(m_pPlayer->GetPosition());
 	MINIONMANAGER->BlueUpdate(m_pPlayer->GetPosition());
+
+	//for (int i = 0; i < m_pLoadMap->GetFielBox().size(); i++)
+	//{
+	//	if (!m_isColl)
+	//	{
+	//		D3DXIntersect(m_pLoadMap->GetFielBox()[i].pMesh,
+	//			&m_pPlayer->GetPosition(),
+	//			&m_pPlayer->GetDir(),
+	//			&m_isColl,
+	//			NULL, NULL, NULL,
+	//			&m_fDist,
+	//			NULL, NULL);
+	//	}
+
+	//	else
+	//	{
+	//		m_
+	//	}
+	//}
+	//ST_PC_VERTEXT v, v1;
+
+	//v.c = D3DXCOLOR(1, 0, 0, 1);
+	//v.p = m_pPlayer->GetPosition();
+	//m_vecvetex.push_back(v);
+	//v1.c = D3DXCOLOR(0, 1, 0, 1);
+	//v1.p = m_pPlayer->GetPosition() + m_pPlayer->GetDir() * 200;
+	//m_vecvetex.push_back(v1);
+
 }
 
 void cInGame::Render()
 {
-	if (m_UI && !m_UILoading) m_UI->renderBG();	// ��� ���� ���� ��
-	else if (m_UILoading) m_UILoading->renderBG();
+	if (m_UI) m_UI->renderBG();	// ��� ���� ���� ��
 
-	if (m_UI && !m_UILoading) m_UI->render();	// ��� �� UI ��õ� ����
-	else if (m_UILoading) m_UILoading->render();
+	if (m_UI) m_UI->render();	// ��� �� UI ��õ� ����
 
 	//g_pSprite->BeginScene();
 	//g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
@@ -229,6 +241,20 @@ void cInGame::Render()
 
 	m_pPlayer->Render();
 
+	/*ST_PC_VERTEXT v, v1;
+
+	v.c = D3DXCOLOR(1, 0, 0, 1);
+	v.p = m_pPlayer->GetPosition();
+	m_vecvetex.push_back(v);
+	v1.c = D3DXCOLOR(0, 1, 0, 1);
+	v1.p = m_pPlayer->GetPosition() + (m_pPlayer->GetDir()) * 200;
+	m_vecvetex.push_back(v1);*/
+	m_UI->updateBar(true, m_pPlayer->GetPosition(), m_pPlayer->GetHp());
+	//m_UI->updateBarMinion(10, { 0,0,0 }, 100);	// 미니언 추가되면 작업
+	/*g_pD3DDevice->SetFVF(ST_PC_VERTEXT::FVF);
+	g_pD3DDevice->DrawPrimitiveUP(D3DPT_LINELIST, m_vecvetex.size() / 2, &m_vecvetex[0], sizeof(ST_PC_VERTEXT));
+*/
+	m_vecvetex.clear();
 	//=======미니언=======
 	MINIONMANAGER->BlueRender();
 	MINIONMANAGER->RedRender();
@@ -240,17 +266,19 @@ void cInGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	m_ptMouse.y = HIWORD(lParam);
 }
 
-void cInGame::tCollision(OUT float* fDistans, IN LPD3DXMESH pObjMesh)
+void cInGame::SphereCollision()
 {
-	D3DXIntersect(
-		pObjMesh,											//	충돌할 메쉬
-		&m_pPlayer->GetPosition(),							//	해당 충돌할 녀석의 포지션
-		&m_pPlayer->GetDir(),								//	" 방향
-		&m_isColl, NULL, NULL, NULL, fDistans, NULL, NULL);
+	for (int i = 0; i < m_pLoadMap->GetFieldObj().size(); i++)
+	{
+		if (!m_pLoadMap->GetFieldObj()[i].isShow) continue;
 
-	//printf_s("%f\n", Distance);
-
-	//std::cout << m_pPlayer->GetPosition().x << " " << m_pPlayer->GetPosition().y << " " << m_pPlayer->GetPosition().z << endl;
-	/*std::cout << Distance << std::endl;*/
-	//std::cout << m_pPlayer->GetDir().x << " " << m_pPlayer->GetDir().y << " " << m_pPlayer->GetDir().z << endl;
+		if (getDistance(
+			m_pLoadMap->GetFieldObj()[i].vPosition.x,
+			m_pLoadMap->GetFieldObj()[i].vPosition.z,
+			m_pPlayer->GetPosition().x,
+			m_pPlayer->GetPosition().z) < m_pLoadMap->GetFieldObj()[i].sSphere.fRadius)
+		{
+			break;
+		}
+	}
 }

@@ -45,4 +45,13 @@ namespace Util
 		vPickedPosition = v0 + (u*(v1 - v0)) + (v*(v2 - v0));
 		return b;
 	}
+
+	// 두점 사이의 거리
+	float getDistance(float startX, float startY, float endX, float endY)
+	{
+		float x = endX - startX;
+		float y = endY - startY;
+
+		return sqrtf(x * x + y * y);
+	}
 }

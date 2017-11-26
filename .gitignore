@@ -288,3 +288,4 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 4Dollor/.vs/D3DX_Base/v14/.suo
+*.suo
