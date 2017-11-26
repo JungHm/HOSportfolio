@@ -242,8 +242,10 @@ void cInGame::Render()
 
 	if (m_pTower)
 		m_pTower->Render();
-
-	m_pPlayer->Render();
+	if (m_pPlayer->GetHp() > 0)
+	{
+		m_pPlayer->Render();
+	}
 
 
 	//	ST_PC_VERTEXT v, v1;
