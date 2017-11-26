@@ -743,19 +743,19 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos, int & chHp)
 	case MINI_AGGRO:
 	{
 
-		D3DXVECTOR3 m_pos = red_minion[index].pos;		// 미니언 포지션
-		D3DXVECTOR3 m_dir = red_minion[index].dir;		// 미니언 전방 벡터
-		D3DXVECTOR3 p_pos = chPos;						// 캐릭터 포지션
+		D3DXVECTOR3 m_pos = red_minion[index].pos;      // 미니언 포지션
+		D3DXVECTOR3 m_dir = red_minion[index].dir;      // 미니언 전방 벡터
+		D3DXVECTOR3 p_pos = chPos;                  // 캐릭터 포지션
 
-		D3DXVECTOR3 mp_dir = p_pos - m_pos;				// 미니언이 캐릭터를 바라보는 벡터
+		D3DXVECTOR3 mp_dir = p_pos - m_pos;            // 미니언이 캐릭터를 바라보는 벡터
 
-														// 방향벡터는 모두 노멀라이징을 통해 단위 벡터화 시켜야함
+													   // 방향벡터는 모두 노멀라이징을 통해 단위 벡터화 시켜야함
 		D3DXVec3Normalize(&m_dir, &m_dir);
 		D3DXVec3Normalize(&mp_dir, &mp_dir);
 
 		// 미니언이 주인공을 바라보는 벡터와 몬스터의 전방벡터를 이용해 내적을 구한다.
-		float dot;		// 내적 값
-		float radian;	// 내적한 값을 역코사인 해서 구한 최종 각도
+		float dot;      // 내적 값
+		float radian;   // 내적한 값을 역코사인 해서 구한 최종 각도
 
 						// 미니언 전방벡터와 몬스터가 주인공 캐릭터를 바라보는 벡터의 내적값을 구함
 		dot = D3DXVec3Dot(&m_dir, &mp_dir);
@@ -767,7 +767,7 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos, int & chHp)
 		// 캐릭터가 미니언의 좌측에 있는지 우측에 있는지 구하는 방법
 		// 첫번째로 미니언의 우향 벡터를 구해야함
 		// 모든 방향벡터는 단위 벡터
-		D3DXVECTOR3 right_dir;		// 미니언의 우향벡터값
+		D3DXVECTOR3 right_dir;      // 미니언의 우향벡터값
 
 									// 미니언의 전방벡터와 몬스터의 업벡터를 이용해 몬스터의 우향벡터를 구함
 									// 여기서 D3DXVECTOR3(0.0f, 1.0f, 0.0f)가 업벡터이다.
@@ -943,19 +943,19 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos, int & chHp)
 
 		//=================================================
 
-		D3DXVECTOR3 m_pos = red_minion[index].pos;		// 미니언 포지션
-		D3DXVECTOR3 m_dir = red_minion[index].dir;		// 미니언 전방 벡터
-		D3DXVECTOR3 p_pos = blue_minion[blue_index].pos;						// 캐릭터 포지션
+		D3DXVECTOR3 m_pos = red_minion[index].pos;      // 미니언 포지션
+		D3DXVECTOR3 m_dir = red_minion[index].dir;      // 미니언 전방 벡터
+		D3DXVECTOR3 p_pos = blue_minion[blue_index].pos;                  // 캐릭터 포지션
 
-		D3DXVECTOR3 mp_dir = p_pos - m_pos;				// 미니언이 캐릭터를 바라보는 벡터
+		D3DXVECTOR3 mp_dir = p_pos - m_pos;            // 미니언이 캐릭터를 바라보는 벡터
 
-														// 방향벡터는 모두 노멀라이징을 통해 단위 벡터화 시켜야함
+													   // 방향벡터는 모두 노멀라이징을 통해 단위 벡터화 시켜야함
 		D3DXVec3Normalize(&m_dir, &m_dir);
 		D3DXVec3Normalize(&mp_dir, &mp_dir);
 
 		// 미니언이 주인공을 바라보는 벡터와 몬스터의 전방벡터를 이용해 내적을 구한다.
-		float dot;		// 내적 값
-		float radian;	// 내적한 값을 역코사인 해서 구한 최종 각도
+		float dot;      // 내적 값
+		float radian;   // 내적한 값을 역코사인 해서 구한 최종 각도
 
 						// 미니언 전방벡터와 몬스터가 주인공 캐릭터를 바라보는 벡터의 내적값을 구함
 		dot = D3DXVec3Dot(&m_dir, &mp_dir);
@@ -967,7 +967,7 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos, int & chHp)
 		// 캐릭터가 미니언의 좌측에 있는지 우측에 있는지 구하는 방법
 		// 첫번째로 미니언의 우향 벡터를 구해야함
 		// 모든 방향벡터는 단위 벡터
-		D3DXVECTOR3 right_dir;		// 미니언의 우향벡터값
+		D3DXVECTOR3 right_dir;      // 미니언의 우향벡터값
 
 									// 미니언의 전방벡터와 몬스터의 업벡터를 이용해 몬스터의 우향벡터를 구함
 									// 여기서 D3DXVECTOR3(0.0f, 1.0f, 0.0f)가 업벡터이다.
@@ -1007,7 +1007,6 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos, int & chHp)
 		break;
 	}
 }
-
 float cMinion::GetDistance(D3DXVECTOR3 a, D3DXVECTOR3 b)
 {
 	float x = a.x - b.x;
@@ -1238,22 +1237,6 @@ void cMinion::RedMinionCollision()
 	}
 }
 
-void cMinion::RedMinionUnColl()
-{
-	for (int i = 0; i < red_minion.size(); i++)
-	{
-		for (int j = 0; j < red_minion.size(); j++)
-		{
-			if (i != j && GetDistance(red_minion[i].pos, red_minion[j].pos) > MINI_TO_MINI_RANGE)
-			{
-				red_minion[i].coll = false;
-				red_minion[j].coll = false;
-				red_minion[i].coll_angleY = red_minion[j].coll_angleY = 0.0f;
-			}
-		}
-	}
-}
-
 void cMinion::Char_Red_Attack_Q(D3DXVECTOR3 centerPos)
 {
 	for (int i = 0; i < red_minion.size(); i++)
@@ -1289,6 +1272,22 @@ void cMinion::Char_Red_Attack_B(D3DXVECTOR3 chPos, bool attack)
 					red_minion[i].direction = MINI_DEATH;
 				}
 				break;
+			}
+		}
+	}
+}
+
+void cMinion::RedMinionUnColl()
+{
+	for (int i = 0; i < red_minion.size(); i++)
+	{
+		for (int j = 0; j < red_minion.size(); j++)
+		{
+			if (i != j && GetDistance(red_minion[i].pos, red_minion[j].pos) > MINI_TO_MINI_RANGE)
+			{
+				red_minion[i].coll = false;
+				red_minion[j].coll = false;
+				red_minion[i].coll_angleY = red_minion[j].coll_angleY = 0.0f;
 			}
 		}
 	}

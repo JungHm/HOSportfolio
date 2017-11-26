@@ -43,12 +43,12 @@ LPD3DXFONT cFontManager::GetFont(eFontType e)
 		fd.OutputPrecision = OUT_DEFAULT_PRECIS;
 		fd.PitchAndFamily = FF_DONTCARE;
 
-		AddFontResource(L"font/umberto.ttf");
+		AddFontResource(L"font/koKR_bold.ttf");
 	}
 	else if (e == FT_SMALL)
 	{
-		fd.Height = 20;
-		fd.Width = 8;
+		fd.Height = 30;
+		fd.Width = 12;
 		fd.Weight = FW_BOLD;
 		fd.Italic = false;
 		fd.CharSet = DEFAULT_CHARSET;

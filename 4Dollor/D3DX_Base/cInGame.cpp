@@ -21,6 +21,8 @@ cInGame::~cInGame()
 
 void cInGame::SetUp()
 {
+	delayTime = 0.0f;
+	revivalTime = 10.0f;
 	m_isColl = false;
 	m_fDist = 0.0f;
 
@@ -84,6 +86,9 @@ void cInGame::Destroy()
 
 void cInGame::Update()
 {
+
+
+
 	if (m_pTower)
 	{
 		m_pTower->Update();
@@ -91,9 +96,17 @@ void cInGame::Update()
 
 		for (int i = 0; i < MINIONMANAGER->GetBlueMinion().size(); i++)
 		{
-			m_pTower->RedFindEnemy(MINIONMANAGER->GetBlueMinion()[i].GetSphere());
+			//	m_pTower->RedFindEnemy(MINIONMANAGER->GetBlueMinion()[i].GetSphere());
 		}
-		
+		if (m_pTower->GetTower(1).isFind && delayTime >=3.0f)
+		{
+			m_pPlayer->SetHp(m_pPlayer->GetHp() - 10);
+			delayTime = 0.0f;
+		}
+		else if (m_pTower->GetTower(1).isFind)
+		{
+			delayTime += g_pTimeManager->GetEllapsedTime();
+		}
 		for (int i = 0; i < MINIONMANAGER->GetRedMinion().size(); i++)
 		{
 			m_pTower->BlueFindEnemy(MINIONMANAGER->GetRedMinion()[i].GetSphere());
@@ -102,7 +115,7 @@ void cInGame::Update()
 
 	m_pPlayer->Update();
 	if (m_pPlayer->GetLevel() < 4)//레벨에 따라 스킬 언락
-		m_UI->SetSkillUnlock(m_pPlayer->GetLevel(), true);
+		m_UI->SetLevelUp(m_pPlayer->GetLevel()); //m_UI->SetSkillUnlock(m_pPlayer->GetLevel(), true);
 
 	if (m_pPlayer->isQcool)
 	{
@@ -163,7 +176,6 @@ void cInGame::Update()
 		}
 	}
 
-	std::cout << m_fDist << std::endl;
 
 	if (m_UI)
 	{
@@ -187,9 +199,32 @@ void cInGame::Update()
 	}
 
 	D3DXVECTOR3 pos2(2000, 2000, 2000);
+	int hp = m_pPlayer->GetHp();
+	int hp2 = 0;
+	MINIONMANAGER->RedUpdate(m_pPlayer->GetPosition(), hp);
+	m_pPlayer->SetHp(hp);
+	MINIONMANAGER->BlueUpdate(pos2, hp2);
 
-	MINIONMANAGER->RedUpdate(m_pPlayer->GetPosition());
-	MINIONMANAGER->BlueUpdate(pos2);
+	//미니언 플레이어 피격
+	if (m_pPlayer->GetUnit()->GetboolQ())
+		MINIONMANAGER->Char_Red_Attack_Q(m_pPlayer->GetUnit()->GetStormPos());
+	MINIONMANAGER->Char_Red_Attack_B(m_pPlayer->GetPosition(), m_pPlayer->GetAttack());
+
+
+	if (m_pPlayer->GetHp() <= 0)
+	{
+		m_UI->SetDead(true);
+		revivalTime -= g_pTimeManager->GetEllapsedTime();
+		m_UI->SetDeadCount(revivalTime);
+	}
+	if (revivalTime < 0.0f)
+	{
+		m_UI->SetDead(false);
+		revivalTime = 10.0f;
+		m_pPlayer->SetHp(100);
+		m_pPlayer->SetPosition(D3DXVECTOR3(0, 0, 0));
+	}
+	//if(GetAsyncKeyState()
 }
 
 void cInGame::Render()
@@ -216,23 +251,30 @@ void cInGame::Render()
 
 	if (m_pTower)
 		m_pTower->Render();
+	if (m_pPlayer->GetHp() > 0)
+	{
+		m_pPlayer->Render();
+	}
 
-	m_pPlayer->Render();
 
-	ST_PC_VERTEXT v, v1;
-	v.c = D3DXCOLOR(1, 0, 0, 1);
-	v.p = m_pPlayer->GetPosition();
-	m_vecvetex.push_back(v);
-	v1.c = D3DXCOLOR(0, 1, 0, 1);
-	v1.p = m_pPlayer->GetPosition() + m_pPlayer->GetDir() * 100;
-	m_vecvetex.push_back(v1);
+	//	ST_PC_VERTEXT v, v1;
+	D3DXMATRIXA16 matWorld; D3DXMatrixIdentity(&matWorld);
+	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
+	//v.c = D3DXCOLOR(1, 0, 0, 1);
+	//v.p = m_pPlayer->GetPosition();
+	//m_vecvetex.push_back(v);
+	//v1.c = D3DXCOLOR(0, 1, 0, 1);
+	//v1.p = m_pPlayer->GetPosition() + (m_pPlayer->GetDir()) * 200;
+	//v1.p = m_pPlayer->GetPosition() + (m_vDir) * 200;
+	//v1.p = m_pPlayer->GetPosition() + m_pPlayer->GetDir() * 100;
+	//m_vecvetex.push_back(v1);
 	m_UI->updateBar(true, m_pPlayer->GetPosition(), m_pPlayer->GetHp());
-	D3DXMATRIXA16 matW;
-	D3DXMatrixIdentity(&matW);
-	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matW);
-	g_pD3DDevice->SetFVF(ST_PC_VERTEXT::FVF);
-	g_pD3DDevice->DrawPrimitiveUP(D3DPT_LINELIST, m_vecvetex.size() / 2, &m_vecvetex[0], sizeof(ST_PC_VERTEXT));
-	m_vecvetex.clear();
+	//D3DXMATRIXA16 matW;
+	//D3DXMatrixIdentity(&matW);
+	//g_pD3DDevice->SetTransform(D3DTS_WORLD, &matW);
+	//g_pD3DDevice->SetFVF(ST_PC_VERTEXT::FVF);
+	//g_pD3DDevice->DrawPrimitiveUP(D3DPT_LINELIST, m_vecvetex.size() / 2, &m_vecvetex[0], sizeof(ST_PC_VERTEXT));
+	//m_vecvetex.clear();
 
 	//m_UI->updateBarMinion(10, { 0,0,0 }, 100);	// 미니언 추가되면 작업
 	//=======미니언=======

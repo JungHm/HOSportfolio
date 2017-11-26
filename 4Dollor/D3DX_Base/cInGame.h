@@ -29,6 +29,9 @@ private:
 	LPDIRECT3DTEXTURE9		m_pD3DTexture;
 
 	std::vector<ST_PC_VERTEXT>  m_vecvetex;
+
+	float revivalTime;
+	float delayTime;
 private:
 	POINT m_ptMouse;
 	BOOL  m_isColl;
