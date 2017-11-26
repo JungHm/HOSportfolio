@@ -13,6 +13,7 @@ cUIInGame::cUIInGame()
 	, m_LvUpCount(0)
 	, m_SkillUnlockEfxAlphaCount(0)
 	, m_IsVictory(false)
+	, m_DeadCount(0)
 {
 }
 
@@ -64,6 +65,14 @@ void cUIInGame::SetDead(bool deadEnable)
 	}
 }
 
+void cUIInGame::SetDeadCount(int second)
+{
+	if (m_Dead.enable)
+	{
+		m_DeadCount = second;
+	}
+}
+
 void cUIInGame::rednerDead()
 {
 	if (m_Dead.enable)
@@ -102,7 +111,7 @@ void cUIInGame::rednerDead()
 			D3DCOLOR_ARGB(m_Dead.alpha, 255, 255, 255));
 
 		LPD3DXFONT font = g_pFontManager->GetFont(cFontManager::FT_QUEST);
-		string str = to_string(100);
+		string str = to_string(m_DeadCount);
 		RECT rcText;
 		SetRect(&rcText, m_Dead.pt.x - m_Dead.imgInfo.Width / 2, m_Dead.pt.y - m_Dead.imgInfo.Height / 2, m_Dead.pt.x + m_Dead.imgInfo.Width / 2, m_Dead.pt.y + m_Dead.imgInfo.Height / 2);
 		font->DrawTextA(NULL, str.c_str(), str.length(), &rcText, DT_CENTER | DT_VCENTER, D3DCOLOR_ARGB(m_Dead.alpha, 255, 255, 255));

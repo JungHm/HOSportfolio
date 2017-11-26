@@ -46,6 +46,7 @@ private:
 	int m_SkillUnlockEfxAlphaCount;	// 알파값 왔다갔다 반복 몇번
 	int m_LvUpCount;
 	vector<tagUISpriteButton*> m_SkillUnlock;
+	int m_DeadCount;
 
 public:
 	cUIInGame();
@@ -53,6 +54,7 @@ public:
 
 	void setupDeadAdd();
 	void SetDead(bool deadEnable);
+	void SetDeadCount(int second);
 	void rednerDead();
 
 	void setupFadeAdd(wstring filePath);
