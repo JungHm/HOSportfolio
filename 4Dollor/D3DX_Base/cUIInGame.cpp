@@ -145,10 +145,39 @@ void cUIInGame::setupFadeAdd(wstring filePath)
 		&m_Fade.texture);
 
 	SetRect(&m_Fade.drawRc, 0, 0, 0, 0);
-	m_Fade.alpha = 255;
+	m_Fade.alpha = 0;
 	m_Fade.scale = 1;
 	m_Fade.pt = { 0, 0, 0 };
 	m_Fade.enable = true;
+
+	wstring strr = L"UI/ingame_loading_bg10.png";
+	ZeroMemory(&m_FadeBG, sizeof(tagUISpriteEfx));
+
+	D3DXMatrixIdentity(&m_FadeBG.matWorld);
+
+	D3DXCreateSprite(g_pD3DDevice, &m_FadeBG.sprite);
+
+	D3DXCreateTextureFromFileEx(
+		g_pD3DDevice,
+		strr.c_str(),
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT,
+		0,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_MANAGED,
+		D3DX_FILTER_NONE,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(255, 255, 255),
+		&m_FadeBG.imgInfo,
+		NULL,
+		&m_FadeBG.texture);
+
+	SetRect(&m_FadeBG.drawRc, 0, 0, m_FadeBG.imgInfo.Width, m_FadeBG.imgInfo.Height);
+	m_FadeBG.alpha = 255;
+	m_FadeBG.scale = m_UIScale;
+	m_FadeBG.pt = { 0, 0, 0 };
+	m_FadeBG.enable = true;
 }
 
 void cUIInGame::setupSkillLockList()
@@ -337,7 +366,7 @@ void cUIInGame::renderVictory()
 			{
 				if (m_VictoryEfx[i].alpha < 255)
 				{
-					m_VictoryEfx[i].alpha += 10;
+					m_VictoryEfx[i].alpha += VICTORYLIGHTSPEED;
 					//m_VictoryEfx[i].rotate += 1;
 					if (m_VictoryEfx[i].alpha >= 255)
 					{
@@ -358,7 +387,7 @@ void cUIInGame::renderVictory()
 
 				if (m_VictoryEfx[i].scale > VICTORYCYCLESCALE)
 				{
-					m_VictoryEfx[i].scale -= 0.2f;
+					m_VictoryEfx[i].scale -= VICTORYCYCLESCALESPEED;
 				}
 				if (m_VictoryEfx[i].scale <= VICTORYCYCLESCALE)
 				{
@@ -834,32 +863,57 @@ void cUIInGame::renderFade()
 {
 	if (m_Fade.enable)
 	{
-		m_Fade.sprite->Begin(D3DXSPRITE_ALPHABLEND);
-
-		m_Fade.alpha -= FADEINSPEED;
-		if (m_Fade.alpha <= 0)
 		{
-			m_Fade.alpha = 0;
-			m_Fade.enable = false;
+			m_FadeBG.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+			D3DXMatrixAffineTransformation2D(&m_FadeBG.matWorld,
+				m_FadeBG.scale,
+				NULL,
+				NULL,
+				&D3DXVECTOR2(0, 0));
+
+			m_FadeBG.sprite->SetTransform(&m_FadeBG.matWorld);
+			m_FadeBG.sprite->Draw(m_FadeBG.texture,
+				&m_FadeBG.drawRc,
+				NULL,
+				NULL,
+				D3DCOLOR_ARGB(m_FadeBG.alpha, 255, 255, 255));
+
+
+			m_FadeBG.sprite->End();
+
 		}
 
-		D3DXMatrixAffineTransformation2D(&m_Fade.matWorld,
-			m_Fade.scale,
-			NULL,
-			NULL,
-			&D3DXVECTOR2(0, 0));
 
-		m_Fade.sprite->SetTransform(&m_Fade.matWorld);
-		RECT rc;
-		SetRect(&rc, 0, 0, WINX, WINY);
-		m_Fade.sprite->Draw(m_Fade.texture,
-			&rc,
-			NULL,
-			NULL,
-			D3DCOLOR_ARGB(m_Fade.alpha, 255, 255, 255));
+		{
+			m_Fade.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+			m_Fade.alpha += FADEINSPEED;
+			if (m_Fade.alpha >= 255)
+			{
+				m_Fade.alpha = 255;
+				m_Fade.enable = false;
+				m_FadeBG.enable = false;
+			}
+
+			D3DXMatrixAffineTransformation2D(&m_Fade.matWorld,
+				m_Fade.scale,
+				NULL,
+				NULL,
+				&D3DXVECTOR2(0, 0));
+
+			m_Fade.sprite->SetTransform(&m_Fade.matWorld);
+			RECT rc;
+			SetRect(&rc, 0, 0, WINX, WINY);
+			m_Fade.sprite->Draw(m_Fade.texture,
+				&rc,
+				NULL,
+				NULL,
+				D3DCOLOR_ARGB(m_Fade.alpha, 255, 255, 255));
 
 
-		m_Fade.sprite->End();
+			m_Fade.sprite->End();
+		}
 	}
 }
 
@@ -928,6 +982,8 @@ void cUIInGame::destroyOther()
 	}
 	m_Fade.sprite->Release();
 	m_Fade.texture->Release();
+	m_FadeBG.texture->Release();
+	m_FadeBG.sprite->Release();
 	m_Dead.sprite->Release();
 	m_Dead.texture->Release();
 	m_SkillUnlockEfx.sprite->Release();

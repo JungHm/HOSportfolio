@@ -118,7 +118,7 @@ void cUIMainMenu::setupOther()
 	setupTextInput("장비", ptHeroinfo, rcSizeHeroinfo);
 	setupTextInput("기술", ptAbility, rcSizeAbility);
 	setupTextInput("특성", ptTalent, rcSizeTalent);
-	setupTextInput("준비", ptReady, rcSizeReady);
+	setupTextInput("Ready", ptReady, rcSizeReady);
 
 	m_GameReadyEfxPath[0] = L"UI\\mainmenu_img_gamestart_1.dds";
 	m_GameReadyEfxPath[1] = L"UI\\mainmenu_img_gamestart_2.dds";
