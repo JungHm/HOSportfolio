@@ -10,6 +10,8 @@ using namespace FMOD;
 //총사운드 버퍼 설정: 버퍼가 작아서 씹히는 문제를 해결해주기 위함
 #define TOTALSOUNDBUFFER SOUNDBUFFER + EXTRACHANNERBUFFER
 
+#define SOUNDMANAGER			cSoundManager::GetInstance()
+
 class cSoundManager
 {
 	SINGLETONE(cSoundManager);
