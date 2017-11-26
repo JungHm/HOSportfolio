@@ -21,6 +21,7 @@ cInGame::~cInGame()
 
 void cInGame::SetUp()
 {
+	revivalTime = 10.0f;
 	m_isColl = false;
 	m_fDist = 0.0f;
 
@@ -105,7 +106,7 @@ void cInGame::Update()
 
 	m_pPlayer->Update();
 	if (m_pPlayer->GetLevel() < 4)//레벨에 따라 스킬 언락
-		m_UI->SetSkillUnlock(m_pPlayer->GetLevel(), true);
+		m_UI->SetLevelUp(m_pPlayer->GetLevel()); //m_UI->SetSkillUnlock(m_pPlayer->GetLevel(), true);
 
 	if (m_pPlayer->isQcool)
 	{
@@ -166,7 +167,6 @@ void cInGame::Update()
 		}
 	}
 
-	std::cout << m_fDist << std::endl;
 
 	if (m_UI)
 	{
@@ -190,8 +190,32 @@ void cInGame::Update()
 	}
 
 	D3DXVECTOR3 pos2(2000, 2000, 2000);
-	MINIONMANAGER->RedUpdate(m_pPlayer->GetPosition());
-	MINIONMANAGER->BlueUpdate(pos2);
+	int hp = m_pPlayer->GetHp();
+	int hp2 = 0;
+	MINIONMANAGER->RedUpdate(m_pPlayer->GetPosition(), hp);
+	m_pPlayer->SetHp(hp);
+	MINIONMANAGER->BlueUpdate(pos2, hp2);
+
+	//미니언 플레이어 피격
+	if (m_pPlayer->GetUnit()->GetboolQ())
+		MINIONMANAGER->Char_Red_Attack_Q(m_pPlayer->GetUnit()->GetStormPos());
+	MINIONMANAGER->Char_Red_Attack_B(m_pPlayer->GetPosition(), m_pPlayer->GetAttack());
+
+
+	if (m_pPlayer->GetHp() <= 0)
+	{
+		m_UI->SetDead(true);
+		revivalTime -= g_pTimeManager->GetEllapsedTime();
+		//m_UI->SetDeadCount();
+	}
+	if (revivalTime < 0.0f)
+	{
+		m_UI->SetDead(false);
+		revivalTime = 10.0f;
+		m_pPlayer->SetHp(100);
+		m_pPlayer->SetPosition(D3DXVECTOR3(0, 0, 0));
+	}
+	//if(GetAsyncKeyState()
 }
 
 void cInGame::Render()
@@ -222,7 +246,7 @@ void cInGame::Render()
 	m_pPlayer->Render();
 
 
-//	ST_PC_VERTEXT v, v1;
+	//	ST_PC_VERTEXT v, v1;
 	D3DXMATRIXA16 matWorld; D3DXMatrixIdentity(&matWorld);
 	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
 	//v.c = D3DXCOLOR(1, 0, 0, 1);

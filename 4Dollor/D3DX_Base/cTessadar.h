@@ -53,10 +53,10 @@ private:
 	float fTime;//W지속시간
 	float QTime;//Q지속시간
 	float ETime;//QE지속시간
-	D3DXVECTOR3 StormPos;// 스톰 유지시킬 좌표
-	bool SkillQ;
+	//D3DXVECTOR3 StormPos;// 스톰 유지시킬 좌표
+	/*bool SkillQ;
 	bool SkillW;
-	bool SkillE;
+	bool SkillE;*/
 
 
 public:

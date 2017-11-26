@@ -248,7 +248,7 @@ void cMinion::RedSetup()
 	}
 }
 
-void cMinion::BlueUpdate(D3DXVECTOR3 chPos)
+void cMinion::BlueUpdate(D3DXVECTOR3 chPos, int & chHp)
 {
 	for (unsigned int i = 0; i < blue_minion.size(); i++)
 	{
@@ -268,7 +268,7 @@ void cMinion::BlueUpdate(D3DXVECTOR3 chPos)
 
 			blue_minion[i].matWorld = blue_minion[i].matScale * blue_minion[i].matRot * blue_minion[i].matTrans;
 
-			BlueDirection(i, chPos);
+			BlueDirection(i, chPos,chHp);
 			BlueXfileUpdate(i);
 
 			blue_minion[i].GetSphere().vCenter = blue_minion[i].pos;
@@ -278,7 +278,7 @@ void cMinion::BlueUpdate(D3DXVECTOR3 chPos)
 	BlueMinionUnColl();
 }
 
-void cMinion::RedUpdate(D3DXVECTOR3 chPos)
+void cMinion::RedUpdate(D3DXVECTOR3 chPos, int & chHp)
 {
 	for (unsigned int i = 0; i < red_minion.size(); i++)
 	{
@@ -300,7 +300,7 @@ void cMinion::RedUpdate(D3DXVECTOR3 chPos)
 
 			red_minion[i].GetSphere().vCenter = red_minion[i].pos;
 
-			RedDirection(i, chPos);
+			RedDirection(i, chPos, chHp);
 			RedXfileUpdate(i);
 		}
 	}
@@ -430,7 +430,7 @@ void cMinion::RedXfileRender(int index)
 	g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 }
 
-void cMinion::BlueDirection(int index, D3DXVECTOR3 chPos)
+void cMinion::BlueDirection(int index, D3DXVECTOR3 chPos, int & chHp)
 {
 	switch (blue_minion[index].direction)
 	{
@@ -711,8 +711,7 @@ void cMinion::BlueDirection(int index, D3DXVECTOR3 chPos)
 		break;
 	}
 }
-
-void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
+void cMinion::RedDirection(int index, D3DXVECTOR3 chPos, int & chHp)
 {
 	switch (red_minion[index].direction)
 	{
@@ -743,19 +742,19 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 	case MINI_AGGRO:
 	{
 
-		D3DXVECTOR3 m_pos = red_minion[index].pos;		// 미니언 포지션
-		D3DXVECTOR3 m_dir = red_minion[index].dir;		// 미니언 전방 벡터
-		D3DXVECTOR3 p_pos = chPos;						// 캐릭터 포지션
+		D3DXVECTOR3 m_pos = red_minion[index].pos;      // 미니언 포지션
+		D3DXVECTOR3 m_dir = red_minion[index].dir;      // 미니언 전방 벡터
+		D3DXVECTOR3 p_pos = chPos;                  // 캐릭터 포지션
 
-		D3DXVECTOR3 mp_dir = p_pos - m_pos;				// 미니언이 캐릭터를 바라보는 벡터
+		D3DXVECTOR3 mp_dir = p_pos - m_pos;            // 미니언이 캐릭터를 바라보는 벡터
 
-														// 방향벡터는 모두 노멀라이징을 통해 단위 벡터화 시켜야함
+													   // 방향벡터는 모두 노멀라이징을 통해 단위 벡터화 시켜야함
 		D3DXVec3Normalize(&m_dir, &m_dir);
 		D3DXVec3Normalize(&mp_dir, &mp_dir);
 
 		// 미니언이 주인공을 바라보는 벡터와 몬스터의 전방벡터를 이용해 내적을 구한다.
-		float dot;		// 내적 값
-		float radian;	// 내적한 값을 역코사인 해서 구한 최종 각도
+		float dot;      // 내적 값
+		float radian;   // 내적한 값을 역코사인 해서 구한 최종 각도
 
 						// 미니언 전방벡터와 몬스터가 주인공 캐릭터를 바라보는 벡터의 내적값을 구함
 		dot = D3DXVec3Dot(&m_dir, &mp_dir);
@@ -767,7 +766,7 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 		// 캐릭터가 미니언의 좌측에 있는지 우측에 있는지 구하는 방법
 		// 첫번째로 미니언의 우향 벡터를 구해야함
 		// 모든 방향벡터는 단위 벡터
-		D3DXVECTOR3 right_dir;		// 미니언의 우향벡터값
+		D3DXVECTOR3 right_dir;      // 미니언의 우향벡터값
 
 									// 미니언의 전방벡터와 몬스터의 업벡터를 이용해 몬스터의 우향벡터를 구함
 									// 여기서 D3DXVECTOR3(0.0f, 1.0f, 0.0f)가 업벡터이다.
@@ -798,6 +797,11 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 				{
 					// 시선만 방향 따라다님, 공격
 					red_minion[index].char_attack = true;
+					red_minion[index].attack_count++;
+					if (red_minion[index].attack_count % 60 == 0)
+					{
+						chHp -= red_minion[index].attack;
+					}
 					//캐릭터 pos 값과 hp 받아서 공격
 				}
 			}
@@ -815,6 +819,11 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 				{
 					// 시선만 방향 따라다님, 공격
 					red_minion[index].char_attack = true;
+					red_minion[index].attack_count++;
+					if (red_minion[index].attack_count % 60 == 0)
+					{
+						chHp -= red_minion[index].attack;
+					}
 					//캐릭터 pos 값과 hp 받아서 공격
 				}
 			}
@@ -846,6 +855,11 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 				{
 					// 시선만 방향 따라다님, 공격
 					red_minion[index].char_attack = true;
+					red_minion[index].attack_count++;
+					if (red_minion[index].attack_count % 60 == 0)
+					{
+						chHp -= red_minion[index].attack;
+					}
 					//캐릭터 pos 값과 hp 받아서 공격
 				}
 			}
@@ -863,6 +877,11 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 				{
 					// 시선만 방향 따라다님, 공격
 					red_minion[index].char_attack = true;
+					red_minion[index].attack_count++;
+					if (red_minion[index].attack_count % 60 == 0)
+					{
+						chHp -= red_minion[index].attack;
+					}
 					//캐릭터 pos 값과 hp 받아서 공격
 				}
 			}
@@ -923,19 +942,19 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 
 		//=================================================
 
-		D3DXVECTOR3 m_pos = red_minion[index].pos;		// 미니언 포지션
-		D3DXVECTOR3 m_dir = red_minion[index].dir;		// 미니언 전방 벡터
-		D3DXVECTOR3 p_pos = blue_minion[blue_index].pos;						// 캐릭터 포지션
+		D3DXVECTOR3 m_pos = red_minion[index].pos;      // 미니언 포지션
+		D3DXVECTOR3 m_dir = red_minion[index].dir;      // 미니언 전방 벡터
+		D3DXVECTOR3 p_pos = blue_minion[blue_index].pos;                  // 캐릭터 포지션
 
-		D3DXVECTOR3 mp_dir = p_pos - m_pos;				// 미니언이 캐릭터를 바라보는 벡터
+		D3DXVECTOR3 mp_dir = p_pos - m_pos;            // 미니언이 캐릭터를 바라보는 벡터
 
-														// 방향벡터는 모두 노멀라이징을 통해 단위 벡터화 시켜야함
+													   // 방향벡터는 모두 노멀라이징을 통해 단위 벡터화 시켜야함
 		D3DXVec3Normalize(&m_dir, &m_dir);
 		D3DXVec3Normalize(&mp_dir, &mp_dir);
 
 		// 미니언이 주인공을 바라보는 벡터와 몬스터의 전방벡터를 이용해 내적을 구한다.
-		float dot;		// 내적 값
-		float radian;	// 내적한 값을 역코사인 해서 구한 최종 각도
+		float dot;      // 내적 값
+		float radian;   // 내적한 값을 역코사인 해서 구한 최종 각도
 
 						// 미니언 전방벡터와 몬스터가 주인공 캐릭터를 바라보는 벡터의 내적값을 구함
 		dot = D3DXVec3Dot(&m_dir, &mp_dir);
@@ -947,7 +966,7 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 		// 캐릭터가 미니언의 좌측에 있는지 우측에 있는지 구하는 방법
 		// 첫번째로 미니언의 우향 벡터를 구해야함
 		// 모든 방향벡터는 단위 벡터
-		D3DXVECTOR3 right_dir;		// 미니언의 우향벡터값
+		D3DXVECTOR3 right_dir;      // 미니언의 우향벡터값
 
 									// 미니언의 전방벡터와 몬스터의 업벡터를 이용해 몬스터의 우향벡터를 구함
 									// 여기서 D3DXVECTOR3(0.0f, 1.0f, 0.0f)가 업벡터이다.
@@ -987,7 +1006,6 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 		break;
 	}
 }
-
 float cMinion::GetDistance(D3DXVECTOR3 a, D3DXVECTOR3 b)
 {
 	float x = a.x - b.x;
@@ -1214,6 +1232,46 @@ void cMinion::RedMinionCollision()
 			red_minion[i].dir = D3DXVECTOR3(-0.2f, 0, 0);
 			D3DXVec3TransformNormal(&red_minion[i].dir, &red_minion[i].dir, &rot);
 			red_minion[i].pos += red_minion[i].dir;
+		}
+	}
+}
+
+void cMinion::Char_Red_Attack_Q(D3DXVECTOR3 centerPos)
+{
+	for (int i = 0; i < red_minion.size(); i++)
+	{
+		float dis = GetDistance(centerPos, red_minion[i].pos);
+
+		if (dis <= 10.0f)
+		{
+			red_minion[i].hp -= 5.0f;
+		}
+
+		if (red_minion[i].hp < 0)
+		{
+			red_minion[i].direction = MINI_DEATH;
+		}
+	}
+}
+
+void cMinion::Char_Red_Attack_B(D3DXVECTOR3 chPos, bool attack)
+{
+	for (int i = 0; i < red_minion.size(); i++)
+	{
+		float dis = GetDistance(chPos, red_minion[i].pos);
+
+		if (dis <= 10)
+		{
+			if (attack)
+			{
+				red_minion[i].hp -= 2;
+
+				if (red_minion[i].hp <= 0)
+				{
+					red_minion[i].direction = MINI_DEATH;
+				}
+				break;
+			}
 		}
 	}
 }

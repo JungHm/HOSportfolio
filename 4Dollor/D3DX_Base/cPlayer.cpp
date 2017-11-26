@@ -118,15 +118,21 @@ void cPlayer::Update()
 
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8001)
 	{
-		isAttack = true;//적을 피킹했을때만 true 나머지는 false
+		///isAttack = true;//적을 피킹했을때만 true 나머지는 false
 		m_pChar->Setskill(NULL);
 	}
 
-	if (distance >= 5.0f && isAttack)
+	if (GetAsyncKeyState('A') & 0x8001)
 	{
 		m_pChar->BlendAni(ATTACK);
-		isAttack = false;
+
+		isAttack = true;
 	}
+	if (m_pChar->GetState() == ATTACK)
+	{
+		isAttack = true;
+	}
+	else isAttack = false;
 
 	D3DXVECTOR3 mDir;
 	//D3DXVec3Normalize(&mDir, &m_vDirection);

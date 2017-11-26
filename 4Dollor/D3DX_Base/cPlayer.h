@@ -4,7 +4,7 @@ class cCharacter;
 
 struct P_INFO
 {
-	
+
 	//float CtQ, CtW, CtE;
 };
 
@@ -19,8 +19,8 @@ private://player 기본 정보
 	int Att;
 	SYNTHESIZE(float, m_Radius, Radius);
 	//공격용
-	SYNTHESIZE(float ,distance,Distance);
-	bool isAttack;
+	SYNTHESIZE(float, distance, Distance);
+	SYNTHESIZE(bool ,isAttack,Attack);
 
 private:
 	D3DXMATRIXA16 matWorld, matR, matT;
@@ -62,5 +62,9 @@ public:
 	bool isQcool;
 	bool isWcool;
 	bool isEcool;
+
+	cCharacter* GetUnit() {
+		return m_pChar;
+	}
 };
 

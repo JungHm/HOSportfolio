@@ -651,17 +651,20 @@ void cUIInGame::SetSkillUseCooldown(int SkillIndex, float count)
 	}
 }
 
-void cUIInGame::SetLevelUp()
+void cUIInGame::SetLevelUp(int level)
 {
-	SetLvUpAddCount();
+	static int currLevel = 0;
+	if (currLevel < level)
+	{
+		currLevel = level;
+		SetLvUpAddCount();
+	}
 }
 
 void cUIInGame::setupOther()
 {
 	setupHpBar(L"UI/ingame_img_bar_hp_bg.png", 1000);
 	setupHpBar(L"UI/ingame_img_bar_hp.dds", 1000);
-	setupHpBar(L"UI/ingame_img_bar_hp_bg.png", 1001);
-	setupHpBar(L"UI/ingame_img_bar_hp.dds", 1001);
 	//SetMinionAdd(10);
 	setupFadeAdd(L"UI/black.png");
 	setupSkillLockList();
@@ -679,7 +682,7 @@ void cUIInGame::updateOther()
 {
 	if (m_UIViewEnable)
 	{
-		if (KEY->isOnceKeyDown('0')) SetLevelUp();
+		if (KEY->isOnceKeyDown('0')) SetLevelUp(1);
 		if (KEY->isOnceKeyDown('8')) SetDead(true);
 		if (KEY->isOnceKeyDown('9')) SetDead(false);
 		if (KEY->isOnceKeyDown('7')) SetVictory();

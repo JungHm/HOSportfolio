@@ -83,7 +83,7 @@ public:
 	void SetSkillUse(int SkillIndex, bool used);
 	// 스킬 사용 쿨타임 표시
 	void SetSkillUseCooldown(int SkillIndex, float count);
-	void SetLevelUp();
+	void SetLevelUp(int level);
 
 	// 순수 가상함수로 실행하는 것들
 	void setupOther();
