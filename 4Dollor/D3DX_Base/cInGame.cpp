@@ -87,9 +87,6 @@ void cInGame::Destroy()
 
 void cInGame::Update()
 {
-
-	
-
 	if (m_pTower)
 	{
 		m_pTower->Update();
