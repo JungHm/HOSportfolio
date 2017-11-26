@@ -9,8 +9,8 @@
 #define BLUE_ANGLE			-D3DX_PI / 2
 #define RED_ANGLE			D3DX_PI / 2
 
-#define MINI_LONG_DIS		50
-#define MINI_SHORT_DIS		15
+#define MINI_LONG_DIS		55
+#define MINI_SHORT_DIS		25
 
 #define BLUE_START_X			(float)-250
 #define RED_START_X				(float)250
