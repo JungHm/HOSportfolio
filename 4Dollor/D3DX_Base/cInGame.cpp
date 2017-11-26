@@ -206,7 +206,7 @@ void cInGame::Update()
 	{
 		m_UI->SetDead(true);
 		revivalTime -= g_pTimeManager->GetEllapsedTime();
-		//m_UI->SetDeadCount();
+		m_UI->SetDeadCount(revivalTime);
 	}
 	if (revivalTime < 0.0f)
 	{

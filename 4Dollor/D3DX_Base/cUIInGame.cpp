@@ -657,8 +657,6 @@ void cUIInGame::setupOther()
 {
 	setupHpBar(L"UI/ingame_img_bar_hp_bg.png", 1000);
 	setupHpBar(L"UI/ingame_img_bar_hp.dds", 1000);
-	setupHpBar(L"UI/ingame_img_bar_hp_bg.png", 1001);
-	setupHpBar(L"UI/ingame_img_bar_hp.dds", 1001);
 	//SetMinionAdd(10);
 	setupFadeAdd(L"UI/black.png");
 	setupSkillLockList();
