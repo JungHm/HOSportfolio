@@ -63,6 +63,7 @@ void cInGame::SetUp()
 	MINIONMANAGER->RedSetup();
 	MINIONMANAGER->BlueSetup();
 	MINIONMANAGER->RedSetup();
+
 	minionCount = 0;
 }
 
@@ -151,8 +152,6 @@ void cInGame::Update()
 		}
 	}
 
-
-
 	if (m_UI)
 	{
 		m_UI->update();	// ��ư�� ����Ƿ� update
@@ -176,7 +175,6 @@ void cInGame::Update()
 		MINIONMANAGER->RedSetup();
 		MINIONMANAGER->BlueSetup();
 		MINIONMANAGER->RedSetup();
-
 	}
 
 	D3DXVECTOR3 pos2(2000, 2000, 2000);
@@ -196,7 +194,6 @@ void cInGame::Update()
 	//			&m_fDist,
 	//			NULL, NULL);
 	//	}
-
 	//	else
 	//	{
 	//		m_
@@ -210,7 +207,6 @@ void cInGame::Update()
 	//v1.c = D3DXCOLOR(0, 1, 0, 1);
 	//v1.p = m_pPlayer->GetPosition() + m_pPlayer->GetDir() * 200;
 	//m_vecvetex.push_back(v1);
-
 }
 
 void cInGame::Render()
@@ -240,20 +236,20 @@ void cInGame::Render()
 
 	m_pPlayer->Render();
 
-	/*ST_PC_VERTEXT v, v1;
+	//ST_PC_VERTEXT v, v1;
 
-	v.c = D3DXCOLOR(1, 0, 0, 1);
-	v.p = m_pPlayer->GetPosition();
-	m_vecvetex.push_back(v);
-	v1.c = D3DXCOLOR(0, 1, 0, 1);
-	v1.p = m_pPlayer->GetPosition() + (m_pPlayer->GetDir()) * 200;
-	m_vecvetex.push_back(v1);*/
+	//v.c = D3DXCOLOR(1, 0, 0, 1);
+	//v.p = m_pPlayer->GetPosition();
+	//m_vecvetex.push_back(v);
+	//v1.c = D3DXCOLOR(0, 1, 0, 1);
+	//v1.p = m_pPlayer->GetPosition() + (m_pPlayer->GetDir()) * 200;
+	//m_vecvetex.push_back(v1);
 	m_UI->updateBar(true, m_pPlayer->GetPosition(), m_pPlayer->GetHp());
 	//m_UI->updateBarMinion(10, { 0,0,0 }, 100);	// 미니언 추가되면 작업
-	/*g_pD3DDevice->SetFVF(ST_PC_VERTEXT::FVF);
-	g_pD3DDevice->DrawPrimitiveUP(D3DPT_LINELIST, m_vecvetex.size() / 2, &m_vecvetex[0], sizeof(ST_PC_VERTEXT));
-*/
-	m_vecvetex.clear();
+	//g_pD3DDevice->SetFVF(ST_PC_VERTEXT::FVF);
+	//g_pD3DDevice->DrawPrimitiveUP(D3DPT_LINELIST, m_vecvetex.size() / 2, &m_vecvetex[0], sizeof(ST_PC_VERTEXT));
+
+	//m_vecvetex.clear();
 	//=======미니언=======
 	MINIONMANAGER->BlueRender();
 	MINIONMANAGER->RedRender();

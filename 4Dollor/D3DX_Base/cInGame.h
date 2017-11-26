@@ -36,6 +36,7 @@ private:
 
 	int minionCount;
 
+
 public:
 	cInGame();
 	~cInGame();

@@ -42,7 +42,7 @@ void cMinion::BlueXfileSetup()
 		if (rnd == 0) m.rnd = RND_LEFT;
 		else m.rnd = RND_RIGHT;
 
-		int pos_rnd = (rand() % 5) - 2;
+		int pos_rnd = (rand() % 5) - 2 - 30;
 
 		m.coll_angleY = 0.0f;
 		m.angleY = BLUE_ANGLE;
@@ -92,7 +92,7 @@ void cMinion::RedXfileSetup()
 		if (rnd == 0) m.rnd = RND_LEFT;
 		else m.rnd = RND_RIGHT;
 
-		int pos_rnd = (rand() % 5) - 2;
+		int pos_rnd = (rand() % 5) - 2 - 30;
 
 		m.coll_angleY = 0.0f;
 		m.angleY = RED_ANGLE;
@@ -146,7 +146,7 @@ void cMinion::BlueSetup()
 			if (rnd == 0) blue_minion[i].rnd = RND_LEFT;
 			else blue_minion[i].rnd = RND_RIGHT;
 
-			int pos_rnd = (rand() % 5) - 2;
+			int pos_rnd = (rand() % 5) - 2 - 30;
 
 			blue_minion[i].coll_angleY = 0.0f;
 			blue_minion[i].angleY = BLUE_ANGLE;
@@ -198,7 +198,7 @@ void cMinion::RedSetup()
 			if (rnd == 0) red_minion[i].rnd = RND_LEFT;
 			else red_minion[i].rnd = RND_RIGHT;
 
-			int pos_rnd = (rand() % 5) - 2;
+			int pos_rnd = (rand() % 5) - 2 - 30;
 
 			red_minion[i].coll_angleY = 0.0f;
 			red_minion[i].angleY = RED_ANGLE;
