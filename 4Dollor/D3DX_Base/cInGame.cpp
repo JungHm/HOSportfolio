@@ -182,8 +182,10 @@ void cInGame::Update()
 
 	}
 
+	D3DXVECTOR3 pos2(2000, 2000, 2000);
+
 	MINIONMANAGER->RedUpdate(m_pPlayer->GetPosition());
-	MINIONMANAGER->BlueUpdate(m_pPlayer->GetPosition());
+	MINIONMANAGER->BlueUpdate(pos2);
 
 	//for (int i = 0; i < m_pLoadMap->GetFielBox().size(); i++)
 	//{
