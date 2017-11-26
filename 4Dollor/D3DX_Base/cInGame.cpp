@@ -96,7 +96,10 @@ void cInGame::Update()
 
 		for (int i = 0; i < MINIONMANAGER->GetBlueMinion().size(); i++)
 		{
-			//	m_pTower->RedFindEnemy(MINIONMANAGER->GetBlueMinion()[i].GetSphere());
+			if (MINIONMANAGER->BlueMinionDirection(i) != MINI_DEATH)
+			{
+				//	m_pTower->RedFindEnemy(MINIONMANAGER->GetBlueMinion()[i].GetSphere());
+			}
 		}
 		if (m_pTower->GetTower(1).isFind && delayTime >=3.0f)
 		{
@@ -109,7 +112,10 @@ void cInGame::Update()
 		}
 		for (int i = 0; i < MINIONMANAGER->GetRedMinion().size(); i++)
 		{
-			m_pTower->BlueFindEnemy(MINIONMANAGER->GetRedMinion()[i].GetSphere());
+			if (MINIONMANAGER->RedMinionDirection(i) != MINI_DEATH)
+			{
+				m_pTower->BlueFindEnemy(MINIONMANAGER->GetRedMinion()[i].GetSphere());
+			}
 		}
 	}
 
