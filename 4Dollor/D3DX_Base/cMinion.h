@@ -123,8 +123,8 @@ public:
 
 	void BlueSetup();
 	void RedSetup();
-	void BlueUpdate(D3DXVECTOR3 chPos);
-	void RedUpdate(D3DXVECTOR3 chPos);
+	void BlueUpdate(D3DXVECTOR3 chPos, int & chHp);
+	void RedUpdate(D3DXVECTOR3 chPos, int & chHp);
 	void BlueXfileUpdate(int index);
 	void RedXfileUpdate(int index);
 	void BlueRender();
@@ -132,8 +132,8 @@ public:
 	void BlueXfileRender(int index);
 	void RedXfileRender(int index);
 
-	void BlueDirection(int index, D3DXVECTOR3 chPos);
-	void RedDirection(int index, D3DXVECTOR3 chPos);
+	void BlueDirection(int index, D3DXVECTOR3 chPos, int & chHp);
+	void RedDirection(int index, D3DXVECTOR3 chPos, int & chHp);
 
 	// 두 벡터 사이 거리 구하는 함수
 	float GetDistance(D3DXVECTOR3 a, D3DXVECTOR3 b);
@@ -151,4 +151,16 @@ public:
 
 	void RedMinionCollision();
 	void RedMinionUnColl();
+
+	void Char_Red_Attack_Q(D3DXVECTOR3 centerPos);
+	void Char_Red_Attack_B(D3DXVECTOR3 chPos, bool attack);
+
+	int BlueMinionHp(int index) { return blue_minion[index].hp; }
+	int RedMinionHp(int index) { return red_minion[index].hp; }
+
+	D3DXVECTOR3 BlueMinionPos(int index) { return blue_minion[index].pos; }
+	D3DXVECTOR3 RedMinionPos(int index) { return red_minion[index].pos; }
+
+	DIRECTION BlueMinionDirection(int index) { return blue_minion[index].direction; }
+	DIRECTION RedMinionDirection(int index) { return red_minion[index].direction; }
 };

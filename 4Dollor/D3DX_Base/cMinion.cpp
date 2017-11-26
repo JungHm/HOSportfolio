@@ -248,7 +248,7 @@ void cMinion::RedSetup()
 	}
 }
 
-void cMinion::BlueUpdate(D3DXVECTOR3 chPos)
+void cMinion::BlueUpdate(D3DXVECTOR3 chPos, int & chHp)
 {
 	for (unsigned int i = 0; i < blue_minion.size(); i++)
 	{
@@ -268,7 +268,7 @@ void cMinion::BlueUpdate(D3DXVECTOR3 chPos)
 
 			blue_minion[i].matWorld = blue_minion[i].matScale * blue_minion[i].matRot * blue_minion[i].matTrans;
 
-			BlueDirection(i, chPos);
+			BlueDirection(i, chPos, chHp);
 			BlueXfileUpdate(i);
 
 			blue_minion[i].GetSphere().vCenter = blue_minion[i].pos;
@@ -278,7 +278,7 @@ void cMinion::BlueUpdate(D3DXVECTOR3 chPos)
 	BlueMinionUnColl();
 }
 
-void cMinion::RedUpdate(D3DXVECTOR3 chPos)
+void cMinion::RedUpdate(D3DXVECTOR3 chPos, int & chHp)
 {
 	for (unsigned int i = 0; i < red_minion.size(); i++)
 	{
@@ -300,7 +300,7 @@ void cMinion::RedUpdate(D3DXVECTOR3 chPos)
 
 			red_minion[i].GetSphere().vCenter = red_minion[i].pos;
 
-			RedDirection(i, chPos);
+			RedDirection(i, chPos, chHp);
 			RedXfileUpdate(i);
 		}
 	}
@@ -430,7 +430,7 @@ void cMinion::RedXfileRender(int index)
 	g_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 }
 
-void cMinion::BlueDirection(int index, D3DXVECTOR3 chPos)
+void cMinion::BlueDirection(int index, D3DXVECTOR3 chPos, int & chHp)
 {
 	switch (blue_minion[index].direction)
 	{
@@ -712,7 +712,7 @@ void cMinion::BlueDirection(int index, D3DXVECTOR3 chPos)
 	}
 }
 
-void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
+void cMinion::RedDirection(int index, D3DXVECTOR3 chPos, int & chHp)
 {
 	switch (red_minion[index].direction)
 	{
@@ -798,6 +798,11 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 				{
 					// 시선만 방향 따라다님, 공격
 					red_minion[index].char_attack = true;
+					red_minion[index].attack_count++;
+					if (red_minion[index].attack_count % 60 == 0)
+					{
+						chHp -= red_minion[index].attack;
+					}
 					//캐릭터 pos 값과 hp 받아서 공격
 				}
 			}
@@ -815,6 +820,11 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 				{
 					// 시선만 방향 따라다님, 공격
 					red_minion[index].char_attack = true;
+					red_minion[index].attack_count++;
+					if (red_minion[index].attack_count % 60 == 0)
+					{
+						chHp -= red_minion[index].attack;
+					}
 					//캐릭터 pos 값과 hp 받아서 공격
 				}
 			}
@@ -846,6 +856,11 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 				{
 					// 시선만 방향 따라다님, 공격
 					red_minion[index].char_attack = true;
+					red_minion[index].attack_count++;
+					if (red_minion[index].attack_count % 60 == 0)
+					{
+						chHp -= red_minion[index].attack;
+					}
 					//캐릭터 pos 값과 hp 받아서 공격
 				}
 			}
@@ -863,6 +878,11 @@ void cMinion::RedDirection(int index, D3DXVECTOR3 chPos)
 				{
 					// 시선만 방향 따라다님, 공격
 					red_minion[index].char_attack = true;
+					red_minion[index].attack_count++;
+					if (red_minion[index].attack_count % 60 == 0)
+					{
+						chHp -= red_minion[index].attack;
+					}
 					//캐릭터 pos 값과 hp 받아서 공격
 				}
 			}
@@ -1229,6 +1249,46 @@ void cMinion::RedMinionUnColl()
 				red_minion[i].coll = false;
 				red_minion[j].coll = false;
 				red_minion[i].coll_angleY = red_minion[j].coll_angleY = 0.0f;
+			}
+		}
+	}
+}
+
+void cMinion::Char_Red_Attack_Q(D3DXVECTOR3 centerPos)
+{
+	for (int i = 0; i < red_minion.size(); i++)
+	{
+		float dis = GetDistance(centerPos, red_minion[i].pos);
+
+		if (dis <= 10.0f)
+		{
+			red_minion[i].hp -= 5.0f;
+		}
+
+		if (red_minion[i].hp < 0)
+		{
+			red_minion[i].direction = MINI_DEATH;
+		}
+	}
+}
+
+void cMinion::Char_Red_Attack_B(D3DXVECTOR3 chPos, bool attack)
+{
+	for (int i = 0; i < red_minion.size(); i++)
+	{
+		float dis = GetDistance(chPos, red_minion[i].pos);
+
+		if (dis <= 10)
+		{
+			if (attack)
+			{
+				red_minion[i].hp -= 2;
+
+				if (red_minion[i].hp <= 0)
+				{
+					red_minion[i].direction = MINI_DEATH;
+				}
+				break;
 			}
 		}
 	}
