@@ -2,7 +2,7 @@
 #include "cUIObject.h"
 
 cUIObject::cUIObject()
-	: m_UIScale(0.5f)
+	: m_UIScale(0.8f)
 	, m_CollisionRectReduce(0.7f)
 	, m_UIViewEnable(true)
 {

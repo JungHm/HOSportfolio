@@ -47,8 +47,8 @@ LPD3DXFONT cFontManager::GetFont(eFontType e)
 	}
 	else if (e == FT_SMALL)
 	{
-		fd.Height = 20;
-		fd.Width = 8;
+		fd.Height = 30;
+		fd.Width = 12;
 		fd.Weight = FW_BOLD;
 		fd.Italic = false;
 		fd.CharSet = DEFAULT_CHARSET;

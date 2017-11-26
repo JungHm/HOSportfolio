@@ -125,7 +125,7 @@ void cUIInGame::setupDeadSideAdd(bool left)
 	}
 	else
 	{
-		m_DeadSide[l].pt = { float(MAX_XPIXEL - m_DeadSide[l].imgInfo.Width), 0, 0 };
+		m_DeadSide[l].pt = { float(WINX - m_DeadSide[l].imgInfo.Width), 0, 0 };
 	}
 	
 }
@@ -195,9 +195,9 @@ void cUIInGame::setupSkillLockList()
 	m_SkillUnlock.push_back(&m_MUIButton.find("unlockskill2")->second);
 	m_SkillUnlock.push_back(&m_MUIButton.find("unlockskill3")->second);
 
-	m_SkillUnlock[0]->pt = { m_MUIButton.find("charport")->second.pt.x, m_MUIButton.find("charport")->second.pt.y - 70 ,0 };
-	m_SkillUnlock[1]->pt = { m_MUIButton.find("charport")->second.pt.x, m_MUIButton.find("charport")->second.pt.y - 115 ,0 };
-	m_SkillUnlock[2]->pt = { m_MUIButton.find("charport")->second.pt.x, m_MUIButton.find("charport")->second.pt.y - 160 ,0 };
+	m_SkillUnlock[0]->pt = { m_MUIButton.find("charport")->second.pt.x, m_MUIButton.find("charport")->second.pt.y - 100 ,0 };
+	m_SkillUnlock[1]->pt = { m_MUIButton.find("charport")->second.pt.x, m_MUIButton.find("charport")->second.pt.y - 100 - SKILLUNLOCKLISTINTERVAL ,0 };
+	m_SkillUnlock[2]->pt = { m_MUIButton.find("charport")->second.pt.x, m_MUIButton.find("charport")->second.pt.y - 100 - SKILLUNLOCKLISTINTERVAL * 2 ,0 };
 }
 
 void cUIInGame::setupSkillUnlockEfx(wstring filePath)
@@ -375,7 +375,7 @@ void cUIInGame::renderVictory()
 			{
 				if (m_VictoryEfx[i].alpha < 255)
 				{
-					m_VictoryEfx[i].alpha += 5;
+					m_VictoryEfx[i].alpha += 10;
 					//m_VictoryEfx[i].rotate += 1;
 					if (m_VictoryEfx[i].alpha >= 255)
 					{
@@ -534,8 +534,8 @@ void cUIInGame::SetSkillUnlock(int SkillIndex, bool unlock)
 
 void cUIInGame::skillUnlockPtChange(int index)
 {
-	float interval = 45;
-	float basePtY = m_MUIButton.find("charport")->second.pt.y - 70;
+	float interval = SKILLUNLOCKLISTINTERVAL;
+	float basePtY = m_MUIButton.find("charport")->second.pt.y - 100;
 	m_SkillUnlock[index]->used = true;
 
 	for (int i = 0; i < 3; i++)
@@ -554,7 +554,7 @@ void cUIInGame::skillUnlockPtChange(int index)
 void cUIInGame::skillUnlockEfx(int index)
 {
 	string s = "abil" + to_string(index);
-	m_SkillUnlockEfx.pt = m_MUIButton.find(s)->second.pt * 2;
+	m_SkillUnlockEfx.pt = m_MUIButton.find(s)->second.pt * 1.25f;
 	m_SkillUnlockEfx.enable = true;
 	m_SkillUnlockEfx.matWorld = m_MUIButton.find(s)->second.matWorld;
 }
@@ -669,10 +669,10 @@ void cUIInGame::setupOther()
 	setupDeadAdd();
 	setupDeadSideAdd(true);
 	setupDeadSideAdd(false);
-	setupVictoryAdd(L"UI/black.png",					0,	2000.0f, { 0,0,0 });
-	setupVictoryAdd(L"UI/ingame_img_victory_bg.png",	1,	0.6f, { 0,0,0 });
-	setupVictoryAdd(L"UI/ingame_img_victory_cycle.png",	2,	VICTORYCYCLESCALE, { MAX_XPIXEL / 2 -  50,MAX_YPIXEL / 2 - 100,0 });
-	setupVictoryAdd(L"UI/ingame_img_victory_text.png",	3,	0.7f, { MAX_XPIXEL / 2 - 375,MAX_YPIXEL / 2 - 225,0 });
+	setupVictoryAdd(L"UI/black.png",					0,	4000.0f, { 0,0,0 });
+	setupVictoryAdd(L"UI/ingame_img_victory_bg.png",	1,	0.95f, { 0,0,0 });
+	setupVictoryAdd(L"UI/ingame_img_victory_cycle.png",	2,	VICTORYCYCLESCALE, { WINX / 2 -  25,WINY / 2 - 50,0 });
+	setupVictoryAdd(L"UI/ingame_img_victory_text.png",	3,	VICTORYCYCLESCALE, { WINX / 2 - 550,WINY / 2 - 290,0 });
 }
 
 void cUIInGame::updateOther()
@@ -892,7 +892,7 @@ void cUIInGame::renderFade()
 
 		m_Fade.sprite->SetTransform(&m_Fade.matWorld);
 		RECT rc;
-		SetRect(&rc, 0, 0, MAX_XPIXEL, MAX_YPIXEL);
+		SetRect(&rc, 0, 0, WINX, WINY);
 		m_Fade.sprite->Draw(m_Fade.texture,
 			&rc,
 			NULL,

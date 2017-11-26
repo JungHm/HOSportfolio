@@ -172,8 +172,8 @@ void cUIMainMenu::setupAddTexture(wstring filePath)
 
 	SetRect(&pse->drawRc, 0, 0, pse->imgInfo.Width, pse->imgInfo.Height);
 	pse->alpha = 5;
-	pse->scale = 2.0f;
-	pse->pt = { 750, 250,0 };
+	pse->scale = READYCOUNTSTARTSCALE;
+	pse->pt = { 1050, 250,0 };
 }
 
 void cUIMainMenu::setupAddFadeImg(wstring filePath)
@@ -226,13 +226,13 @@ void cUIMainMenu::updateGameReady()
 			D3DXMatrixIdentity(&matS);
 			if (!m_GameReadyEfxIt->second.reverse)
 			{
-				if (m_GameReadyEfxIt->second.scale > 0.7f)
-					m_GameReadyEfxIt->second.scale -= 0.07f;
+				if (m_GameReadyEfxIt->second.scale > READYCOUNTENDSCALE)
+					m_GameReadyEfxIt->second.scale -= 0.25f;
 				if (m_GameReadyEfxIt->second.alpha < 255)
 					m_GameReadyEfxIt->second.alpha += 10;
 				if (m_GameReadyEfxIt->second.alpha > 255)
 					m_GameReadyEfxIt->second.alpha = 255;
-				if (m_GameReadyEfxIt->second.scale <= 0.7f && m_GameReadyEfxIt->second.alpha == 255)
+				if (m_GameReadyEfxIt->second.scale <= READYCOUNTENDSCALE && m_GameReadyEfxIt->second.alpha == 255)
 				{
 					m_GameReadyEfxIt->second.reverse = true;
 				}
@@ -242,10 +242,10 @@ void cUIMainMenu::updateGameReady()
 				if (m_GameReadyEfxIt->second.scale < 0)
 					m_GameReadyEfxIt->second.scale = 0;
 				else
-					m_GameReadyEfxIt->second.scale -= 0.001f;
+					m_GameReadyEfxIt->second.scale -= 0.002f;
 				if (m_GameReadyEfxIt->second.alpha != 0)
 				{
-					m_GameReadyEfxIt->second.alpha -= 7;
+					m_GameReadyEfxIt->second.alpha -= 6;
 					if (m_GameReadyEfxIt->second.alpha <= 0)
 					{
 						m_GameReadyEfxIt->second.alpha = 0;
@@ -334,7 +334,7 @@ void cUIMainMenu::renderFade()
 
 	m_Fade.sprite->SetTransform(&m_Fade.matWorld);
 	RECT rc;
-	SetRect(&rc, 0, 0, MAX_XPIXEL, MAX_YPIXEL);
+	SetRect(&rc, 0, 0, WINX, WINY);
 	m_Fade.sprite->Draw(m_Fade.texture,
 		&rc,
 		NULL,

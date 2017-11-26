@@ -2,6 +2,8 @@
 #include "cUIObject.h"
 
 #define FADEINSPEED 3	// 값이 낮을수록 느림
+#define READYCOUNTSTARTSCALE 4
+#define READYCOUNTENDSCALE 1.6
 
 class cUILoadingInGame;
 
