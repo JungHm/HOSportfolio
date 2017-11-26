@@ -42,14 +42,17 @@ void cMinion::BlueXfileSetup()
 		if (rnd == 0) m.rnd = RND_LEFT;
 		else m.rnd = RND_RIGHT;
 
-		int pos_rnd = (rand() % 5) - 2 - 30;
+		/*int pos_rnd = (rand() % 5) - 2 - 30;*/
 
 		m.coll_angleY = 0.0f;
 		m.angleY = BLUE_ANGLE;
 
 		m.team = TEAM_BLUE;
-		m.pos = D3DXVECTOR3(BLUE_START_X, 1.0f, pos_rnd);
+		m.pos = D3DXVECTOR3(BLUE_START_X, 1.0f, -20);
 		m.dir = D3DXVECTOR3(0.2f, 0.0f, 0.0f);
+
+		m.GetSphere().vCenter = m.pos;
+		m.GetSphere().fRadius = 5.0f;
 
 		m.char_attack = false;
 		m.coll = false;
@@ -92,14 +95,17 @@ void cMinion::RedXfileSetup()
 		if (rnd == 0) m.rnd = RND_LEFT;
 		else m.rnd = RND_RIGHT;
 
-		int pos_rnd = (rand() % 5) - 2 - 30;
+		/*int pos_rnd = (rand() % 5) - 2 - 30;*/
 
 		m.coll_angleY = 0.0f;
 		m.angleY = RED_ANGLE;
 
 		m.team = TEAM_RED;
-		m.pos = D3DXVECTOR3(RED_START_X, 1.0f, pos_rnd);
+		m.pos = D3DXVECTOR3(RED_START_X, 1.0f, -20);
 		m.dir = D3DXVECTOR3(-0.2f, 0.0f, 0.0f);
+
+		m.GetSphere().vCenter = m.pos;
+		m.GetSphere().fRadius = 5.0f;
 
 		m.char_attack = false;
 		m.coll = false;
@@ -146,12 +152,12 @@ void cMinion::BlueSetup()
 			if (rnd == 0) blue_minion[i].rnd = RND_LEFT;
 			else blue_minion[i].rnd = RND_RIGHT;
 
-			int pos_rnd = (rand() % 5) - 2 - 30;
+			/*int pos_rnd = (rand() % 5) - 2 - 30;*/
 
 			blue_minion[i].coll_angleY = 0.0f;
 			blue_minion[i].angleY = BLUE_ANGLE;
 
-			blue_minion[i].pos = D3DXVECTOR3(BLUE_START_X, 1.0f, pos_rnd);
+			blue_minion[i].pos = D3DXVECTOR3(BLUE_START_X, 1.0f, -20);
 			blue_minion[i].dir = D3DXVECTOR3(0.2f, 0.0f, 0.0f);
 
 			blue_minion[i].hp = 10;
@@ -167,6 +173,8 @@ void cMinion::BlueSetup()
 
 			blue_minion[i].count = 0;
 			blue_minion[i].fBlendTime = 0.3f;
+
+			blue_minion[i].GetSphere().vCenter = blue_minion[i].pos;
 
 			blue_minion[i].char_attack = false;
 			blue_minion[i].coll = false;
@@ -198,12 +206,12 @@ void cMinion::RedSetup()
 			if (rnd == 0) red_minion[i].rnd = RND_LEFT;
 			else red_minion[i].rnd = RND_RIGHT;
 
-			int pos_rnd = (rand() % 5) - 2 - 30;
+			/*int pos_rnd = (rand() % 5) - 2 - 30;*/
 
 			red_minion[i].coll_angleY = 0.0f;
 			red_minion[i].angleY = RED_ANGLE;
 
-			red_minion[i].pos = D3DXVECTOR3(RED_START_X, 1.0f, pos_rnd);
+			red_minion[i].pos = D3DXVECTOR3(RED_START_X, 1.0f, -20);
 			red_minion[i].dir = D3DXVECTOR3(-0.2f, 0.0f, 0.0f);
 
 			red_minion[i].hp = 10;
@@ -219,6 +227,8 @@ void cMinion::RedSetup()
 
 			red_minion[i].count = 0;
 			red_minion[i].fBlendTime = 0.3f;
+
+			red_minion[i].GetSphere().vCenter = red_minion[i].pos;
 
 			red_minion[i].char_attack = false;
 			red_minion[i].coll = false;
@@ -260,6 +270,8 @@ void cMinion::BlueUpdate(D3DXVECTOR3 chPos)
 
 			BlueDirection(i, chPos);
 			BlueXfileUpdate(i);
+
+			blue_minion[i].GetSphere().vCenter = blue_minion[i].pos;
 		}
 	}
 	BlueMinionCollision();
@@ -285,6 +297,8 @@ void cMinion::RedUpdate(D3DXVECTOR3 chPos)
 			//D3DXVec3TransformNormal(&red_minion[i].dir, &red_minion[i].dir, &red_minion[i].matRot);
 
 			red_minion[i].matWorld = red_minion[i].matScale * red_minion[i].matRot * red_minion[i].matTrans;
+
+			red_minion[i].GetSphere().vCenter = red_minion[i].pos;
 
 			RedDirection(i, chPos);
 			RedXfileUpdate(i);

@@ -59,10 +59,6 @@ void cInGame::SetUp()
 	MINIONMANAGER->RedXfileSetup();
 	MINIONMANAGER->BlueSetup();
 	MINIONMANAGER->RedSetup();
-	MINIONMANAGER->BlueSetup();
-	MINIONMANAGER->RedSetup();
-	MINIONMANAGER->BlueSetup();
-	MINIONMANAGER->RedSetup();
 
 	minionCount = 0;
 }
@@ -92,7 +88,16 @@ void cInGame::Update()
 	{
 		m_pTower->Update();
 		m_pTower->RedFindEnemy(m_pPlayer->GetSphere());
-		//m_pTower->RedFindEnemy(MINIONMANAGER->GetBlueMinion()[0].sSphere());
+
+		for (int i = 0; i < MINIONMANAGER->GetBlueMinion().size(); i++)
+		{
+			m_pTower->RedFindEnemy(MINIONMANAGER->GetBlueMinion()[i].GetSphere());
+		}
+		
+		for (int i = 0; i < MINIONMANAGER->GetRedMinion().size(); i++)
+		{
+			m_pTower->BlueFindEnemy(MINIONMANAGER->GetRedMinion()[i].GetSphere());
+		}
 	}
 
 	m_pPlayer->Update();
@@ -150,7 +155,15 @@ void cInGame::Update()
 				break;
 			}
 		}
+
+		// 버튼을 눌럿을떄만 레이저 픽킹 검사 시작
+		for (int i = 0; i < m_pLoadMap->GetFielBox().size(); i++)
+		{
+			RayMeshCollision(m_pLoadMap->GetFielBox()[i].pMesh);
+		}
 	}
+
+	std::cout << m_fDist << std::endl;
 
 	if (m_UI)
 	{
@@ -167,12 +180,8 @@ void cInGame::Update()
 
 	int rnd;
 
-	if (minionCount % 1000 == 0)
+	if (minionCount % 500 == 0)
 	{
-		MINIONMANAGER->BlueSetup();
-		MINIONMANAGER->RedSetup();
-		MINIONMANAGER->BlueSetup();
-		MINIONMANAGER->RedSetup();
 		MINIONMANAGER->BlueSetup();
 		MINIONMANAGER->RedSetup();
 	}
@@ -181,32 +190,6 @@ void cInGame::Update()
 
 	MINIONMANAGER->RedUpdate(m_pPlayer->GetPosition());
 	MINIONMANAGER->BlueUpdate(pos2);
-
-	//for (int i = 0; i < m_pLoadMap->GetFielBox().size(); i++)
-	//{
-	//	if (!m_isColl)
-	//	{
-	//		D3DXIntersect(m_pLoadMap->GetFielBox()[i].pMesh,
-	//			&m_pPlayer->GetPosition(),
-	//			&m_pPlayer->GetDir(),
-	//			&m_isColl,
-	//			NULL, NULL, NULL,
-	//			&m_fDist,
-	//			NULL, NULL);
-	//	}
-	//	else
-	//	{
-	//		m_
-	//	}
-	//}
-	//ST_PC_VERTEXT v, v1;
-
-	//v.c = D3DXCOLOR(1, 0, 0, 1);
-	//v.p = m_pPlayer->GetPosition();
-	//m_vecvetex.push_back(v);
-	//v1.c = D3DXCOLOR(0, 1, 0, 1);
-	//v1.p = m_pPlayer->GetPosition() + m_pPlayer->GetDir() * 200;
-	//m_vecvetex.push_back(v1);
 }
 
 void cInGame::Render()
@@ -236,20 +219,22 @@ void cInGame::Render()
 
 	m_pPlayer->Render();
 
-	//ST_PC_VERTEXT v, v1;
-
-	//v.c = D3DXCOLOR(1, 0, 0, 1);
-	//v.p = m_pPlayer->GetPosition();
-	//m_vecvetex.push_back(v);
-	//v1.c = D3DXCOLOR(0, 1, 0, 1);
-	//v1.p = m_pPlayer->GetPosition() + (m_pPlayer->GetDir()) * 200;
-	//m_vecvetex.push_back(v1);
+	ST_PC_VERTEXT v, v1;
+	v.c = D3DXCOLOR(1, 0, 0, 1);
+	v.p = m_pPlayer->GetPosition();
+	m_vecvetex.push_back(v);
+	v1.c = D3DXCOLOR(0, 1, 0, 1);
+	v1.p = m_pPlayer->GetPosition() + m_pPlayer->GetDir() * 100;
+	m_vecvetex.push_back(v1);
 	m_UI->updateBar(true, m_pPlayer->GetPosition(), m_pPlayer->GetHp());
-	//m_UI->updateBarMinion(10, { 0,0,0 }, 100);	// 미니언 추가되면 작업
-	//g_pD3DDevice->SetFVF(ST_PC_VERTEXT::FVF);
-	//g_pD3DDevice->DrawPrimitiveUP(D3DPT_LINELIST, m_vecvetex.size() / 2, &m_vecvetex[0], sizeof(ST_PC_VERTEXT));
+	D3DXMATRIXA16 matW;
+	D3DXMatrixIdentity(&matW);
+	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matW);
+	g_pD3DDevice->SetFVF(ST_PC_VERTEXT::FVF);
+	g_pD3DDevice->DrawPrimitiveUP(D3DPT_LINELIST, m_vecvetex.size() / 2, &m_vecvetex[0], sizeof(ST_PC_VERTEXT));
+	m_vecvetex.clear();
 
-	//m_vecvetex.clear();
+	//m_UI->updateBarMinion(10, { 0,0,0 }, 100);	// 미니언 추가되면 작업
 	//=======미니언=======
 	MINIONMANAGER->BlueRender();
 	MINIONMANAGER->RedRender();
@@ -261,19 +246,14 @@ void cInGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	m_ptMouse.y = HIWORD(lParam);
 }
 
-void cInGame::SphereCollision()
+void cInGame::RayMeshCollision(IN LPD3DXMESH pMesh)
 {
-	for (int i = 0; i < m_pLoadMap->GetFieldObj().size(); i++)
-	{
-		if (!m_pLoadMap->GetFieldObj()[i].isShow) continue;
-
-		if (getDistance(
-			m_pLoadMap->GetFieldObj()[i].vPosition.x,
-			m_pLoadMap->GetFieldObj()[i].vPosition.z,
-			m_pPlayer->GetPosition().x,
-			m_pPlayer->GetPosition().z) < m_pLoadMap->GetFieldObj()[i].sSphere.fRadius)
-		{
-			break;
-		}
-	}
+	D3DXIntersect(
+		pMesh,
+		&m_pPlayer->GetPosition(),
+		&m_pPlayer->GetDir(),
+		&m_isColl,
+		NULL, NULL, NULL,
+		&m_fDist,
+		NULL, NULL);
 }

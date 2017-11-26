@@ -80,7 +80,7 @@ struct tagMinion
 	float fPassedBlendTime;
 
 	int nKey;
-	ST_SPHERE sSphere;
+	SYNTHESIZE_PASS_BY_REF(ST_SPHERE, sSphere, Sphere);
 	DWORD	ani_walk;
 	DWORD	ani_attack;
 

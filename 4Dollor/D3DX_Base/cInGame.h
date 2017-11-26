@@ -46,7 +46,6 @@ public:
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
-
-	void SphereCollision();
+	void RayMeshCollision(IN LPD3DXMESH pMesh);
 };
 
