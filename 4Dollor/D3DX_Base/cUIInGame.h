@@ -6,7 +6,6 @@
 #define HPMAX 100
 #define FADEINSPEED 30
 #define SKILLUNLOCKEFXREPEATCOUNT 6
-#define DEADSIDE 2
 #define VICTORYRESOURCE 4
 #define VICTORYCYCLESCALE 1
 #define SKILLUNLOCKLISTINTERVAL 75
@@ -42,7 +41,6 @@ private:
 
 	tagUISpriteEfx m_Fade;
 	tagUISpriteEfx m_Dead;
-	tagUISpriteEfx m_DeadSide[DEADSIDE];
 	tagUISpriteEfx m_SkillUnlockEfx;
 	tagUISpriteEfx m_VictoryEfx[VICTORYRESOURCE];
 	int m_SkillUnlockEfxAlphaCount;	// 알파값 왔다갔다 반복 몇번
@@ -56,9 +54,6 @@ public:
 	void setupDeadAdd();
 	void SetDead(bool deadEnable);
 	void rednerDead();
-
-	void setupDeadSideAdd(bool left);
-	void renderDeadSide();
 
 	void setupFadeAdd(wstring filePath);
 	void setupSkillLockList();

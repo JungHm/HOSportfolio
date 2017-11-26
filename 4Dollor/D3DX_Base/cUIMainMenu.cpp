@@ -227,9 +227,9 @@ void cUIMainMenu::updateGameReady()
 			if (!m_GameReadyEfxIt->second.reverse)
 			{
 				if (m_GameReadyEfxIt->second.scale > READYCOUNTENDSCALE)
-					m_GameReadyEfxIt->second.scale -= 0.25f;
+					m_GameReadyEfxIt->second.scale -= 0.2f;
 				if (m_GameReadyEfxIt->second.alpha < 255)
-					m_GameReadyEfxIt->second.alpha += 10;
+					m_GameReadyEfxIt->second.alpha += 12;
 				if (m_GameReadyEfxIt->second.alpha > 255)
 					m_GameReadyEfxIt->second.alpha = 255;
 				if (m_GameReadyEfxIt->second.scale <= READYCOUNTENDSCALE && m_GameReadyEfxIt->second.alpha == 255)

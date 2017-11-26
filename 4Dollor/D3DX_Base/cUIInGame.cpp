@@ -22,7 +22,7 @@ cUIInGame::~cUIInGame()
 
 void cUIInGame::setupDeadAdd()
 {
-	wstring filePath = L"UI/ingame_img_deadbg.png";
+	wstring filePath = L"UI/ingame_img_depeat_cycle.png";
 	ZeroMemory(&m_Dead, sizeof(tagUISpriteEfx));
 
 	D3DXMatrixIdentity(&m_Dead.matWorld);
@@ -47,8 +47,8 @@ void cUIInGame::setupDeadAdd()
 
 	SetRect(&m_Dead.drawRc, 0, 0, m_Dead.imgInfo.Width, m_Dead.imgInfo.Height);
 	m_Dead.alpha = 0;
-	m_Dead.scale = m_UIScale * 1.2f;
-	m_Dead.pt = { 0, 0, 0 };
+	m_Dead.scale = 2;
+	m_Dead.pt = { WINX / 2, WINY / 2 - 50, 0 };
 	m_Dead.enable = false;
 }
 
@@ -56,6 +56,12 @@ void cUIInGame::SetDead(bool deadEnable)
 {
 	// enable = true면 죽음. false면 부활.
 	m_Dead.enable = deadEnable;
+
+	if (!deadEnable)	// 부활 후 연출값 초기화
+	{
+		m_Dead.alpha = 0;
+		m_Dead.scale = 2;
+	}
 }
 
 void cUIInGame::rednerDead()
@@ -64,97 +70,44 @@ void cUIInGame::rednerDead()
 	{
 		m_Dead.sprite->Begin(D3DXSPRITE_ALPHABLEND);
 
+		m_Dead.rotate -= 0.02f;
+		if (m_Dead.alpha < 255)
+		{
+			m_Dead.alpha += 30;
+			if (m_Dead.alpha >= 255)
+				m_Dead.alpha = 255;
+		}
+		if (m_Dead.scale > VICTORYCYCLESCALE)
+		{
+			m_Dead.scale -= 0.4f;
+			if (m_Dead.scale <= VICTORYCYCLESCALE)
+			{
+				m_Dead.scale = VICTORYCYCLESCALE;
+			}
+		}
+
 		D3DXMatrixAffineTransformation2D(&m_Dead.matWorld,
 			m_Dead.scale,
 			NULL,
-			NULL,
-			&D3DXVECTOR2(0, 0));
+			m_Dead.rotate,
+			&D3DXVECTOR2(m_Dead.pt.x, m_Dead.pt.y));
 
 		m_Dead.sprite->SetTransform(&m_Dead.matWorld);
 		RECT rc;
 		SetRect(&rc, 0, 0, m_Dead.imgInfo.Width, m_Dead.imgInfo.Height);
 		m_Dead.sprite->Draw(m_Dead.texture,
 			&rc,
-			NULL,
+			&D3DXVECTOR3(m_Dead.imgInfo.Width / 2, m_Dead.imgInfo.Height / 2, 0),
 			NULL,
 			D3DCOLOR_ARGB(m_Dead.alpha, 255, 255, 255));
 
+		LPD3DXFONT font = g_pFontManager->GetFont(cFontManager::FT_QUEST);
+		string str = to_string(100);
+		RECT rcText;
+		SetRect(&rcText, m_Dead.pt.x - m_Dead.imgInfo.Width / 2, m_Dead.pt.y - m_Dead.imgInfo.Height / 2, m_Dead.pt.x + m_Dead.imgInfo.Width / 2, m_Dead.pt.y + m_Dead.imgInfo.Height / 2);
+		font->DrawTextA(NULL, str.c_str(), str.length(), &rcText, DT_CENTER | DT_VCENTER, D3DCOLOR_ARGB(m_Dead.alpha, 255, 255, 255));
+
 		m_Dead.sprite->End();
-	}
-}
-
-void cUIInGame::setupDeadSideAdd(bool left)
-{
-	int l = 0;
-	wstring filePath = L"UI/ingame_img_dead_right.png";
-	if (left)
-	{
-		filePath = L"UI/ingame_img_dead_left.png";
-		l = 1;
-	}
-	ZeroMemory(&m_DeadSide[l], sizeof(tagUISpriteEfx));
-
-	D3DXMatrixIdentity(&m_DeadSide[l].matWorld);
-
-	D3DXCreateSprite(g_pD3DDevice, &m_DeadSide[l].sprite);
-
-	D3DXCreateTextureFromFileEx(
-		g_pD3DDevice,
-		filePath.c_str(),
-		D3DX_DEFAULT_NONPOW2,
-		D3DX_DEFAULT_NONPOW2,
-		D3DX_DEFAULT,
-		0,
-		D3DFMT_UNKNOWN,
-		D3DPOOL_MANAGED,
-		D3DX_FILTER_NONE,
-		D3DX_DEFAULT,
-		D3DCOLOR_XRGB(255, 255, 255),
-		&m_DeadSide[l].imgInfo,
-		NULL,
-		&m_DeadSide[l].texture);
-
-	SetRect(&m_DeadSide[l].drawRc, 0, 0, m_DeadSide[l].imgInfo.Width, m_DeadSide[l].imgInfo.Height);
-	m_DeadSide[l].alpha = 255;
-	m_DeadSide[l].scale = m_UIScale;
-	m_DeadSide[l].enable = true;
-
-	if (left)
-	{
-		m_DeadSide[l].pt = { 0, 0, 0 };
-	}
-	else
-	{
-		m_DeadSide[l].pt = { float(WINX - m_DeadSide[l].imgInfo.Width), 0, 0 };
-	}
-	
-}
-
-void cUIInGame::renderDeadSide()
-{
-	if (m_Dead.enable)
-	{
-		for (int i = 0; i < DEADSIDE; i++)
-		{
-			m_DeadSide[i].sprite->Begin(D3DXSPRITE_ALPHABLEND);
-
-			D3DXMatrixAffineTransformation2D(&m_DeadSide[i].matWorld,
-				m_DeadSide[i].scale,
-				NULL,
-				NULL,
-				&D3DXVECTOR2(0, 0));
-
-			m_DeadSide[i].sprite->SetTransform(&m_DeadSide[i].matWorld);
-			RECT rc;
-			SetRect(&rc, 0, 0, m_DeadSide[i].imgInfo.Width, m_DeadSide[i].imgInfo.Height);
-			m_DeadSide[i].sprite->Draw(m_DeadSide[i].texture,
-				&rc,
-				NULL,
-				&m_DeadSide[i].pt,
-				D3DCOLOR_ARGB(m_DeadSide[i].alpha, 255, 255, 255));
-
-			m_DeadSide[i].sprite->End();
-		}
 	}
 }
 
@@ -667,8 +620,6 @@ void cUIInGame::setupOther()
 	setupSkillLockList();
 	setupSkillUnlockEfx(L"UI/ingame_img_unlock_efx.png");
 	setupDeadAdd();
-	setupDeadSideAdd(true);
-	setupDeadSideAdd(false);
 	setupVictoryAdd(L"UI/black.png",					0,	4000.0f, { 0,0,0 });
 	setupVictoryAdd(L"UI/ingame_img_victory_bg.png",	1,	0.95f, { 0,0,0 });
 	setupVictoryAdd(L"UI/ingame_img_victory_cycle.png",	2,	VICTORYCYCLESCALE, { WINX / 2 -  25,WINY / 2 - 50,0 });
@@ -700,7 +651,6 @@ void cUIInGame::renderOther()
 		renderAbilityAddGuide();
 		renderSkillUnlockEfx();
 		rednerDead();
-		renderDeadSide();
 	}
 	renderVictory();
 }
@@ -973,12 +923,7 @@ void cUIInGame::destroyOther()
 	m_Dead.texture->Release();
 	m_SkillUnlockEfx.sprite->Release();
 	m_SkillUnlockEfx.texture->Release();
-	
-	for (int i = 0; i < DEADSIDE; i++)
-	{
-		m_DeadSide[i].sprite->Release();
-		m_DeadSide[i].texture->Release();
-	}
+
 	for (int i = 0; i < VICTORYRESOURCE; i++)
 	{
 		m_VictoryEfx[i].sprite->Release();

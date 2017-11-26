@@ -43,7 +43,7 @@ LPD3DXFONT cFontManager::GetFont(eFontType e)
 		fd.OutputPrecision = OUT_DEFAULT_PRECIS;
 		fd.PitchAndFamily = FF_DONTCARE;
 
-		AddFontResource(L"font/umberto.ttf");
+		AddFontResource(L"font/koKR_bold.ttf");
 	}
 	else if (e == FT_SMALL)
 	{
