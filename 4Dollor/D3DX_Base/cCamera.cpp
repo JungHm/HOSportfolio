@@ -37,19 +37,19 @@ void cCamera::Update()
 {
 	if (KEY->isStayKeyDown(VK_LEFT))
 	{
-		m_fCamMove.x -= 0.5f;
+		m_fCamMove.x -= 3.5f;
 	}
 	if (KEY->isStayKeyDown(VK_RIGHT))
 	{
-		m_fCamMove.x += 0.5f;
+		m_fCamMove.x += 3.5f;
 	}
 	if (KEY->isStayKeyDown(VK_UP))
 	{
-		m_fCamMove.y += 0.5f;
+		m_fCamMove.y += 3.5f;
 	}
 	if (KEY->isStayKeyDown(VK_DOWN))
 	{
-		m_fCamMove.y -= 0.5f;
+		m_fCamMove.y -= 3.5f;
 	}
 	D3DXMATRIXA16 matR, matRX, matRY;
 	D3DXMatrixRotationX(&matRX, m_vCamRotAngle.x);
@@ -63,8 +63,8 @@ void cCamera::Update()
 		(18 + m_fCameraDistance)-m_fCamMove.y,
 		(m_fCameraDistance + (1 - m_fCameraDistance) / 3));*/
 	m_vEye = D3DXVECTOR3(m_fCamMove.x,
-		77,
-		m_fCamMove.y - 48);
+		130,
+		m_fCamMove.y - 90);
 
 	m_vLookAt = D3DXVECTOR3(m_fCamMove.x, 3, m_fCamMove.y);
 	D3DXVec3TransformCoord(&m_vEye, &m_vEye, &matR);

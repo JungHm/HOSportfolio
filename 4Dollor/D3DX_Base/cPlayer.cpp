@@ -56,7 +56,6 @@ void cPlayer::Update()
 	coolE = m_pChar->GetCoolE();
 	if (coolQ > 0.0f)// 쿨타임 max 보다 작다면 쿨을 돌려준다
 	{
-
 		m_pChar->SetCoolQ(coolQ - g_pTimeManager->GetEllapsedTime());
 		isQcool = true;
 	}
@@ -85,6 +84,7 @@ void cPlayer::Update()
 			
 		}
 	}
+
 	if ((GetAsyncKeyState('W') & 0x8001) && level >= 2)
 	{
 		if (m_pChar->GetCoolW() <= 0.0f)
@@ -94,6 +94,7 @@ void cPlayer::Update()
 			m_pChar->SetCoolW(10.0f);
 		}
 	}
+
 	if ((GetAsyncKeyState('E') & 0x8001) && level >= 3)
 	{
 		if (m_pChar->GetCoolE() <= 0.0f)
@@ -105,7 +106,6 @@ void cPlayer::Update()
 	}
 
 	//==========================================================
-
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8001)
 	{
 		if (m_pChar->Getskill() != NULL)// 스킬에 예약된 무언가가 있다면 
@@ -115,6 +115,7 @@ void cPlayer::Update()
 			m_pChar->SetCoolQ(10.0f);
 		}
 	}
+
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8001)
 	{
 		isAttack = true;//적을 피킹했을때만 true 나머지는 false
