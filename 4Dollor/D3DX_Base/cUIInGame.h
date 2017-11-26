@@ -101,7 +101,7 @@ public:
 	// 스킬 사용 쿨타임 표시
 	void SetSkillUseCooldown(int SkillIndex, float count);
 	// 외부에서 렙업 시 Set
-	void SetLevelUp();
+	void SetLevelUp(int level);
 
 	// 순수 가상함수로 실행하는 것들
 	void setupOther();

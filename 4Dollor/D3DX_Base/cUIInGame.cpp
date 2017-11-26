@@ -643,9 +643,14 @@ void cUIInGame::SetSkillUseCooldown(int SkillIndex, float count)
 	}
 }
 
-void cUIInGame::SetLevelUp()
+void cUIInGame::SetLevelUp(int level)
 {
-	SetLvUpAddCount();
+	static int currLevel = 0;
+	if (currLevel < level)
+	{
+		currLevel = level;
+		SetLvUpAddCount();
+	}
 }
 
 void cUIInGame::setupOther()
@@ -669,7 +674,6 @@ void cUIInGame::updateOther()
 {
 	if (m_UIViewEnable)
 	{
-		if (KEY->isOnceKeyDown('0')) SetLevelUp();
 		if (KEY->isOnceKeyDown('8')) SetDead(true);
 		if (KEY->isOnceKeyDown('9')) SetDead(false);
 		if (KEY->isOnceKeyDown('7')) SetVictory();
