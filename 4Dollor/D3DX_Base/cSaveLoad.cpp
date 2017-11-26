@@ -63,6 +63,7 @@ void cSaveLoad::CreateBox(IN LPD3DXMESH pMesh, IN D3DXVECTOR3 vScal, IN D3DXVECT
 	box.pMesh = pMesh;
 	box.vScaling = vScal;
 	box.vPosition = vPos;
+	box.vPosition.y -= 5.0f;
 	box.fAngleY = fAngleY;
 
 	D3DXCreateBox(g_pD3DDevice, 30.0f, 20.0f, 13.0f, &box.pMesh, NULL);
