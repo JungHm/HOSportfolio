@@ -21,6 +21,7 @@ cInGame::~cInGame()
 
 void cInGame::SetUp()
 {
+	delayTime = 0.0f;
 	revivalTime = 10.0f;
 	m_isColl = false;
 	m_fDist = 0.0f;
@@ -95,9 +96,17 @@ void cInGame::Update()
 
 		for (int i = 0; i < MINIONMANAGER->GetBlueMinion().size(); i++)
 		{
-			m_pTower->RedFindEnemy(MINIONMANAGER->GetBlueMinion()[i].GetSphere());
+			//	m_pTower->RedFindEnemy(MINIONMANAGER->GetBlueMinion()[i].GetSphere());
 		}
-
+		if (m_pTower->GetTower(1).isFind && delayTime >=3.0f)
+		{
+			m_pPlayer->SetHp(m_pPlayer->GetHp() - 10);
+			delayTime = 0.0f;
+		}
+		else if (m_pTower->GetTower(1).isFind)
+		{
+			delayTime += g_pTimeManager->GetEllapsedTime();
+		}
 		for (int i = 0; i < MINIONMANAGER->GetRedMinion().size(); i++)
 		{
 			m_pTower->BlueFindEnemy(MINIONMANAGER->GetRedMinion()[i].GetSphere());

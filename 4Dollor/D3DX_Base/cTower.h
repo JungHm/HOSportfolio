@@ -34,6 +34,7 @@ public:
 	cTower();
 	~cTower();
 
+	TOWER GetTower(int nIndex) { return m_sTower[nIndex]; }
 	void Setup(IN D3DXVECTOR3 vBTowerPos, IN D3DXVECTOR3 vRTowerPos);
 	void Update();
 	void Render();
