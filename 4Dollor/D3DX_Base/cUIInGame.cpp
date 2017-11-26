@@ -548,6 +548,7 @@ void cUIInGame::skillUnlockEfx(int index)
 	m_SkillUnlockEfx.pt = m_MUIButton.find(s)->second.pt * 1.25f;
 	m_SkillUnlockEfx.enable = true;
 	m_SkillUnlockEfx.matWorld = m_MUIButton.find(s)->second.matWorld;
+	m_SkillUnlockEfxAlphaCount = 0;
 }
 
 void cUIInGame::updateSkillUnlockEfx()
@@ -922,6 +923,24 @@ void cUIInGame::renderAbilityAddGuide()
 	// 스킬 찍을 수 있을 때만 떠야 됨
 	if (!m_MUIButton.find("charport")->second.selected && m_LvUpCount > 0)
 	{
+		bool skillAllUnlock = true;
+		for (int i = 0; i < m_SkillUnlock.size(); i++)
+		{
+			if (!m_SkillUnlock[i]->used)
+			{
+				skillAllUnlock = false;
+				break;
+			}
+		}
+
+		// 스킬이 모두 개방되었으면 랜더 안함
+		if (skillAllUnlock)
+		{
+			//if (m_MUIButton.find("charport")->second.selected)
+			//	m_MUIButton.find("charport")->second.selected = false;
+			return;
+		}
+
 		int delay = 8;	// 화살표 표시되는 간격에 모두 사라졌다 등장하는 연출 시간 제어용. 4이하면 안됨
 		int t = GetTickCount() / 300 % delay;
 		if (t == delay / 2 + 2)
