@@ -13,6 +13,7 @@ cUIInGame::cUIInGame()
 	, m_LvUpCount(0)
 	, m_SkillUnlockEfxAlphaCount(0)
 	, m_IsVictory(false)
+	, m_DeadCount(0)
 {
 }
 
@@ -22,7 +23,7 @@ cUIInGame::~cUIInGame()
 
 void cUIInGame::setupDeadAdd()
 {
-	wstring filePath = L"UI/ingame_img_deadbg.png";
+	wstring filePath = L"UI/ingame_img_depeat_cycle.png";
 	ZeroMemory(&m_Dead, sizeof(tagUISpriteEfx));
 
 	D3DXMatrixIdentity(&m_Dead.matWorld);
@@ -47,8 +48,8 @@ void cUIInGame::setupDeadAdd()
 
 	SetRect(&m_Dead.drawRc, 0, 0, m_Dead.imgInfo.Width, m_Dead.imgInfo.Height);
 	m_Dead.alpha = 0;
-	m_Dead.scale = m_UIScale * 1.2f;
-	m_Dead.pt = { 0, 0, 0 };
+	m_Dead.scale = 2;
+	m_Dead.pt = { WINX / 2, WINY / 2 - 50, 0 };
 	m_Dead.enable = false;
 }
 
@@ -56,6 +57,20 @@ void cUIInGame::SetDead(bool deadEnable)
 {
 	// enable = true면 죽음. false면 부활.
 	m_Dead.enable = deadEnable;
+
+	if (!deadEnable)	// 부활 후 연출값 초기화
+	{
+		m_Dead.alpha = 0;
+		m_Dead.scale = 2;
+	}
+}
+
+void cUIInGame::SetDeadCount(int second)
+{
+	if (m_Dead.enable)
+	{
+		m_DeadCount = second;
+	}
 }
 
 void cUIInGame::rednerDead()
@@ -64,97 +79,44 @@ void cUIInGame::rednerDead()
 	{
 		m_Dead.sprite->Begin(D3DXSPRITE_ALPHABLEND);
 
+		m_Dead.rotate -= 0.02f;
+		if (m_Dead.alpha < 255)
+		{
+			m_Dead.alpha += 30;
+			if (m_Dead.alpha >= 255)
+				m_Dead.alpha = 255;
+		}
+		if (m_Dead.scale > VICTORYCYCLESCALE)
+		{
+			m_Dead.scale -= 0.4f;
+			if (m_Dead.scale <= VICTORYCYCLESCALE)
+			{
+				m_Dead.scale = VICTORYCYCLESCALE;
+			}
+		}
+
 		D3DXMatrixAffineTransformation2D(&m_Dead.matWorld,
 			m_Dead.scale,
 			NULL,
-			NULL,
-			&D3DXVECTOR2(0, 0));
+			m_Dead.rotate,
+			&D3DXVECTOR2(m_Dead.pt.x, m_Dead.pt.y));
 
 		m_Dead.sprite->SetTransform(&m_Dead.matWorld);
 		RECT rc;
 		SetRect(&rc, 0, 0, m_Dead.imgInfo.Width, m_Dead.imgInfo.Height);
 		m_Dead.sprite->Draw(m_Dead.texture,
 			&rc,
-			NULL,
+			&D3DXVECTOR3(m_Dead.imgInfo.Width / 2, m_Dead.imgInfo.Height / 2, 0),
 			NULL,
 			D3DCOLOR_ARGB(m_Dead.alpha, 255, 255, 255));
 
+		LPD3DXFONT font = g_pFontManager->GetFont(cFontManager::FT_QUEST);
+		string str = to_string(m_DeadCount);
+		RECT rcText;
+		SetRect(&rcText, m_Dead.pt.x - m_Dead.imgInfo.Width / 2, m_Dead.pt.y - m_Dead.imgInfo.Height / 2, m_Dead.pt.x + m_Dead.imgInfo.Width / 2, m_Dead.pt.y + m_Dead.imgInfo.Height / 2);
+		font->DrawTextA(NULL, str.c_str(), str.length(), &rcText, DT_CENTER | DT_VCENTER, D3DCOLOR_ARGB(m_Dead.alpha, 255, 255, 255));
+
 		m_Dead.sprite->End();
-	}
-}
-
-void cUIInGame::setupDeadSideAdd(bool left)
-{
-	int l = 0;
-	wstring filePath = L"UI/ingame_img_dead_right.png";
-	if (left)
-	{
-		filePath = L"UI/ingame_img_dead_left.png";
-		l = 1;
-	}
-	ZeroMemory(&m_DeadSide[l], sizeof(tagUISpriteEfx));
-
-	D3DXMatrixIdentity(&m_DeadSide[l].matWorld);
-
-	D3DXCreateSprite(g_pD3DDevice, &m_DeadSide[l].sprite);
-
-	D3DXCreateTextureFromFileEx(
-		g_pD3DDevice,
-		filePath.c_str(),
-		D3DX_DEFAULT_NONPOW2,
-		D3DX_DEFAULT_NONPOW2,
-		D3DX_DEFAULT,
-		0,
-		D3DFMT_UNKNOWN,
-		D3DPOOL_MANAGED,
-		D3DX_FILTER_NONE,
-		D3DX_DEFAULT,
-		D3DCOLOR_XRGB(255, 255, 255),
-		&m_DeadSide[l].imgInfo,
-		NULL,
-		&m_DeadSide[l].texture);
-
-	SetRect(&m_DeadSide[l].drawRc, 0, 0, m_DeadSide[l].imgInfo.Width, m_DeadSide[l].imgInfo.Height);
-	m_DeadSide[l].alpha = 255;
-	m_DeadSide[l].scale = m_UIScale;
-	m_DeadSide[l].enable = true;
-
-	if (left)
-	{
-		m_DeadSide[l].pt = { 0, 0, 0 };
-	}
-	else
-	{
-		m_DeadSide[l].pt = { float(MAX_XPIXEL - m_DeadSide[l].imgInfo.Width), 0, 0 };
-	}
-	
-}
-
-void cUIInGame::renderDeadSide()
-{
-	if (m_Dead.enable)
-	{
-		for (int i = 0; i < DEADSIDE; i++)
-		{
-			m_DeadSide[i].sprite->Begin(D3DXSPRITE_ALPHABLEND);
-
-			D3DXMatrixAffineTransformation2D(&m_DeadSide[i].matWorld,
-				m_DeadSide[i].scale,
-				NULL,
-				NULL,
-				&D3DXVECTOR2(0, 0));
-
-			m_DeadSide[i].sprite->SetTransform(&m_DeadSide[i].matWorld);
-			RECT rc;
-			SetRect(&rc, 0, 0, m_DeadSide[i].imgInfo.Width, m_DeadSide[i].imgInfo.Height);
-			m_DeadSide[i].sprite->Draw(m_DeadSide[i].texture,
-				&rc,
-				NULL,
-				&m_DeadSide[i].pt,
-				D3DCOLOR_ARGB(m_DeadSide[i].alpha, 255, 255, 255));
-
-			m_DeadSide[i].sprite->End();
-		}
 	}
 }
 
@@ -183,10 +145,39 @@ void cUIInGame::setupFadeAdd(wstring filePath)
 		&m_Fade.texture);
 
 	SetRect(&m_Fade.drawRc, 0, 0, 0, 0);
-	m_Fade.alpha = 255;
+	m_Fade.alpha = 0;
 	m_Fade.scale = 1;
 	m_Fade.pt = { 0, 0, 0 };
 	m_Fade.enable = true;
+
+	wstring strr = L"UI/ingame_loading_bg10.png";
+	ZeroMemory(&m_FadeBG, sizeof(tagUISpriteEfx));
+
+	D3DXMatrixIdentity(&m_FadeBG.matWorld);
+
+	D3DXCreateSprite(g_pD3DDevice, &m_FadeBG.sprite);
+
+	D3DXCreateTextureFromFileEx(
+		g_pD3DDevice,
+		strr.c_str(),
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT,
+		0,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_MANAGED,
+		D3DX_FILTER_NONE,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(255, 255, 255),
+		&m_FadeBG.imgInfo,
+		NULL,
+		&m_FadeBG.texture);
+
+	SetRect(&m_FadeBG.drawRc, 0, 0, m_FadeBG.imgInfo.Width, m_FadeBG.imgInfo.Height);
+	m_FadeBG.alpha = 255;
+	m_FadeBG.scale = m_UIScale;
+	m_FadeBG.pt = { 0, 0, 0 };
+	m_FadeBG.enable = true;
 }
 
 void cUIInGame::setupSkillLockList()
@@ -195,9 +186,9 @@ void cUIInGame::setupSkillLockList()
 	m_SkillUnlock.push_back(&m_MUIButton.find("unlockskill2")->second);
 	m_SkillUnlock.push_back(&m_MUIButton.find("unlockskill3")->second);
 
-	m_SkillUnlock[0]->pt = { m_MUIButton.find("charport")->second.pt.x, m_MUIButton.find("charport")->second.pt.y - 70 ,0 };
-	m_SkillUnlock[1]->pt = { m_MUIButton.find("charport")->second.pt.x, m_MUIButton.find("charport")->second.pt.y - 115 ,0 };
-	m_SkillUnlock[2]->pt = { m_MUIButton.find("charport")->second.pt.x, m_MUIButton.find("charport")->second.pt.y - 160 ,0 };
+	m_SkillUnlock[0]->pt = { m_MUIButton.find("charport")->second.pt.x, m_MUIButton.find("charport")->second.pt.y - 100 ,0 };
+	m_SkillUnlock[1]->pt = { m_MUIButton.find("charport")->second.pt.x, m_MUIButton.find("charport")->second.pt.y - 100 - SKILLUNLOCKLISTINTERVAL ,0 };
+	m_SkillUnlock[2]->pt = { m_MUIButton.find("charport")->second.pt.x, m_MUIButton.find("charport")->second.pt.y - 100 - SKILLUNLOCKLISTINTERVAL * 2 ,0 };
 }
 
 void cUIInGame::setupSkillUnlockEfx(wstring filePath)
@@ -375,7 +366,7 @@ void cUIInGame::renderVictory()
 			{
 				if (m_VictoryEfx[i].alpha < 255)
 				{
-					m_VictoryEfx[i].alpha += 5;
+					m_VictoryEfx[i].alpha += VICTORYLIGHTSPEED;
 					//m_VictoryEfx[i].rotate += 1;
 					if (m_VictoryEfx[i].alpha >= 255)
 					{
@@ -396,7 +387,7 @@ void cUIInGame::renderVictory()
 
 				if (m_VictoryEfx[i].scale > VICTORYCYCLESCALE)
 				{
-					m_VictoryEfx[i].scale -= 0.2f;
+					m_VictoryEfx[i].scale -= VICTORYCYCLESCALESPEED;
 				}
 				if (m_VictoryEfx[i].scale <= VICTORYCYCLESCALE)
 				{
@@ -534,8 +525,8 @@ void cUIInGame::SetSkillUnlock(int SkillIndex, bool unlock)
 
 void cUIInGame::skillUnlockPtChange(int index)
 {
-	float interval = 45;
-	float basePtY = m_MUIButton.find("charport")->second.pt.y - 70;
+	float interval = SKILLUNLOCKLISTINTERVAL;
+	float basePtY = m_MUIButton.find("charport")->second.pt.y - 100;
 	m_SkillUnlock[index]->used = true;
 
 	for (int i = 0; i < 3; i++)
@@ -554,9 +545,10 @@ void cUIInGame::skillUnlockPtChange(int index)
 void cUIInGame::skillUnlockEfx(int index)
 {
 	string s = "abil" + to_string(index);
-	m_SkillUnlockEfx.pt = m_MUIButton.find(s)->second.pt * 2;
+	m_SkillUnlockEfx.pt = m_MUIButton.find(s)->second.pt * 1.25f;
 	m_SkillUnlockEfx.enable = true;
 	m_SkillUnlockEfx.matWorld = m_MUIButton.find(s)->second.matWorld;
+	m_SkillUnlockEfxAlphaCount = 0;
 }
 
 void cUIInGame::updateSkillUnlockEfx()
@@ -651,38 +643,33 @@ void cUIInGame::SetSkillUseCooldown(int SkillIndex, float count)
 	}
 }
 
-void cUIInGame::SetLevelUp(int level)
+void cUIInGame::SetLevelUp()
 {
-	static int currLevel = 0;
-	if (currLevel < level)
-	{
-		currLevel = level;
-		SetLvUpAddCount();
-	}
+	SetLvUpAddCount();
 }
 
 void cUIInGame::setupOther()
 {
 	setupHpBar(L"UI/ingame_img_bar_hp_bg.png", 1000);
 	setupHpBar(L"UI/ingame_img_bar_hp.dds", 1000);
+	setupHpBar(L"UI/ingame_img_bar_hp_bg.png", 1001);
+	setupHpBar(L"UI/ingame_img_bar_hp.dds", 1001);
 	//SetMinionAdd(10);
 	setupFadeAdd(L"UI/black.png");
 	setupSkillLockList();
 	setupSkillUnlockEfx(L"UI/ingame_img_unlock_efx.png");
 	setupDeadAdd();
-	setupDeadSideAdd(true);
-	setupDeadSideAdd(false);
-	setupVictoryAdd(L"UI/black.png",					0,	2000.0f, { 0,0,0 });
-	setupVictoryAdd(L"UI/ingame_img_victory_bg.png",	1,	0.6f, { 0,0,0 });
-	setupVictoryAdd(L"UI/ingame_img_victory_cycle.png",	2,	VICTORYCYCLESCALE, { MAX_XPIXEL / 2 -  50,MAX_YPIXEL / 2 - 100,0 });
-	setupVictoryAdd(L"UI/ingame_img_victory_text.png",	3,	0.7f, { MAX_XPIXEL / 2 - 375,MAX_YPIXEL / 2 - 225,0 });
+	setupVictoryAdd(L"UI/black.png",					0,	4000.0f, { 0,0,0 });
+	setupVictoryAdd(L"UI/ingame_img_victory_bg.png",	1,	0.95f, { 0,0,0 });
+	setupVictoryAdd(L"UI/ingame_img_victory_cycle.png",	2,	VICTORYCYCLESCALE, { WINX / 2 -  25,WINY / 2 - 50,0 });
+	setupVictoryAdd(L"UI/ingame_img_victory_text.png",	3,	VICTORYCYCLESCALE, { WINX / 2 - 550,WINY / 2 - 290,0 });
 }
 
 void cUIInGame::updateOther()
 {
 	if (m_UIViewEnable)
 	{
-		if (KEY->isOnceKeyDown('0')) SetLevelUp(1);
+		if (KEY->isOnceKeyDown('0')) SetLevelUp();
 		if (KEY->isOnceKeyDown('8')) SetDead(true);
 		if (KEY->isOnceKeyDown('9')) SetDead(false);
 		if (KEY->isOnceKeyDown('7')) SetVictory();
@@ -703,7 +690,6 @@ void cUIInGame::renderOther()
 		renderAbilityAddGuide();
 		renderSkillUnlockEfx();
 		rednerDead();
-		renderDeadSide();
 	}
 	renderVictory();
 }
@@ -878,32 +864,57 @@ void cUIInGame::renderFade()
 {
 	if (m_Fade.enable)
 	{
-		m_Fade.sprite->Begin(D3DXSPRITE_ALPHABLEND);
-
-		m_Fade.alpha -= FADEINSPEED;
-		if (m_Fade.alpha <= 0)
 		{
-			m_Fade.alpha = 0;
-			m_Fade.enable = false;
+			m_FadeBG.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+			D3DXMatrixAffineTransformation2D(&m_FadeBG.matWorld,
+				m_FadeBG.scale,
+				NULL,
+				NULL,
+				&D3DXVECTOR2(0, 0));
+
+			m_FadeBG.sprite->SetTransform(&m_FadeBG.matWorld);
+			m_FadeBG.sprite->Draw(m_FadeBG.texture,
+				&m_FadeBG.drawRc,
+				NULL,
+				NULL,
+				D3DCOLOR_ARGB(m_FadeBG.alpha, 255, 255, 255));
+
+
+			m_FadeBG.sprite->End();
+
 		}
 
-		D3DXMatrixAffineTransformation2D(&m_Fade.matWorld,
-			m_Fade.scale,
-			NULL,
-			NULL,
-			&D3DXVECTOR2(0, 0));
 
-		m_Fade.sprite->SetTransform(&m_Fade.matWorld);
-		RECT rc;
-		SetRect(&rc, 0, 0, MAX_XPIXEL, MAX_YPIXEL);
-		m_Fade.sprite->Draw(m_Fade.texture,
-			&rc,
-			NULL,
-			NULL,
-			D3DCOLOR_ARGB(m_Fade.alpha, 255, 255, 255));
+		{
+			m_Fade.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+			m_Fade.alpha += FADEINSPEED;
+			if (m_Fade.alpha >= 255)
+			{
+				m_Fade.alpha = 255;
+				m_Fade.enable = false;
+				m_FadeBG.enable = false;
+			}
+
+			D3DXMatrixAffineTransformation2D(&m_Fade.matWorld,
+				m_Fade.scale,
+				NULL,
+				NULL,
+				&D3DXVECTOR2(0, 0));
+
+			m_Fade.sprite->SetTransform(&m_Fade.matWorld);
+			RECT rc;
+			SetRect(&rc, 0, 0, WINX, WINY);
+			m_Fade.sprite->Draw(m_Fade.texture,
+				&rc,
+				NULL,
+				NULL,
+				D3DCOLOR_ARGB(m_Fade.alpha, 255, 255, 255));
 
 
-		m_Fade.sprite->End();
+			m_Fade.sprite->End();
+		}
 	}
 }
 
@@ -912,6 +923,24 @@ void cUIInGame::renderAbilityAddGuide()
 	// 스킬 찍을 수 있을 때만 떠야 됨
 	if (!m_MUIButton.find("charport")->second.selected && m_LvUpCount > 0)
 	{
+		bool skillAllUnlock = true;
+		for (int i = 0; i < m_SkillUnlock.size(); i++)
+		{
+			if (!m_SkillUnlock[i]->used)
+			{
+				skillAllUnlock = false;
+				break;
+			}
+		}
+
+		// 스킬이 모두 개방되었으면 랜더 안함
+		if (skillAllUnlock)
+		{
+			//if (m_MUIButton.find("charport")->second.selected)
+			//	m_MUIButton.find("charport")->second.selected = false;
+			return;
+		}
+
 		int delay = 8;	// 화살표 표시되는 간격에 모두 사라졌다 등장하는 연출 시간 제어용. 4이하면 안됨
 		int t = GetTickCount() / 300 % delay;
 		if (t == delay / 2 + 2)
@@ -972,16 +1001,13 @@ void cUIInGame::destroyOther()
 	}
 	m_Fade.sprite->Release();
 	m_Fade.texture->Release();
+	m_FadeBG.texture->Release();
+	m_FadeBG.sprite->Release();
 	m_Dead.sprite->Release();
 	m_Dead.texture->Release();
 	m_SkillUnlockEfx.sprite->Release();
 	m_SkillUnlockEfx.texture->Release();
-	
-	for (int i = 0; i < DEADSIDE; i++)
-	{
-		m_DeadSide[i].sprite->Release();
-		m_DeadSide[i].texture->Release();
-	}
+
 	for (int i = 0; i < VICTORYRESOURCE; i++)
 	{
 		m_VictoryEfx[i].sprite->Release();
