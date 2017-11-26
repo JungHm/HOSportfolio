@@ -81,6 +81,7 @@ struct tagMinion
 
 	int nKey;
 	SYNTHESIZE_PASS_BY_REF(ST_SPHERE, sSphere, Sphere);
+
 	DWORD	ani_walk;
 	DWORD	ani_attack;
 
