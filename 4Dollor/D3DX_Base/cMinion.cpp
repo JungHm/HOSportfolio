@@ -272,6 +272,8 @@ void cMinion::BlueUpdate(D3DXVECTOR3 chPos, int & chHp)
 			BlueXfileUpdate(i);
 
 			blue_minion[i].GetSphere().vCenter = blue_minion[i].pos;
+
+			if (blue_minion[i].hp <= 0) blue_minion[i].direction = MINI_DEATH;
 		}
 	}
 	BlueMinionCollision();
@@ -302,6 +304,8 @@ void cMinion::RedUpdate(D3DXVECTOR3 chPos, int & chHp)
 
 			RedDirection(i, chPos, chHp);
 			RedXfileUpdate(i);
+
+			if (red_minion[i].hp <= 0) red_minion[i].direction = MINI_DEATH;
 		}
 	}
 

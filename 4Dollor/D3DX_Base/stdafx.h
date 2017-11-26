@@ -227,6 +227,7 @@ enum TEAM
 #include "cParticleManager.h"
 #include "cFireEffect.h"
 #include "cMinion.h"
+#include "cSoundManager.h"
 
 typedef struct tagObject
 {

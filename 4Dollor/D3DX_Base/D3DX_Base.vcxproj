@@ -110,6 +110,7 @@
     <ClInclude Include="cSaveLoad.h" />
     <ClInclude Include="cSceneManager.h" />
     <ClInclude Include="cSkyBox.h" />
+    <ClInclude Include="cSoundManager.h" />
     <ClInclude Include="cSpriteManager.h" />
     <ClInclude Include="cTessadar.h" />
     <ClInclude Include="cTextureManager.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="cSaveLoad.cpp" />
     <ClCompile Include="cSceneManager.cpp" />
     <ClCompile Include="cSkyBox.cpp" />
+    <ClCompile Include="cSoundManager.cpp" />
     <ClCompile Include="cSpriteManager.cpp" />
     <ClCompile Include="cTessadar.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
