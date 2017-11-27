@@ -223,10 +223,19 @@ void cUIInGame::setupSkillUnlockEfx(wstring filePath)
 	m_SkillUnlockEfx.enable = false;
 }
 
-void cUIInGame::SetMinionAdd(int id)
+void cUIInGame::SetMinionAdd()
 {
-	setupMinionAdd(L"UI/ingame_img_bar_hp_bg.png", id);
-	setupMinionAdd(L"UI/ingame_img_bar_hp.dds", id);
+	// 아래는 미니언 생성 전에 실행하므로 추가가 안됨..
+	//for (int i = 0; i < MINIONMANAGER->GetBlueMinion().size(); i++)
+	//{
+	//	setupMinionAdd(L"UI/ingame_img_bar_hp_bg_M.png");
+	//	setupMinionAdd(L"UI/ingame_img_bar_hp.dds");
+	//}
+	//for (int i = 0; i < MINIONMANAGER->GetRedMinion().size(); i++)
+	//{
+	//	setupMinionAdd(L"UI/ingame_img_bar_hp_bg_M.png");
+	//	setupMinionAdd(L"UI/ingame_img_bar_hp.dds");
+	//}
 }
 
 void cUIInGame::SetMinionDelete(int id)
@@ -245,14 +254,13 @@ void cUIInGame::SetMinionDelete(int id)
 	}
 }
 
-void cUIInGame::setupMinionAdd(wstring filePath, int id)
+void cUIInGame::setupMinionAdd(wstring filePath)
 {
 	tagHPBar hb;
 	ZeroMemory(&hb, sizeof(tagHPBar));
 
-	hb.max = HPMAX;
-	hb.current = HPMAX;
-	hb.id = id;
+	hb.max = HPMAXMINION;
+	hb.current = HPMAXMINION;
 	hb.enable = true;
 
 	D3DXMatrixIdentity(&hb.matWorld);
@@ -261,7 +269,7 @@ void cUIInGame::setupMinionAdd(wstring filePath, int id)
 	D3DXMatrixIdentity(&matR);
 
 	D3DXMatrixRotationX(&matR, -D3DX_PI / 2);
-	D3DXMatrixTranslation(&matT, -m_HPBarSizeXM, m_HPBarHeightM, 0.0f);
+	D3DXMatrixTranslation(&matT, 0, 0, 0.0f);
 	hb.matWorld = matR * matT;
 
 
@@ -657,7 +665,7 @@ void cUIInGame::setupOther()
 {
 	setupHpBar(L"UI/ingame_img_bar_hp_bg.png", 1000);
 	setupHpBar(L"UI/ingame_img_bar_hp.dds", 1000);
-	//SetMinionAdd(10);
+	SetMinionAdd();
 	setupFadeAdd(L"UI/black.png");
 	setupSkillLockList();
 	setupSkillUnlockEfx(L"UI/ingame_img_unlock_efx.png");
@@ -680,6 +688,24 @@ void cUIInGame::updateOther()
 	}
 	// 승리 후 클릭하면 씬전환
 	if (KEY->isOnceKeyDown(VK_LBUTTON) && m_IsVictory) m_GameEnd = true;
+	static bool en = false;
+	{
+		if (!en)
+		{
+			for (int i = 0; i < MINIONMANAGER->GetBlueMinion().size(); i++)
+			{
+				setupMinionAdd(L"UI/ingame_img_bar_hp_bg_M.png");
+				setupMinionAdd(L"UI/ingame_img_bar_hp.dds");
+			}
+			for (int i = 0; i < MINIONMANAGER->GetRedMinion().size(); i++)
+			{
+				setupMinionAdd(L"UI/ingame_img_bar_hp_bg_M.png");
+				setupMinionAdd(L"UI/ingame_img_bar_hp.dds");
+			}
+			en = true;
+		}
+		
+	}
 }
 
 void cUIInGame::renderOther()
@@ -782,19 +808,19 @@ void cUIInGame::updateBar(bool pc, D3DXVECTOR3 pt, int currHp)
 void cUIInGame::updateBarMinion(int id, D3DXVECTOR3 pt, int currHp)
 {
 	if (m_VHPBarMinion.size() == 0) return;
-	int n1 = 0;
-	int n2 = 0;
-	for (int i = 0; i < m_VHPBarMinion.size(); i++)
-	{
-		if (m_VHPBarMinion[i].id == id)
-		{
-			n1 = i;
-			n2 = i + 1;
-			break;
-		}
-	}
+	int n1 = id;
+	int n2 = id + 1;
+	//for (int i = 0; i < m_VHPBarMinion.size(); i++)
+	//{
+	//	if (m_VHPBarMinion[i].id == id)
+	//	{
+	//		n1 = i;
+	//		n2 = i + 1;
+	//		break;
+	//	}
+	//}
 	if (currHp < 0) currHp = 0;
-	else if (currHp > m_VHPBarMinion[n2].max) currHp = HPMAX;
+	else if (currHp > m_VHPBarMinion[n2].max) currHp = HPMAXMINION;
 
 	m_VHPBarMinion[n2].current = currHp;
 	float scale = m_VHPBarMinion[n2].current / m_VHPBarMinion[n2].max;
@@ -809,7 +835,7 @@ void cUIInGame::updateBarMinion(int id, D3DXVECTOR3 pt, int currHp)
 
 	D3DXMatrixScaling(&matS, (m_VHPBarMinion[n2].current / m_VHPBarMinion[n2].max), 1, 1);
 	D3DXMatrixRotationX(&matR, -D3DX_PI / 2);
-	D3DXMatrixTranslation(&matT, -m_HPBarSizeX + pt.x, m_HPBarHeight + pt.y, pt.z);
+	D3DXMatrixTranslation(&matT, -m_HPBarSizeXM + pt.x, m_HPBarHeightM + pt.y, pt.z);
 
 	m_VHPBarMinion[n1].matWorld = matR * matT;
 	m_VHPBarMinion[n2].matWorld = matS * matR * matT;
@@ -841,9 +867,40 @@ void cUIInGame::renderBar()
 
 void cUIInGame::renderBarMinion()
 {
+	static int idx1 = 0;
+	static int idx2 = 0;
+	int siz = MINIONMANAGER->GetBlueMinion().size();
+	for (int i = 0; i < m_VHPBarMinion.size(); i++)
+	{
+		m_VHPBarMinion[i].enable = true;
+	}
 	for (int i = 0; i < m_VHPBarMinion.size(); i++)
 	{
 		if (!m_VHPBarMinion[i].enable) continue;
+		if (i < siz * 2 && i % 2 == 0)
+		{
+			if (MINIONMANAGER->BlueMinionDirection(idx1) == MINI_DEATH)
+			{
+				m_VHPBarMinion[i].enable = false;
+				m_VHPBarMinion[i + 1].enable = false;
+				idx1++;
+				continue;
+			}
+			updateBarMinion(i, MINIONMANAGER->BlueMinionPos(idx1), MINIONMANAGER->BlueMinionHp(idx1));
+			idx1++;
+		}
+		else if (i >= siz * 2 && i % 2 == 0)
+		{
+			if (MINIONMANAGER->RedMinionDirection(idx2) == MINI_DEATH)
+			{
+				m_VHPBarMinion[i].enable = false;
+				m_VHPBarMinion[i + 1].enable = false;
+				idx2++;
+				continue;
+			}
+			updateBarMinion(i, MINIONMANAGER->RedMinionPos(idx2), MINIONMANAGER->RedMinionHp(idx2));
+			idx2++;
+		}
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
@@ -860,6 +917,8 @@ void cUIInGame::renderBarMinion()
 		g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, m_VHPBarMinion[i].vertex.size() / 3, &m_VHPBarMinion[i].vertex[0], sizeof(ST_PT_VERTEXT));
 		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	}
+	idx1 = 0;
+	idx2 = 0;
 }
 
 void cUIInGame::renderFade()

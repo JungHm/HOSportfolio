@@ -4,6 +4,7 @@
 #define SKILLCOUNT 5
 #define SKILLCOUNTNUM 10
 #define HPMAX 100
+#define HPMAXMINION 10
 #define FADEINSPEED 5
 #define SKILLUNLOCKEFXREPEATCOUNT 6
 #define VICTORYRESOURCE 4
@@ -73,11 +74,11 @@ public:
 	void setupSkillUnlockEfx(wstring filePath);
 
 	// 미니언 추가되었을 때 체력바 push_back
-	void SetMinionAdd(int id);
+	void SetMinionAdd();
 	// 미니언 죽었을 때 체력바 erase
 	void SetMinionDelete(int id);
 	// 미니언 체력바 기본 셋팅
-	void setupMinionAdd(wstring filePath, int id);
+	void setupMinionAdd(wstring filePath);
 
 	// 승리 시 연출할 리소스 등록
 	void setupVictoryAdd(wstring filePath, int index, float scale, D3DXVECTOR3 pt);
