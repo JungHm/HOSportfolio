@@ -10,6 +10,9 @@ cUIInGame::cUIInGame()
 	, m_HPBarSizeXM(m_HPBarSizeX / 2)
 	, m_HPBarSizeYM(m_HPBarSizeY / 2)
 	, m_HPBarHeightM(m_HPBarHeight / 2)
+	, m_HPBarSizeXT(m_HPBarSizeX * 2)
+	, m_HPBarSizeYT(m_HPBarSizeY * 2)
+	, m_HPBarHeightT(m_HPBarHeight * 3)
 	, m_LvUpCount(0)
 	, m_SkillUnlockEfxAlphaCount(0)
 	, m_IsVictory(false)
@@ -666,6 +669,10 @@ void cUIInGame::setupOther()
 	setupHpBar(L"UI/ingame_img_bar_hp_bg.png", 1000);
 	setupHpBar(L"UI/ingame_img_bar_hp.dds", 1000);
 	SetMinionAdd();
+	setupHpBarTower(L"UI/ingame_img_bar_hp_bg.png");
+	setupHpBarTower(L"UI/ingame_img_bar_hp.dds");
+	setupHpBarTower(L"UI/ingame_img_bar_hp_bg.png");
+	setupHpBarTower(L"UI/ingame_img_bar_hp.dds");
 	setupFadeAdd(L"UI/black.png");
 	setupSkillLockList();
 	setupSkillUnlockEfx(L"UI/ingame_img_unlock_efx.png");
@@ -714,6 +721,7 @@ void cUIInGame::renderOther()
 	{
 		renderBar();
 		renderBarMinion();
+		renderBarTower();
 		renderFade();
 		renderAbilityAddGuide();
 		renderSkillUnlockEfx();
@@ -765,6 +773,53 @@ void cUIInGame::setupHpBar(wstring filePath, int id)
 	p.t = D3DXVECTOR2(1, 0);
 	phb->vertex.push_back(p);
 	p.p = D3DXVECTOR3(m_HPBarSizeX * 2, 0, -m_HPBarSizeY);
+	p.t = D3DXVECTOR2(1, 1);
+	phb->vertex.push_back(p);
+}
+
+void cUIInGame::setupHpBarTower(wstring filePath)
+{
+	tagHPBar hb;
+	ZeroMemory(&hb, sizeof(tagHPBar));
+	m_VHPBarTower.push_back(hb);
+	tagHPBar *phb = &m_VHPBarTower[m_VHPBarTower.size() - 1];
+
+	phb->max = 20;
+	phb->current = 20;
+	phb->enable = true;
+
+	D3DXMatrixIdentity(&phb->matWorld);
+	D3DXMATRIXA16 matT, matR;
+	D3DXMatrixIdentity(&matT);
+	D3DXMatrixIdentity(&matR);
+
+	D3DXMatrixRotationX(&matR, -D3DX_PI / 2);
+	D3DXMatrixTranslation(&matT, -m_HPBarSizeXT, m_HPBarHeightT, 0.0f);
+	phb->matWorld = matR * matT;
+
+
+	phb->filePath = filePath;
+	D3DXVECTOR2 v2(0, 0);
+	g_pTextureManager->AddTexture(phb->filePath.c_str(), phb->texture, &v2);
+
+	ST_PT_VERTEXT p;
+	p.p = D3DXVECTOR3(0, 0, -m_HPBarSizeYT);	// 사이즈
+	p.t = D3DXVECTOR2(0, 1);		// 텍스쳐
+	phb->vertex.push_back(p);
+	p.p = D3DXVECTOR3(0, 0, m_HPBarSizeYT);
+	p.t = D3DXVECTOR2(0, 0);
+	phb->vertex.push_back(p);
+	p.p = D3DXVECTOR3(m_HPBarSizeXT * 2, 0, m_HPBarSizeYT);
+	p.t = D3DXVECTOR2(1, 0);
+	phb->vertex.push_back(p);
+
+	p.p = D3DXVECTOR3(0, 0, -m_HPBarSizeYT);
+	p.t = D3DXVECTOR2(0, 1);
+	phb->vertex.push_back(p);
+	p.p = D3DXVECTOR3(m_HPBarSizeXT * 2, 0, m_HPBarSizeYT);
+	p.t = D3DXVECTOR2(1, 0);
+	phb->vertex.push_back(p);
+	p.p = D3DXVECTOR3(m_HPBarSizeXT * 2, 0, -m_HPBarSizeYT);
 	p.t = D3DXVECTOR2(1, 1);
 	phb->vertex.push_back(p);
 }
@@ -842,11 +897,39 @@ void cUIInGame::updateBarMinion(int id, D3DXVECTOR3 pt, int currHp)
 
 }
 
+void cUIInGame::updateBarTower(int id, D3DXVECTOR3 pt, int currHp)
+{
+	// 체력의 비율을 계산해서 scale.x 값을 조정.
+	int n1 = id * 2;
+	int n2 = id * 2 + 1;
+	if (currHp < 0) currHp = 0;
+	else if (currHp > m_VHPBarTower[n2].max) currHp = m_VHPBarTower[n2].max;
+
+	m_VHPBarTower[n2].current = currHp;
+	float scale = m_VHPBarTower[n2].current / m_VHPBarTower[n2].max;
+	if (scale < 0) scale = 0;
+	else if (scale > 1) scale = 1;
+
+	D3DXMatrixIdentity(&m_VHPBarTower[n2].matWorld);
+	D3DXMATRIXA16 matT, matR, matS;
+	D3DXMatrixIdentity(&matT);
+	D3DXMatrixIdentity(&matR);
+	D3DXMatrixIdentity(&matS);
+
+	D3DXMatrixScaling(&matS, (m_VHPBarTower[n2].current / m_VHPBarTower[n2].max), 1, 1);
+	D3DXMatrixRotationX(&matR, -D3DX_PI / 2);
+	D3DXMatrixTranslation(&matT, -m_HPBarSizeXT + pt.x, m_HPBarHeightT + pt.y, pt.z);
+
+	m_VHPBarTower[n1].matWorld = matR * matT;
+	m_VHPBarTower[n2].matWorld = matS * matR * matT;
+}
+
 void cUIInGame::renderBar()
 {
 	for (int i = 0; i < m_VHPBar.size(); i++)
 	{
 		if (!m_VHPBar[i].enable) continue;
+		if (m_Dead.enable) continue;
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
@@ -919,6 +1002,29 @@ void cUIInGame::renderBarMinion()
 	}
 	idx1 = 0;
 	idx2 = 0;
+}
+
+void cUIInGame::renderBarTower()
+{
+	for (int i = 0; i < m_VHPBarTower.size(); i++)
+	{
+		if (!m_VHPBarTower[i].enable) continue;
+		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+
+		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		g_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		g_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+
+		g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
+
+		g_pD3DDevice->SetFVF(ST_PT_VERTEXT::FVF);
+		g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_VHPBarTower[i].matWorld);
+		g_pD3DDevice->SetTexture(0, m_VHPBarTower[i].texture);
+		g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, m_VHPBarTower[i].vertex.size() / 3, &m_VHPBarTower[i].vertex[0], sizeof(ST_PT_VERTEXT));
+		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	}
 }
 
 void cUIInGame::renderFade()
@@ -1059,6 +1165,10 @@ void cUIInGame::destroyOther()
 	for (int i = 0; i < m_VHPBarMinion.size(); i++)
 	{
 		m_VHPBarMinion[i].texture->Release();
+	}
+	for (int i = 0; i < m_VHPBarTower.size(); i++)
+	{
+		m_VHPBarTower[i].texture->Release();
 	}
 	m_Fade.sprite->Release();
 	m_Fade.texture->Release();
