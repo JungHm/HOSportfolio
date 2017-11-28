@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "cSoundManager.h"
 
-HRESULT cSoundManager::init()
+void cSoundManager::init()
 {
 	//사운드 시스템 생성
 	System_Create(&_system);
@@ -15,8 +15,6 @@ HRESULT cSoundManager::init()
 
 	memset(_sound, 0, sizeof(Sound*)* (TOTALSOUNDBUFFER));
 	memset(_channel, 0, sizeof(Channel*)* (TOTALSOUNDBUFFER));
-
-	return S_OK;
 }
 
 void cSoundManager::release()
