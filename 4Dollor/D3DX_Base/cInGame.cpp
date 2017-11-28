@@ -293,6 +293,8 @@ void cInGame::Render()
 	//v1.p = m_pPlayer->GetPosition() + m_pPlayer->GetDir() * 100;
 	//m_vecvetex.push_back(v1);
 	m_UI->updateBar(true, m_pPlayer->GetPosition(), m_pPlayer->GetHp());
+	m_UI->updateBarTower(TEAM_BLUE, m_pTower->GetTowerPos(TEAM_BLUE), m_pTower->GetTowerHP(TEAM_BLUE));
+	m_UI->updateBarTower(TEAM_RED, m_pTower->GetTowerPos(TEAM_RED), m_pTower->GetTowerHP(TEAM_RED));
 	//D3DXMATRIXA16 matW;
 	//D3DXMatrixIdentity(&matW);
 	//g_pD3DDevice->SetTransform(D3DTS_WORLD, &matW);

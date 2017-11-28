@@ -40,5 +40,7 @@ public:
 	void Render();
 	void BlueFindEnemy(ST_SPHERE sSphere);
 	void RedFindEnemy(ST_SPHERE sSphere);
+	D3DXVECTOR3 GetTowerPos(int team) { return m_sTower[team].vPosition; }
+	int GetTowerHP(int team) { return 20; }	// 타워 체력 추가 후 작업
 };
 

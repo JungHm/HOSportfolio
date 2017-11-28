@@ -4,6 +4,7 @@
 #define SKILLCOUNT 5
 #define SKILLCOUNTNUM 10
 #define HPMAX 100
+#define HPMAXMINION 10
 #define FADEINSPEED 5
 #define SKILLUNLOCKEFXREPEATCOUNT 6
 #define VICTORYRESOURCE 4
@@ -34,6 +35,7 @@ private:
 	bool m_IsVictory;
 	vector<tagHPBar> m_VHPBar;
 	vector<tagHPBar> m_VHPBarMinion;
+	vector<tagHPBar> m_VHPBarTower;
 	// 미니언은 map으로 만들고 첫번째 인자에 걔들 클래스? 주소값을 넣자
 	float m_HPBarSizeX;
 	float m_HPBarSizeY;
@@ -41,6 +43,9 @@ private:
 	float m_HPBarSizeXM;
 	float m_HPBarSizeYM;
 	float m_HPBarHeightM;
+	float m_HPBarSizeXT;
+	float m_HPBarSizeYT;
+	float m_HPBarHeightT;
 
 	tagUISpriteEfx m_Fade;
 	tagUISpriteEfx m_FadeBG;
@@ -73,11 +78,11 @@ public:
 	void setupSkillUnlockEfx(wstring filePath);
 
 	// 미니언 추가되었을 때 체력바 push_back
-	void SetMinionAdd(int id);
+	void SetMinionAdd();
 	// 미니언 죽었을 때 체력바 erase
 	void SetMinionDelete(int id);
 	// 미니언 체력바 기본 셋팅
-	void setupMinionAdd(wstring filePath, int id);
+	void setupMinionAdd(wstring filePath);
 
 	// 승리 시 연출할 리소스 등록
 	void setupVictoryAdd(wstring filePath, int index, float scale, D3DXVECTOR3 pt);
@@ -112,14 +117,17 @@ public:
 
 	// 체력바 셋팅
 	void setupHpBar(wstring filePath, int id);
+	void setupHpBarTower(wstring filePath);
 	// 체력 비율, matrix scale 계산
 	void updateBar(bool pc, D3DXVECTOR3 pt, int currHp);
 	// 미니언 체력바
 	void updateBarMinion(int id, D3DXVECTOR3 pt, int currHp);
+	void updateBarTower(int id, D3DXVECTOR3 pt, int currHp);
 
 	// 체력바 랜더
 	void renderBar();
 	void renderBarMinion();
+	void renderBarTower();
 	// 페이즈 관련 랜더
 	void renderFade();
 	// 언락할 수 있는 스킬이 있을 때 안내해주는 화살표 랜더

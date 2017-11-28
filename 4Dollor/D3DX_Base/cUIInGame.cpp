@@ -10,6 +10,9 @@ cUIInGame::cUIInGame()
 	, m_HPBarSizeXM(m_HPBarSizeX / 2)
 	, m_HPBarSizeYM(m_HPBarSizeY / 2)
 	, m_HPBarHeightM(m_HPBarHeight / 2)
+	, m_HPBarSizeXT(m_HPBarSizeX * 2)
+	, m_HPBarSizeYT(m_HPBarSizeY * 2)
+	, m_HPBarHeightT(m_HPBarHeight * 3)
 	, m_LvUpCount(0)
 	, m_SkillUnlockEfxAlphaCount(0)
 	, m_IsVictory(false)
@@ -223,10 +226,19 @@ void cUIInGame::setupSkillUnlockEfx(wstring filePath)
 	m_SkillUnlockEfx.enable = false;
 }
 
-void cUIInGame::SetMinionAdd(int id)
+void cUIInGame::SetMinionAdd()
 {
-	setupMinionAdd(L"UI/ingame_img_bar_hp_bg.png", id);
-	setupMinionAdd(L"UI/ingame_img_bar_hp.dds", id);
+	// 아래는 미니언 생성 전에 실행하므로 추가가 안됨..
+	//for (int i = 0; i < MINIONMANAGER->GetBlueMinion().size(); i++)
+	//{
+	//	setupMinionAdd(L"UI/ingame_img_bar_hp_bg_M.png");
+	//	setupMinionAdd(L"UI/ingame_img_bar_hp.dds");
+	//}
+	//for (int i = 0; i < MINIONMANAGER->GetRedMinion().size(); i++)
+	//{
+	//	setupMinionAdd(L"UI/ingame_img_bar_hp_bg_M.png");
+	//	setupMinionAdd(L"UI/ingame_img_bar_hp.dds");
+	//}
 }
 
 void cUIInGame::SetMinionDelete(int id)
@@ -245,14 +257,13 @@ void cUIInGame::SetMinionDelete(int id)
 	}
 }
 
-void cUIInGame::setupMinionAdd(wstring filePath, int id)
+void cUIInGame::setupMinionAdd(wstring filePath)
 {
 	tagHPBar hb;
 	ZeroMemory(&hb, sizeof(tagHPBar));
 
-	hb.max = HPMAX;
-	hb.current = HPMAX;
-	hb.id = id;
+	hb.max = HPMAXMINION;
+	hb.current = HPMAXMINION;
 	hb.enable = true;
 
 	D3DXMatrixIdentity(&hb.matWorld);
@@ -261,7 +272,7 @@ void cUIInGame::setupMinionAdd(wstring filePath, int id)
 	D3DXMatrixIdentity(&matR);
 
 	D3DXMatrixRotationX(&matR, -D3DX_PI / 2);
-	D3DXMatrixTranslation(&matT, -m_HPBarSizeXM, m_HPBarHeightM, 0.0f);
+	D3DXMatrixTranslation(&matT, 0, 0, 0.0f);
 	hb.matWorld = matR * matT;
 
 
@@ -657,7 +668,11 @@ void cUIInGame::setupOther()
 {
 	setupHpBar(L"UI/ingame_img_bar_hp_bg.png", 1000);
 	setupHpBar(L"UI/ingame_img_bar_hp.dds", 1000);
-	//SetMinionAdd(10);
+	SetMinionAdd();
+	setupHpBarTower(L"UI/ingame_img_bar_hp_bg.png");
+	setupHpBarTower(L"UI/ingame_img_bar_hp.dds");
+	setupHpBarTower(L"UI/ingame_img_bar_hp_bg.png");
+	setupHpBarTower(L"UI/ingame_img_bar_hp.dds");
 	setupFadeAdd(L"UI/black.png");
 	setupSkillLockList();
 	setupSkillUnlockEfx(L"UI/ingame_img_unlock_efx.png");
@@ -680,6 +695,24 @@ void cUIInGame::updateOther()
 	}
 	// 승리 후 클릭하면 씬전환
 	if (KEY->isOnceKeyDown(VK_LBUTTON) && m_IsVictory) m_GameEnd = true;
+	static bool en = false;
+	{
+		if (!en)
+		{
+			for (int i = 0; i < MINIONMANAGER->GetBlueMinion().size(); i++)
+			{
+				setupMinionAdd(L"UI/ingame_img_bar_hp_bg_M.png");
+				setupMinionAdd(L"UI/ingame_img_bar_hp.dds");
+			}
+			for (int i = 0; i < MINIONMANAGER->GetRedMinion().size(); i++)
+			{
+				setupMinionAdd(L"UI/ingame_img_bar_hp_bg_M.png");
+				setupMinionAdd(L"UI/ingame_img_bar_hp.dds");
+			}
+			en = true;
+		}
+		
+	}
 }
 
 void cUIInGame::renderOther()
@@ -688,6 +721,7 @@ void cUIInGame::renderOther()
 	{
 		renderBar();
 		renderBarMinion();
+		renderBarTower();
 		renderFade();
 		renderAbilityAddGuide();
 		renderSkillUnlockEfx();
@@ -743,6 +777,53 @@ void cUIInGame::setupHpBar(wstring filePath, int id)
 	phb->vertex.push_back(p);
 }
 
+void cUIInGame::setupHpBarTower(wstring filePath)
+{
+	tagHPBar hb;
+	ZeroMemory(&hb, sizeof(tagHPBar));
+	m_VHPBarTower.push_back(hb);
+	tagHPBar *phb = &m_VHPBarTower[m_VHPBarTower.size() - 1];
+
+	phb->max = 20;
+	phb->current = 20;
+	phb->enable = true;
+
+	D3DXMatrixIdentity(&phb->matWorld);
+	D3DXMATRIXA16 matT, matR;
+	D3DXMatrixIdentity(&matT);
+	D3DXMatrixIdentity(&matR);
+
+	D3DXMatrixRotationX(&matR, -D3DX_PI / 2);
+	D3DXMatrixTranslation(&matT, -m_HPBarSizeXT, m_HPBarHeightT, 0.0f);
+	phb->matWorld = matR * matT;
+
+
+	phb->filePath = filePath;
+	D3DXVECTOR2 v2(0, 0);
+	g_pTextureManager->AddTexture(phb->filePath.c_str(), phb->texture, &v2);
+
+	ST_PT_VERTEXT p;
+	p.p = D3DXVECTOR3(0, 0, -m_HPBarSizeYT);	// 사이즈
+	p.t = D3DXVECTOR2(0, 1);		// 텍스쳐
+	phb->vertex.push_back(p);
+	p.p = D3DXVECTOR3(0, 0, m_HPBarSizeYT);
+	p.t = D3DXVECTOR2(0, 0);
+	phb->vertex.push_back(p);
+	p.p = D3DXVECTOR3(m_HPBarSizeXT * 2, 0, m_HPBarSizeYT);
+	p.t = D3DXVECTOR2(1, 0);
+	phb->vertex.push_back(p);
+
+	p.p = D3DXVECTOR3(0, 0, -m_HPBarSizeYT);
+	p.t = D3DXVECTOR2(0, 1);
+	phb->vertex.push_back(p);
+	p.p = D3DXVECTOR3(m_HPBarSizeXT * 2, 0, m_HPBarSizeYT);
+	p.t = D3DXVECTOR2(1, 0);
+	phb->vertex.push_back(p);
+	p.p = D3DXVECTOR3(m_HPBarSizeXT * 2, 0, -m_HPBarSizeYT);
+	p.t = D3DXVECTOR2(1, 1);
+	phb->vertex.push_back(p);
+}
+
 void cUIInGame::updateBar(bool pc, D3DXVECTOR3 pt, int currHp)
 {
 	// 체력의 비율을 계산해서 scale.x 값을 조정.
@@ -782,19 +863,19 @@ void cUIInGame::updateBar(bool pc, D3DXVECTOR3 pt, int currHp)
 void cUIInGame::updateBarMinion(int id, D3DXVECTOR3 pt, int currHp)
 {
 	if (m_VHPBarMinion.size() == 0) return;
-	int n1 = 0;
-	int n2 = 0;
-	for (int i = 0; i < m_VHPBarMinion.size(); i++)
-	{
-		if (m_VHPBarMinion[i].id == id)
-		{
-			n1 = i;
-			n2 = i + 1;
-			break;
-		}
-	}
+	int n1 = id;
+	int n2 = id + 1;
+	//for (int i = 0; i < m_VHPBarMinion.size(); i++)
+	//{
+	//	if (m_VHPBarMinion[i].id == id)
+	//	{
+	//		n1 = i;
+	//		n2 = i + 1;
+	//		break;
+	//	}
+	//}
 	if (currHp < 0) currHp = 0;
-	else if (currHp > m_VHPBarMinion[n2].max) currHp = HPMAX;
+	else if (currHp > m_VHPBarMinion[n2].max) currHp = HPMAXMINION;
 
 	m_VHPBarMinion[n2].current = currHp;
 	float scale = m_VHPBarMinion[n2].current / m_VHPBarMinion[n2].max;
@@ -809,11 +890,38 @@ void cUIInGame::updateBarMinion(int id, D3DXVECTOR3 pt, int currHp)
 
 	D3DXMatrixScaling(&matS, (m_VHPBarMinion[n2].current / m_VHPBarMinion[n2].max), 1, 1);
 	D3DXMatrixRotationX(&matR, -D3DX_PI / 2);
-	D3DXMatrixTranslation(&matT, -m_HPBarSizeX + pt.x, m_HPBarHeight + pt.y, pt.z);
+	D3DXMatrixTranslation(&matT, -m_HPBarSizeXM + pt.x, m_HPBarHeightM + pt.y, pt.z);
 
 	m_VHPBarMinion[n1].matWorld = matR * matT;
 	m_VHPBarMinion[n2].matWorld = matS * matR * matT;
 
+}
+
+void cUIInGame::updateBarTower(int id, D3DXVECTOR3 pt, int currHp)
+{
+	// 체력의 비율을 계산해서 scale.x 값을 조정.
+	int n1 = id * 2;
+	int n2 = id * 2 + 1;
+	if (currHp < 0) currHp = 0;
+	else if (currHp > m_VHPBarTower[n2].max) currHp = m_VHPBarTower[n2].max;
+
+	m_VHPBarTower[n2].current = currHp;
+	float scale = m_VHPBarTower[n2].current / m_VHPBarTower[n2].max;
+	if (scale < 0) scale = 0;
+	else if (scale > 1) scale = 1;
+
+	D3DXMatrixIdentity(&m_VHPBarTower[n2].matWorld);
+	D3DXMATRIXA16 matT, matR, matS;
+	D3DXMatrixIdentity(&matT);
+	D3DXMatrixIdentity(&matR);
+	D3DXMatrixIdentity(&matS);
+
+	D3DXMatrixScaling(&matS, (m_VHPBarTower[n2].current / m_VHPBarTower[n2].max), 1, 1);
+	D3DXMatrixRotationX(&matR, -D3DX_PI / 2);
+	D3DXMatrixTranslation(&matT, -m_HPBarSizeXT + pt.x, m_HPBarHeightT + pt.y, pt.z);
+
+	m_VHPBarTower[n1].matWorld = matR * matT;
+	m_VHPBarTower[n2].matWorld = matS * matR * matT;
 }
 
 void cUIInGame::renderBar()
@@ -821,6 +929,7 @@ void cUIInGame::renderBar()
 	for (int i = 0; i < m_VHPBar.size(); i++)
 	{
 		if (!m_VHPBar[i].enable) continue;
+		if (m_Dead.enable) continue;
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
@@ -841,9 +950,40 @@ void cUIInGame::renderBar()
 
 void cUIInGame::renderBarMinion()
 {
+	static int idx1 = 0;
+	static int idx2 = 0;
+	int siz = MINIONMANAGER->GetBlueMinion().size();
+	for (int i = 0; i < m_VHPBarMinion.size(); i++)
+	{
+		m_VHPBarMinion[i].enable = true;
+	}
 	for (int i = 0; i < m_VHPBarMinion.size(); i++)
 	{
 		if (!m_VHPBarMinion[i].enable) continue;
+		if (i < siz * 2 && i % 2 == 0)
+		{
+			if (MINIONMANAGER->BlueMinionDirection(idx1) == MINI_DEATH)
+			{
+				m_VHPBarMinion[i].enable = false;
+				m_VHPBarMinion[i + 1].enable = false;
+				idx1++;
+				continue;
+			}
+			updateBarMinion(i, MINIONMANAGER->BlueMinionPos(idx1), MINIONMANAGER->BlueMinionHp(idx1));
+			idx1++;
+		}
+		else if (i >= siz * 2 && i % 2 == 0)
+		{
+			if (MINIONMANAGER->RedMinionDirection(idx2) == MINI_DEATH)
+			{
+				m_VHPBarMinion[i].enable = false;
+				m_VHPBarMinion[i + 1].enable = false;
+				idx2++;
+				continue;
+			}
+			updateBarMinion(i, MINIONMANAGER->RedMinionPos(idx2), MINIONMANAGER->RedMinionHp(idx2));
+			idx2++;
+		}
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
@@ -858,6 +998,31 @@ void cUIInGame::renderBarMinion()
 		g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_VHPBarMinion[i].matWorld);
 		g_pD3DDevice->SetTexture(0, m_VHPBarMinion[i].texture);
 		g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, m_VHPBarMinion[i].vertex.size() / 3, &m_VHPBarMinion[i].vertex[0], sizeof(ST_PT_VERTEXT));
+		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	}
+	idx1 = 0;
+	idx2 = 0;
+}
+
+void cUIInGame::renderBarTower()
+{
+	for (int i = 0; i < m_VHPBarTower.size(); i++)
+	{
+		if (!m_VHPBarTower[i].enable) continue;
+		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+		g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+
+		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		g_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		g_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+
+		g_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
+
+		g_pD3DDevice->SetFVF(ST_PT_VERTEXT::FVF);
+		g_pD3DDevice->SetTransform(D3DTS_WORLD, &m_VHPBarTower[i].matWorld);
+		g_pD3DDevice->SetTexture(0, m_VHPBarTower[i].texture);
+		g_pD3DDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, m_VHPBarTower[i].vertex.size() / 3, &m_VHPBarTower[i].vertex[0], sizeof(ST_PT_VERTEXT));
 		g_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	}
 }
@@ -1000,6 +1165,10 @@ void cUIInGame::destroyOther()
 	for (int i = 0; i < m_VHPBarMinion.size(); i++)
 	{
 		m_VHPBarMinion[i].texture->Release();
+	}
+	for (int i = 0; i < m_VHPBarTower.size(); i++)
+	{
+		m_VHPBarTower[i].texture->Release();
 	}
 	m_Fade.sprite->Release();
 	m_Fade.texture->Release();
