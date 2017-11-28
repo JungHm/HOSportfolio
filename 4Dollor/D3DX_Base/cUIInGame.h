@@ -91,6 +91,7 @@ public:
 	void SetVictory();	// 승리 외 UI는 모두 숨기기 위함
 	// 승리 관련 연출 랜더
 	void renderVictory();
+	void fadeEfx();
 
 	void setupDeadBG(wstring filePath);
 	void renderDeadBG();

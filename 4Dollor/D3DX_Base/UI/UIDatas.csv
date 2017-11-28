@@ -121,6 +121,6 @@ cInGame,,,,,,,,,,,,,
 -20,440,0,0,0,choose1,0,0,0,0,ingame_img_choosetalent_1.png,0,0,0
 -20,480,0,0,0,choose2,0,0,0,0,ingame_img_choosetalent_2.png,0,0,0
 -20,520,0,0,0,choose3,0,0,0,0,ingame_img_choosetalent_3.png,0,0,0
-20,450,0,0,0,unlockskill1,0,0,1,120,mainmenu_button_ability_title_1.png,mainmenu_button_ability_title_1_1.png,mainmenu_button_ability_title_1_1.png,mainmenu_button_ability_title_1.png
-20,480,0,0,0,unlockskill2,0,0,1,121,mainmenu_button_ability_title_2.png,mainmenu_button_ability_title_2_1.png,mainmenu_button_ability_title_2_1.png,mainmenu_button_ability_title_2.png
+20,450,0,0,0,unlockskill1,0,0,1,120,mainmenu_button_ability_title_2.png,mainmenu_button_ability_title_2_1.png,mainmenu_button_ability_title_2_1.png,mainmenu_button_ability_title_2.png
+20,480,0,0,0,unlockskill2,0,0,1,121,mainmenu_button_ability_title_1.png,mainmenu_button_ability_title_1_1.png,mainmenu_button_ability_title_1_1.png,mainmenu_button_ability_title_1.png
 20,510,0,0,0,unlockskill3,0,0,1,122,mainmenu_button_ability_title_3.png,mainmenu_button_ability_title_3_1.png,mainmenu_button_ability_title_3_1.png,mainmenu_button_ability_title_3.png

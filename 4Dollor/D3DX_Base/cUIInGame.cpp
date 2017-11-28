@@ -80,6 +80,7 @@ void cUIInGame::rednerDead()
 {
 	if (m_Dead.enable)
 	{
+		fadeEfx();
 		m_Dead.sprite->Begin(D3DXSPRITE_ALPHABLEND);
 
 		m_Dead.rotate -= 0.02f;
@@ -388,9 +389,15 @@ void cUIInGame::renderVictory()
 						m_VictoryEfx[2].scale = 3;
 					}
 				}
+				m_VictoryEfx[i].sprite->Draw(m_VictoryEfx[i].texture,
+					&rc,
+					&D3DXVECTOR3(m_VictoryEfx[i].imgInfo.Width / 2, m_VictoryEfx[i].imgInfo.Height / 2, 0),
+					NULL,
+					D3DCOLOR_ARGB(m_VictoryEfx[i].alpha, 255, 255, 255));
 			}
 			if (i == 2)
 			{
+				fadeEfx();
 				m_VictoryEfx[i].rotate += 0.01;
 
 				m_VictoryEfx[i].alpha += 10;
@@ -443,6 +450,28 @@ void cUIInGame::renderVictory()
 			m_VictoryEfx[i].sprite->End();
 		}
 	}
+}
+
+void cUIInGame::fadeEfx()
+{
+	m_Fade.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+	m_Fade.alpha = 125;
+	D3DXMatrixAffineTransformation2D(&m_Fade.matWorld,
+		m_Fade.scale,
+		NULL,
+		NULL,
+		&D3DXVECTOR2(0, 0));
+
+	m_Fade.sprite->SetTransform(&m_Fade.matWorld);
+	RECT rc;
+	SetRect(&rc, 0, 0, WINX, WINY);
+	m_Fade.sprite->Draw(m_Fade.texture,
+		&rc,
+		NULL,
+		NULL,
+		D3DCOLOR_ARGB(m_Fade.alpha, 255, 255, 255));
+
+	m_Fade.sprite->End();
 }
 
 void cUIInGame::setupDeadBG(wstring filePath)
