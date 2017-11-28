@@ -63,6 +63,23 @@ void cInGame::SetUp()
 	MINIONMANAGER->RedSetup();
 
 	minionCount = 0;
+
+	//=========사운드===========
+
+	//SOUNDMANAGER->addSound("테사다르_기본", "Sound/09_TassadarAtk.wav", false, false);
+	//SOUNDMANAGER->addSound("테사다르_공격1", "Sound/10_TassadarInvincible.wav", false, false);
+	//SOUNDMANAGER->addSound("테사다르_공격2", "Sound/20_TassadarShield.wav", false, false);
+	//SOUNDMANAGER->addSound("테사다르_공격3", "Sound/26_TassadarPsionicStorm.wav", false, false);
+
+	//SOUNDMANAGER->addSound("근접_미니언_1", "Sound/11_Minion_Melee_Attack_Impact01.wav", false, false);
+	//SOUNDMANAGER->addSound("근접_미니언_2", "Sound/12_Minion_Melee_Attack_Impact02.wav", false, false);
+	//SOUNDMANAGER->addSound("근접_미니언_3", "Sound/13_Minion_Melee_Attack_Impact03.wav", false, false);
+	//SOUNDMANAGER->addSound("근접_미니언_4", "Sound/14_Minion_Melee_Attack_Impact05.wav", false, false);
+
+	//SOUNDMANAGER->addSound("원거리_미니언", "Sound/15_Minion_Ranged_Attack_Launch01.wav", false, false);
+
+	//SOUNDMANAGER->addSound("패배", "Sound/22_DefeatBGM.wav", false, false);
+	//SOUNDMANAGER->addSound("승리", "Sound/23_VictoryBGMwav", false, false);
 }
 
 void cInGame::Destroy()
@@ -81,13 +98,13 @@ void cInGame::Destroy()
 	SAFE_DELETE(m_pTower);
 
 	SAFE_DELETE(m_pPlayer);
+
+	//SOUNDMANAGER->release();
 	//m_pRootNode->Destroy();
 }
 
 void cInGame::Update()
 {
-
-
 
 	if (m_pTower)
 	{
@@ -127,6 +144,7 @@ void cInGame::Update()
 	{
 		m_UI->SetSkillUse(1, true);
 		m_UI->SetSkillUseCooldown(1, m_pPlayer->coolQ);
+		//SOUNDMANAGER->play("테사다르_공격1");
 	}
 	else m_UI->SetSkillUse(1, false);
 	if (m_pPlayer->isWcool)
