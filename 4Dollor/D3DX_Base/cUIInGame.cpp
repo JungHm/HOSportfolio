@@ -445,6 +445,62 @@ void cUIInGame::renderVictory()
 	}
 }
 
+void cUIInGame::setupDeadBG(wstring filePath)
+{
+	ZeroMemory(&m_DeadBG, sizeof(tagUISpriteEfx));
+
+	D3DXMatrixIdentity(&m_DeadBG.matWorld);
+
+	D3DXCreateSprite(g_pD3DDevice, &m_DeadBG.sprite);
+
+	D3DXCreateTextureFromFileEx(
+		g_pD3DDevice,
+		filePath.c_str(),
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT,
+		0,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_MANAGED,
+		D3DX_FILTER_NONE,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(255, 255, 255),
+		&m_DeadBG.imgInfo,
+		NULL,
+		&m_DeadBG.texture);
+
+	SetRect(&m_DeadBG.drawRc, 0, 0, m_DeadBG.imgInfo.Width, m_DeadBG.imgInfo.Height);
+	m_DeadBG.alpha = 255;
+	m_DeadBG.scale = 1;
+	m_DeadBG.pt = { 0, 0,0 };
+	m_DeadBG.enable = true;
+}
+
+void cUIInGame::renderDeadBG()
+{
+	if (m_Dead.enable)
+	{
+		m_DeadBG.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+		D3DXMatrixAffineTransformation2D(&m_DeadBG.matWorld,
+			m_DeadBG.scale,
+			NULL,
+			NULL,
+			&D3DXVECTOR2(0, 0));
+
+		m_DeadBG.sprite->SetTransform(&m_DeadBG.matWorld);
+		RECT rc;
+		SetRect(&rc, 0, 0, WINX, WINY);
+		m_DeadBG.sprite->Draw(m_DeadBG.texture,
+			&rc,
+			NULL,
+			NULL,
+			D3DCOLOR_ARGB(m_DeadBG.alpha, 255, 255, 255));
+
+		m_DeadBG.sprite->End();
+	}
+}
+
 int cUIInGame::updateButtonOverCallback(int num)
 {
 	return 0;
@@ -681,6 +737,7 @@ void cUIInGame::setupOther()
 	setupVictoryAdd(L"UI/ingame_img_victory_bg.png",	1,	0.95f, { 0,0,0 });
 	setupVictoryAdd(L"UI/ingame_img_victory_cycle.png",	2,	VICTORYCYCLESCALE, { WINX / 2 -  25,WINY / 2 - 50,0 });
 	setupVictoryAdd(L"UI/ingame_img_victory_text.png",	3,	VICTORYCYCLESCALE, { WINX / 2 - 550,WINY / 2 - 290,0 });
+	setupDeadBG(L"UI/ingame_img_deadbg.png");
 }
 
 void cUIInGame::updateOther()
@@ -726,6 +783,7 @@ void cUIInGame::renderOther()
 		renderAbilityAddGuide();
 		renderSkillUnlockEfx();
 		rednerDead();
+		renderDeadBG();
 	}
 	renderVictory();
 }
@@ -1176,6 +1234,8 @@ void cUIInGame::destroyOther()
 	m_FadeBG.sprite->Release();
 	m_Dead.sprite->Release();
 	m_Dead.texture->Release();
+	m_DeadBG.sprite->Release();
+	m_DeadBG.texture->Release();
 	m_SkillUnlockEfx.sprite->Release();
 	m_SkillUnlockEfx.texture->Release();
 

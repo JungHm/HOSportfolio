@@ -32,6 +32,7 @@ private:
 
 	cUILoadingInGame* m_InGameLoading;
 	bool m_InGameLoadingEnable;
+	tagUISpriteEfx test;
 
 public:
 	cUIMainMenu();
@@ -52,6 +53,7 @@ public:
 	void setupAddTexture(wstring filePath);
 	// 페이드인 관련 sprite 추가
 	void setupAddFadeImg(wstring filePath);
+	void setupTest(wstring filePath);
 	void updateOther();
 	// 래디 후 연출 update
 	void updateGameReady();
@@ -60,6 +62,7 @@ public:
 	void renderGameReady();
 	// 레디 후 연출이 종료되면 fade render
 	void renderFade();
+	void renderTest();
 
 	// 인게임 로딩을 여기서 띄움
 	// 쓰레드를 돌리면 인게임 클래스에서 랜더해야 함

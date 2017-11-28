@@ -128,6 +128,7 @@ void cUIMainMenu::setupOther()
 	setupAddTexture(m_GameReadyEfxPath[1]);
 	setupAddTexture(m_GameReadyEfxPath[2]);
 	setupAddFadeImg(L"UI\\black.png");
+	setupTest(L"UI/ingame_img_deadbg.png");
 
 	m_InGameLoading = new cUILoadingInGame;
 	m_InGameLoading->setup("cUILoadingInGame");
@@ -208,6 +209,36 @@ void cUIMainMenu::setupAddFadeImg(wstring filePath)
 	m_Fade.pt = { 0, 0,0 };
 }
 
+void cUIMainMenu::setupTest(wstring filePath)
+{
+	ZeroMemory(&test, sizeof(tagUISpriteEfx));
+
+	D3DXMatrixIdentity(&test.matWorld);
+
+	D3DXCreateSprite(g_pD3DDevice, &test.sprite);
+
+	D3DXCreateTextureFromFileEx(
+		g_pD3DDevice,
+		filePath.c_str(),
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT,
+		0,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_MANAGED,
+		D3DX_FILTER_NONE,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(255, 255, 255),
+		&test.imgInfo,
+		NULL,
+		&test.texture);
+
+	SetRect(&test.drawRc, 0, 0, test.imgInfo.Width, test.imgInfo.Height);
+	test.alpha = 255;
+	test.scale = 1;
+	test.pt = { 0, 0,0 };
+}
+
 void cUIMainMenu::updateOther()
 {
 	updateGameReady();
@@ -271,6 +302,11 @@ void cUIMainMenu::updateGameReady()
 	{
 		m_Fade.enable = true;
 	}
+	if (KEY->isOnceKeyDown('T'))
+	{
+		if (test.enable) test.enable = false;
+		else if (!test.enable) test.enable = true;
+	}
 }
 
 void cUIMainMenu::renderOther()
@@ -284,6 +320,7 @@ void cUIMainMenu::renderOther()
 	renderGameReady();
 	if (m_Fade.enable) renderFade();
 	if (m_InGameLoadingEnable) renderIngameLoading();
+	renderTest();
 }
 
 void cUIMainMenu::renderGameReady()
@@ -343,6 +380,31 @@ void cUIMainMenu::renderFade()
 
 
 	m_Fade.sprite->End();
+}
+
+void cUIMainMenu::renderTest()
+{
+	if (test.enable)
+	{
+		test.sprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+		D3DXMatrixAffineTransformation2D(&test.matWorld,
+			test.scale,
+			NULL,
+			NULL,
+			&D3DXVECTOR2(0, 0));
+
+		test.sprite->SetTransform(&test.matWorld);
+		RECT rc;
+		SetRect(&rc, 0, 0, WINX, WINY);
+		test.sprite->Draw(test.texture,
+			&rc,
+			NULL,
+			NULL,
+			D3DCOLOR_ARGB(test.alpha, 255, 255, 255));
+
+		test.sprite->End();
+	}
 }
 
 void cUIMainMenu::renderIngameLoading()

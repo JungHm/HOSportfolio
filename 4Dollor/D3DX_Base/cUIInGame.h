@@ -9,8 +9,8 @@
 #define SKILLUNLOCKEFXREPEATCOUNT 6
 #define VICTORYRESOURCE 4
 #define VICTORYCYCLESCALE 1
-#define VICTORYCYCLESCALESPEED 0.7
-#define VICTORYLIGHTSPEED 20
+#define VICTORYCYCLESCALESPEED 0.2
+#define VICTORYLIGHTSPEED 5
 #define SKILLUNLOCKLISTINTERVAL 75
 
 
@@ -56,6 +56,7 @@ private:
 	int m_LvUpCount;
 	vector<tagUISpriteButton*> m_SkillUnlock;
 	int m_DeadCount;
+	tagUISpriteEfx m_DeadBG;
 
 public:
 	cUIInGame();
@@ -90,6 +91,9 @@ public:
 	void SetVictory();	// 승리 외 UI는 모두 숨기기 위함
 	// 승리 관련 연출 랜더
 	void renderVictory();
+
+	void setupDeadBG(wstring filePath);
+	void renderDeadBG();
 
 	// 스킬 언락. q = 1, w = 2 순서
 	void SetSkillUnlock(int SkillIndex, bool unlock);

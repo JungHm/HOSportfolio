@@ -235,9 +235,7 @@ void cInGame::Update()
 
 void cInGame::Render()
 {
-	if (m_UI) m_UI->renderBG();	// ��� ���� ���� ��
 
-	if (m_UI) m_UI->render();	// ��� �� UI ��õ� ����
 
 	//g_pSprite->BeginScene();
 	//g_pSprite->Render(m_pD3DTexture, NULL, NULL, &D3DXVECTOR3(100, 100, 0), 255);
@@ -288,6 +286,8 @@ void cInGame::Render()
 	//=======미니언=======
 	MINIONMANAGER->BlueRender();
 	MINIONMANAGER->RedRender();
+	if (m_UI) m_UI->renderBG();	// ��� ���� ���� ��
+	if (m_UI) m_UI->render();	// ��� �� UI ��õ� ����
 }
 
 void cInGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
